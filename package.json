@@ -1,15 +1,27 @@
 {
   "name": "barunner",
   "version": "1.0.0",
-  "description": "",
-  "prvate": true,
-  "scripts": {
-    "start": "http-server -c-1"
-  },
-  "author": "",
-  "license": "ISC",
+  "description": "Runner with ram",
   "dependencies": {},
   "devDependencies": {
-    "http-server": "^0.12.3"
-  }
+    "clean-webpack-plugin": "^3.0.0",
+    "eslint": "^7.2.0",
+    "html-webpack-plugin": "^4.3.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --open",
+    "build": "webpack"
+  },
+  "keywords": [
+    "runner",
+    "game",
+    "web"
+  ],
+  "author": "Pavel Malokhatko",
+  "license": "MIT"
 }

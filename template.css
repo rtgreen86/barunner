@@ -1,0 +1,63 @@
+.screen {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  overflow: hidden;
+}
+
+.sky {
+  background-color: #d9f0f5
+}
+
+.background {
+  position: absolute;
+  background-image: url('assets/grafika.png');
+  background-size: 320px 1120px;
+  width: 100%;
+}
+
+.sprite160 {
+  position: absolute;
+  background-image: url('assets/grafika.png');
+  background-size: 320px 1120px;
+  width: 160px;
+  height: 160px;
+}
+
+.sprite80 {
+  position: absolute;
+  background-image: url('assets/grafika.png');
+  background-size: 160px 560px;
+  width: 80px;
+  height: 80px;
+}
+
+.cloud1 {
+  background-position: 0px -480px;
+}
+
+.cloud2 {
+  background-position: 160px -480px;
+}
+
+.sheep {
+  background-position: 0px 0px;
+}
+
+.layer1 {
+  background-position: 0px -640px;
+  height: 160px;
+  top: 320px;
+}
+
+.layer2 {
+  background-position: 0px -800px;
+  height: 160px;
+  top: 320px;
+}
+
+.layer3 {
+  background-position: 0px -960px;
+  height: 160px;
+  top: 320px;
+}

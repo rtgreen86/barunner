@@ -1,8 +1,7 @@
 import {
   Game,
   Scene,
-  AUTO,
-  Tilemaps
+  AUTO
 } from 'Phaser';
 
 import './main.css';
@@ -20,10 +19,36 @@ scene.preload = function () {
 }
 
 scene.create = function () {
-  this.staticSheep = this.physics.add.image(64, 64, 'static-sheep');
+
   this.map = this.add.tilemap('map');
   this.terrain = this.map.addTilesetImage('tiles', 'tileset32');
   this.layer = this.map.createStaticLayer('Tile Layer 1', [this.terrain], 0, 0);
+
+
+
+
+  //this.layer.setCollisionByProperty({ collide: true });
+  // this.layer.setCollision([]);
+  // this.layer.setCollisionByExclusion([14]);
+  this.layer.setCollisionBetween(1, 50);
+
+  this.staticSheep = this.physics.add.image(64, 400, 'static-sheep');
+  this.physics.add.collider(this.staticSheep, this.layer);
+
+  this.staticSheep.body.setVelocityX(600);
+  this.cameras.main.startFollow(
+    this.staticSheep,
+    false,
+    .9,
+    .9,
+    -300,
+    200
+
+
+    );
+  this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
+
+  this.staticSheep.setCollideWorldBounds(true);
 }
 
 scene.init = function () {
@@ -40,7 +65,7 @@ new Game({
     arcade: {
       debug: true,
       gravity: {
-        y: 0
+        y: 500
       }
     }
   }

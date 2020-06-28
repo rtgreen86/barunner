@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -14,6 +15,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'BaRunner',
     }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'assets/*.json',
+          flatten: true
+        }
+      ]
+    })
   ],
   output: {
     filename: 'main.js',

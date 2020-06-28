@@ -1,22 +1,33 @@
 import {
   Game,
   Scene,
-  AUTO
+  AUTO,
+  Tilemaps
 } from 'Phaser';
 
 import './main.css';
 import Images from '../assets/grafika.png';
 
 import StaticSheep from '../assets/static-sheep.png';
+import Tileset from '../assets/tileset32.png';
 
 const scene = new Scene('game');
 
 scene.preload = function () {
   this.load.image('static-sheep', StaticSheep);
+  this.load.image('tileset32', Tileset)
+  this.load.tilemapTiledJSON('map', 'map.json');
 }
 
 scene.create = function () {
-  this.staticSheep = this.add.image(64, 64, 'static-sheep');
+  this.staticSheep = this.physics.add.image(64, 64, 'static-sheep');
+  this.map = this.add.tilemap('map');
+  this.terrain = this.map.addTilesetImage('tiles', 'tileset32');
+  this.layer = this.map.createStaticLayer('Tile Layer 1', [this.terrain], 0, 0);
+}
+
+scene.init = function () {
+
 }
 
 new Game({

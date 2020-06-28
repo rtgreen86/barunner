@@ -1,5 +1,39 @@
+import {
+  Game,
+  Scene,
+  AUTO
+} from 'Phaser';
+
 import './main.css';
 import Images from '../assets/grafika.png';
+
+import StaticSheep from '../assets/static-sheep.png';
+
+const scene = new Scene('game');
+
+scene.preload = function () {
+  this.load.image('static-sheep', StaticSheep);
+}
+
+scene.create = function () {
+  this.staticSheep = this.add.image(64, 64, 'static-sheep');
+}
+
+new Game({
+  type: AUTO,
+  width: 1024,
+  height: 600,
+  scene,
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: true,
+      gravity: {
+        y: 0
+      }
+    }
+  }
+});
 
 (function () {
   /*

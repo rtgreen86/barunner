@@ -4,6 +4,7 @@ import Tileset from '../../assets/tileset32.png';
 import bg13 from '../../assets/13.png';
 import Ground from '../../assets/ground.png';
 import Sheep from '../../assets/black-sheep-idle.png';
+import Background from '../../assets/background.png';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -20,9 +21,15 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('tileset32', Tileset)
     this.load.tilemapTiledJSON('map', 'map.json');
     this.load.image('bg13', bg13);
+    this.load.image('background', Background);
   }
 
   create () {
+    // level background
+    this.background1 = this.add.image(0, 0, 'background');
+    this.background1.setOrigin(0);
+    this.background1.setScrollFactor(0);
+
     // old tile map
     // TODO: delete
 

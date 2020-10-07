@@ -1,7 +1,6 @@
-import { Game, AUTO } from 'Phaser';
-import GameScene from './scenes/GameScene';
+import { Game, AUTO, Scene } from 'Phaser';
 
-const scene = new GameScene();
+const scene = new Scene('game');
 
 new Game({
   type: AUTO,
@@ -12,10 +11,7 @@ new Game({
     default: 'arcade',
     arcade: {
       debug: true,
-      gravity: {
-        x: 0,
-        y: 500
-      }
+      gravity: { x: 0, y: 0 }
     }
   }
 });

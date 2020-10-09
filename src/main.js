@@ -35,10 +35,10 @@ scene.create = function () {
     frameRate: 8
   });
 
-  this.ground = this.physics.add.staticImage(0, 500, 'image-ground');
+  this.ground = this.physics.add.staticImage(0, 560, 'image-ground');
   this.ground.setSize(200, 75);
 
-  this.player = this.physics.add.sprite(0, 300, 'sheep-spritesheet');
+  this.player = this.physics.add.sprite(0, 507, 'sheep-spritesheet');
   this.player.setScale(0.5);
   this.player.setSize(100, 50);
   this.player.play('sheep-idle');
@@ -49,8 +49,8 @@ scene.create = function () {
   this.cameras.main.startFollow(
     this.player,  // target
     false,        // roundPixels
-    1, 0.7,         // lerpX, lerpY
-    -200, 100          // offsetX, offsetY
+    1, 0.5,         // lerpX, lerpY
+    -200, 220          // offsetX, offsetY
   );
 };
 
@@ -65,7 +65,7 @@ new Game({
   physics: {
     default: 'arcade',
     arcade: {
-      //debug: true,
+      debug: true,
       gravity: { x: 0, y: 500 }
     }
   }

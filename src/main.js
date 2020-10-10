@@ -44,6 +44,7 @@ scene.create = function () {
   this.player.setScale(0.5);
   this.player.setSize(100, 50);
   this.player.play('sheep-idle');
+  this.player.status = 'idle';
 
   this.physics.add.collider(this.ground, this.player);
 
@@ -51,12 +52,30 @@ scene.create = function () {
   this.cameras.main.startFollow(
     this.player,  // target
     false,        // roundPixels
-    1, 0.5,         // lerpX, lerpY
+    1, 0,         // lerpX, lerpY
     -200, 220          // offsetX, offsetY
   );
+
+  this.cursor = this.input.keyboard.createCursorKeys();
 };
 
 scene.update = function () {
+  if (this.cursor.up.isDown) {
+    this.player.body.setVelocityY(-300);
+  }
+  if (this.cursor.up.isDown && this.player.status === "idle") {
+    this.player.play('sheep-jump-up', true, 0);
+    this.player.status = 'jumping';
+  }
+  if (this.player.body.velocity.y < 10 && this.player.body.velocity.y > -10 && this.player.status === 'idle') {
+    this.player.play('sheep-idle', true);
+  }
+  if (this.player.body.velocity.y > 10) {
+    this.player.play('sheep-idle', true);
+    this.player.play('sheep-jump-down', true, 0);
+    this.player.status = 'idle';
+  }
+
 }
 
 new Game({
@@ -68,7 +87,7 @@ new Game({
     default: 'arcade',
     arcade: {
       debug: true,
-      gravity: { x: 0, y: 500 }
+      gravity: { x: 0, y: 1000 }
     }
   }
 });

@@ -2,6 +2,8 @@ import { Game, AUTO, Scene } from 'Phaser';
 
 import sheepSpritesheet from '../assets/sheep-spritesheet.png';
 import imageGround from '../assets/ground.png';
+import './main.css';
+
 
 const scene = new Scene('game');
 

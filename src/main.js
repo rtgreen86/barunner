@@ -56,14 +56,17 @@ scene.create = function () {
     -200, 220          // offsetX, offsetY
   );
 
+  // use Phaser.Input.Keyboard. KeyboardPlugin
+  // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
+  // An object containing the properties: up, down, left, right, space and shift.
   this.cursor = this.input.keyboard.createCursorKeys();
 };
 
 scene.update = function () {
-  if (this.cursor.up.isDown) {
+  if (this.cursor.space.isDown) {
     this.player.body.setVelocityY(-300);
   }
-  if (this.cursor.up.isDown && this.player.status === "idle") {
+  if (this.cursor.space.isDown && this.player.status === "idle") {
     this.player.play('sheep-jump-up', true, 0);
     this.player.status = 'jumping';
   }
@@ -75,7 +78,6 @@ scene.update = function () {
     this.player.play('sheep-jump-down', true, 0);
     this.player.status = 'idle';
   }
-
 }
 
 new Game({

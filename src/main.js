@@ -9,10 +9,10 @@ const scene = new Scene('game');
 
 scene.preload = function () {
   this.load.spritesheet('sheep-spritesheet', sheepSpritesheet, {
-    frameWidth: 120,
-    frameHeight: 120,
+    frameWidth: 60,
+    frameHeight: 60,
     startFrame: 0,
-    endFrame: 15
+    endFrame: 63
   });
   this.load.image('image-ground', imageGround);
 };
@@ -27,22 +27,25 @@ scene.create = function () {
 
   this.anims.create({
     key: 'sheep-jump-up',
-    frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [4, 5, 6, 7, 8] }),
+    frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [5, 6, 7, 8, 9] }),
     frameRate: 8,
   });
 
   this.anims.create({
     key: 'sheep-jump-down',
-    frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [9, 10, 11] }),
+    frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [10, 11, 12] }),
     frameRate: 8
   });
 
   this.ground = this.physics.add.staticImage(0, 560, 'image-ground');
   this.ground.setSize(200, 75);
 
-  this.player = this.physics.add.sprite(0, 507, 'sheep-spritesheet');
-  this.player.setScale(0.5);
-  this.player.setSize(100, 50);
+  this.player = this.physics.add.sprite(0, 506, 'sheep-spritesheet');
+
+  // player can be scaled
+  // this.player.setScale(0.5);
+
+  this.player.setSize(50, 35);
   this.player.play('sheep-idle');
   this.player.status = 'idle';
 

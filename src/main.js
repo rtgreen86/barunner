@@ -4,7 +4,6 @@ import sheepSpritesheet from '../assets/sheep-spritesheet.png';
 import imageGround from '../assets/ground.png';
 import './main.css';
 
-
 const scene = new Scene('game');
 
 scene.preload = function () {
@@ -46,8 +45,10 @@ scene.create = function () {
     repeat: -1
   });
 
-  this.ground = this.physics.add.staticImage(0, 560, 'image-ground');
-  this.ground.setSize(200, 75);
+  this.ground = this.physics.add.staticGroup();
+  this.ground.add(this.physics.add.staticImage(-300, 560, 'image-ground'));
+  this.ground.add(this.physics.add.staticImage(-100, 560, 'image-ground'));
+  this.ground.add(this.physics.add.staticImage(100, 560, 'image-ground'));
 
   this.player = this.physics.add.sprite(0, 506, 'sheep-spritesheet');
 

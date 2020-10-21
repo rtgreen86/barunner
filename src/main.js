@@ -18,23 +18,32 @@ scene.preload = function () {
 };
 
 scene.create = function () {
+  this.gameStarted = false;
+
   this.anims.create({
     key: 'sheep-idle',
     frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [0, 1, 2, 3] }),
-    frameRate: 4,
+    frameRate: 8,
     repeat: -1
   });
 
   this.anims.create({
     key: 'sheep-jump-up',
     frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [5, 6, 7, 8, 9] }),
-    frameRate: 8,
+    frameRate: 20,
   });
 
   this.anims.create({
     key: 'sheep-jump-down',
     frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [10, 11, 12] }),
-    frameRate: 8
+    frameRate: 20
+  });
+
+  this.anims.create({
+    key: 'sheep-run',
+    frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [16, 17, 18, 19, 20, 21] }),
+    frameRate: 20,
+    repeat: -1
   });
 
   this.ground = this.physics.add.staticImage(0, 560, 'image-ground');
@@ -65,21 +74,38 @@ scene.create = function () {
   this.cursor = this.input.keyboard.createCursorKeys();
 };
 
-scene.update = function () {
-  if (this.cursor.space.isDown) {
-    this.player.body.setVelocityY(-300);
+scene.update = function (time, delta) {
+  if (this.player.status === 'jumping') {
+    this.player.jumpTime += delta;
   }
-  if (this.cursor.space.isDown && this.player.status === "idle") {
+  if (
+    (this.player.status === 'running' || this.player.status === 'idle') &&
+    this.cursor.space.isDown
+  ) {
+    // start jumping
     this.player.play('sheep-jump-up', true, 0);
     this.player.status = 'jumping';
+    this.player.jumpTime = 0;
+    this.gameStarted = true;
   }
-  if (this.player.body.velocity.y < 10 && this.player.body.velocity.y > -10 && this.player.status === 'idle') {
-    this.player.play('sheep-idle', true);
+  if (this.player.status === 'jumping' && this.cursor.space.isDown && this.player.jumpTime <= 300) {
+    this.player.body.setVelocityY(-300);
   }
-  if (this.player.body.velocity.y > 10) {
-    this.player.play('sheep-idle', true);
-    this.player.play('sheep-jump-down', true, 0);
+  if (this.player.status === 'falling' && this.player.body.velocity.y === 0) {
     this.player.status = 'idle';
+  }
+  if (this.player.status === 'idle' && this.player.body.velocity.y === 0 && this.gameStarted) {
+    this.player.status = 'running';
+  }
+  if (this.player.body.velocity.y > 0 && this.player.status !== 'falling') {
+    this.player.status = 'falling';
+    this.player.play('sheep-jump-down', true);
+  }
+  if (this.player.status === 'idle') {
+    this.player.play('sheep-idle', true);
+  }
+  if (this.player.status === 'running') {
+    this.player.play('sheep-run', true);
   }
 }
 

@@ -46,11 +46,13 @@ scene.create = function () {
   });
 
   this.ground = this.physics.add.staticGroup();
-  this.ground.add(this.physics.add.staticImage(-300, 560, 'image-ground'));
-  this.ground.add(this.physics.add.staticImage(-100, 560, 'image-ground'));
-  this.ground.add(this.physics.add.staticImage(100, 560, 'image-ground'));
+  this.ground.add(this.physics.add.staticImage(0, 560, 'image-ground'));
+  this.ground.add(this.physics.add.staticImage(200, 560, 'image-ground'));
+  this.ground.add(this.physics.add.staticImage(400, 560, 'image-ground'));
+  this.ground.add(this.physics.add.staticImage(600, 560, 'image-ground'));
+  this.lastGround = 800;
 
-  this.player = this.physics.add.sprite(0, 506, 'sheep-spritesheet');
+  this.player = this.physics.add.sprite(300, 506, 'sheep-spritesheet');
 
   // player can be scaled
   // this.player.setScale(0.5);
@@ -97,6 +99,7 @@ scene.update = function (time, delta) {
   }
   if (this.player.status === 'idle' && this.player.body.velocity.y === 0 && this.gameStarted) {
     this.player.status = 'running';
+    this.player.setVelocityX(500);
   }
   if (this.player.body.velocity.y > 0 && this.player.status !== 'falling') {
     this.player.status = 'falling';
@@ -107,6 +110,27 @@ scene.update = function (time, delta) {
   }
   if (this.player.status === 'running') {
     this.player.play('sheep-run', true);
+
+  }
+  this.rebuildScene();
+}
+
+scene.rebuildScene = function () {
+  const cameraPosition = this.cameras.main.scrollX;
+  const destroyLine = cameraPosition - 200;
+  const groundItems = this.ground.getChildren();
+  for (let i = 0; i < groundItems.length; i++) {
+    if (groundItems[i].x < destroyLine) {
+      groundItems[i].setActive(false);
+      groundItems[i].setVisible(false);
+    }
+  }
+  const unusedGround = this.ground.getFirstDead(false, this.lastGround, 560);
+  if (unusedGround) {
+    this.lastGround += 200;
+    unusedGround.setActive(true);
+    unusedGround.setVisible(true);
+    unusedGround.refreshBody();
   }
 }
 

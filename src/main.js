@@ -92,7 +92,7 @@ scene.update = function (time, delta) {
     this.gameStarted = true;
   }
   if (this.player.status === 'jumping' && this.cursor.space.isDown && this.player.jumpTime <= 300) {
-    this.player.body.setVelocityY(-300);
+    this.player.body.setVelocityY(-250);
   }
   if (this.player.status === 'falling' && this.player.body.velocity.y === 0) {
     this.player.status = 'idle';
@@ -110,7 +110,6 @@ scene.update = function (time, delta) {
   }
   if (this.player.status === 'running') {
     this.player.play('sheep-run', true);
-
   }
   this.rebuildScene();
 }
@@ -142,8 +141,8 @@ new Game({
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true,
-      gravity: { x: 0, y: 1000 }
+      // debug: true,
+      gravity: { x: 0, y: 2000 }
     }
   }
 });

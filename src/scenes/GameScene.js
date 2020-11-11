@@ -1,90 +1,86 @@
-import Phaser from 'Phaser';
-import StaticSheep from '../../assets/static-sheep.png';
-import Tileset from '../../assets/tileset32.png';
-import bg13 from '../../assets/13.png';
-import Ground from '../../assets/ground.png';
-import Sheep from '../../assets/black-sheep-idle.png';
-import Background from '../../assets/background.png';
+import { Scene } from 'Phaser';
 
-export default class GameScene extends Phaser.Scene {
+// import resources
+import sheepSpritesheet from '../../assets/sheep-spritesheet.png';
+import imageGround from '../../assets/ground.png';
+
+import Player from '../classes/Player';
+import Ground from '../classes/Ground';
+
+export default class GameScene extends Scene {
   constructor() {
-    super('game')
+    super('game');
   }
 
-  preload () {
-    this.load.image('ground', Ground);
-    this.load.spritesheet('sheep', Sheep, {
-      frameWidth: 64,
-      frameHeight: 64,
+  preload() {
+    this.load.spritesheet('sheep-spritesheet', sheepSpritesheet, {
+      frameWidth: 60,
+      frameHeight: 60,
+      startFrame: 0,
+      endFrame: 63
     });
-    this.load.image('static-sheep', StaticSheep);
-    this.load.image('tileset32', Tileset)
-    this.load.tilemapTiledJSON('map', 'map.json');
-    this.load.image('bg13', bg13);
-    this.load.image('background', Background);
+    this.load.image('image-ground', imageGround);
   }
 
-  create () {
-    // level background
-    this.background1 = this.add.image(0, 0, 'background');
-    this.background1.setOrigin(0);
-    this.background1.setScrollFactor(0);
+  init() {
+    this.gameStarted = false;
+  }
 
-    // old tile map
-    // TODO: delete
+  create() {
+    this.createAnimations();
+    // use Phaser.Input.Keyboard. KeyboardPlugin
+    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
+    // An object containing the properties: up, down, left, right, space and shift.
+    this.cursor = this.input.keyboard.createCursorKeys();
+    this.ground = new Ground(this);
+    this.player = new Player(this, 300, 506, 'sheep-spritesheet', null, this.cursor);
+    this.physics.add.collider(this.ground, this.player);
+    this.camera();
 
-    this.map = this.add.tilemap('map');
-    this.terrain = this.map.addTilesetImage('tiles', 'tileset32');
-    this.background = this.map.createStaticLayer('Background', [this.terrain], 0, 0);
-    this.layer = this.map.createStaticLayer('Tile Layer 1', [this.terrain], 0, 0);
-    this.background.setScrollFactor(0.3);
+  }
 
-    // Dynamic generated map
-
-    this.ground = this.physics.add.staticGroup();
-    for (let i = 0; i < 3; i++) {
-      const tile = this.physics.add.staticImage(i * 200, 500, 'ground');
-      tile.setOrigin(0.5, 0.8);
-      tile.setImmovable();
-      this.ground.add(tile);
-    }
-
-    // TODO: cleanup
-    // this.layer.setCollisionByProperty({ collide: true });
-    // this.layer.setCollision([]);
-    // this.layer.setCollisionByExclusion([14]);
-    // this.layer.setCollisionBetween(1, 50);
-
-    this.layer.setCollisionByExclusion(-1, true);
-    this.staticSheep = this.physics.add.image(64, 400, 'sheep');
-    this.physics.add.collider(this.staticSheep, this.layer);
-
-    this.physics.add.collider(this.staticSheep, this.ground);
-
+  camera() {
+    this.cameras.main.setBackgroundColor('rgba(100, 180, 250, 1)');
     this.cameras.main.startFollow(
-      this.staticSheep,
+      this.player,
       false,
-      .9,
-      .9,
-      -300,
-      200
+      1, 0,
+      -200, 220
     );
-    this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-    this.staticSheep.setCollideWorldBounds(true);
-    this.cursors = this.input.keyboard.createCursorKeys();
   }
 
-  update () {
-    this.staticSheep.body.setVelocityX(0);
-    if (this.cursors.left.isDown) {
-      this.staticSheep.body.setVelocityX(-600);
-    } else if (this.cursors.right.isDown) {
-      this.staticSheep.body.setVelocityX(600);
-    }
+  createAnimations() {
+    this.anims.create({
+      key: 'sheep-idle',
+      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [0, 1, 2, 3] }),
+      frameRate: 8,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'sheep-jump-up',
+      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [5, 6, 7, 8, 9] }),
+      frameRate: 20,
+    });
+    this.anims.create({
+      key: 'sheep-jump-down',
+      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [10, 11, 12] }),
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'sheep-run',
+      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [16, 17, 18, 19, 20, 21] }),
+      frameRate: 20,
+      repeat: -1
+    });
   }
 
-  init () {
-    /* do nothing */
+  update(time, delta) {
+    this.updateDeadline();
+    this.player.update(time, delta);
+    this.ground.update();
   }
 
+  updateDeadline() {
+    this.deadline = this.cameras.main.scrollX - 200;
+  }
 }

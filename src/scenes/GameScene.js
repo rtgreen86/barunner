@@ -3,9 +3,11 @@ import { Scene } from 'Phaser';
 // import resources
 import sheepSpritesheet from '../../assets/sheep-spritesheet.png';
 import imageGround from '../../assets/ground.png';
+import layer1 from '../../assets/layer1.png';
 
 import Player from '../classes/Player';
 import Ground from '../classes/Ground';
+import ChunkGroup from '../classes/ChunkGroup';
 
 export default class GameScene extends Scene {
   constructor() {
@@ -19,6 +21,7 @@ export default class GameScene extends Scene {
       startFrame: 0,
       endFrame: 63
     });
+    this.load.image('bg-layer1', layer1);
     this.load.image('image-ground', imageGround);
   }
 
@@ -32,7 +35,14 @@ export default class GameScene extends Scene {
     // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
     // An object containing the properties: up, down, left, right, space and shift.
     this.cursor = this.input.keyboard.createCursorKeys();
-    this.ground = new Ground(this);
+
+    // this.ground = new Ground(this);
+
+    this.background1 = new ChunkGroup(this, 0, 500, 'bg-layer1', 400, 194, 3);
+    this.background1.setScrollFactor(0.2, 0.2);
+
+    this.ground = new ChunkGroup(this, 0, 560, 'image-ground', 200, 75, 4);
+
     this.player = new Player(this, 300, 506, 'sheep-spritesheet', null, this.cursor);
     this.physics.add.collider(this.ground, this.player);
     this.camera();
@@ -40,7 +50,7 @@ export default class GameScene extends Scene {
   }
 
   camera() {
-    this.cameras.main.setBackgroundColor('rgba(100, 180, 250, 1)');
+    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
     this.cameras.main.startFollow(
       this.player,
       false,
@@ -78,6 +88,7 @@ export default class GameScene extends Scene {
     this.updateDeadline();
     this.player.update(time, delta);
     this.ground.update();
+    this.background1.update();
   }
 
   updateDeadline() {

@@ -22,7 +22,8 @@ export default class Player extends Physics.Arcade.Sprite {
       this.jump();
     }
     if (this.status === 'jumping' && this.cursor.space.isDown && this.jumpTime <= 300) {
-      this.body.setVelocityY(-250);
+      this.body.setVelocityY(-350);
+      this.setVelocityX(400);
     }
     if (this.status === 'falling' && this.body.velocity.y === 0) {
       this.status = 'idle';
@@ -57,7 +58,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   run() {
     this.status = 'running';
-    this.setVelocityX(500);
+    this.setVelocityX(600);
   }
 
   fall() {

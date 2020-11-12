@@ -56,7 +56,7 @@ export default class GameScene extends Scene {
     this.cameras.main.startFollow(
       this.player,
       false,
-      1, 0,
+      0.2, 0,
       -200, 220
     );
   }

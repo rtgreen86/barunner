@@ -1,4 +1,5 @@
 import { Physics } from 'Phaser';
+import ChunkManager from './ChunkManager';
 
 export default class ChankGroup extends Physics.Arcade.StaticGroup {
   constructor(
@@ -9,60 +10,36 @@ export default class ChankGroup extends Physics.Arcade.StaticGroup {
   ) {
     super(scene.physics.world, scene);
 
-    this.scrollFactorX = 1;
-    this.scrollFactorY = 1;
-
     this.scene = scene;
+    this.texture = texture;
+
+    this.chunkManager = new ChunkManager(this, x, y, width, height, length);
+
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
-
-    this.x = x;
-    this.y = y;
-    this.texture = texture;
-    this.width = width;
-    this.height = height;
-    this.length = length;
-
-    this.initChunks();
   }
 
-  initChunks() {
-    for (let i = 0; i < this.length; i++) {
-      this.add(this.scene.physics.add.staticImage(this.x, this.y, this.texture));
-      this.x += this.width;
-    }
+  createChunk(x, y) {
+    this.add(this.scene.physics.add.staticImage(x, y, this.texture));
   }
 
   update() {
-    this.killChunks();
-    this.resurrectChunks();
+    this.chunkManager.update(this.scene.cameras.main);
   }
 
-  resurrectChunks() {
-    let chunk = this.getFirstDead(false, this.x, this.y);
-    while (chunk) {
-      this.x += this.width;
-      chunk.setActive(true);
-      chunk.setVisible(true);
-      chunk.refreshBody();
-      chunk = this.getFirstDead(false, this.x, this.y);
-    }
+  resurrectChunk(chunk) {
+    chunk.setActive(true);
+    chunk.setVisible(true);
+    chunk.refreshBody();
   }
 
-  killChunks() {
-    const chunks = this.getChildren();
-    const deadline = this.scene.deadline * this.scrollFactorX;
-    for (let i = 0; i < chunks.length; i++) {
-      if (chunks[i].x < deadline) {
-        chunks[i].setActive(false);
-        chunks[i].setVisible(false);
-      }
-    }
+  killChunk(chunk) {
+    chunk.setActive(false);
+    chunk.setVisible(false);
   }
 
   setScrollFactor(x, y) {
-    this.scrollFactorX = x;
-    this.scrollFactorY = y;
+    this.chunkManager.setScrollFactor(x, y);
     const chunks = this.getChildren();
     for (let i = 0; i < chunks.length; i++) {
       chunks[i].setScrollFactor(x, y);

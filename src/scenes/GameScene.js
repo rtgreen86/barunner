@@ -4,10 +4,11 @@ import { Scene } from 'Phaser';
 import sheepSpritesheet from '../../assets/sheep-spritesheet.png';
 import imageGround from '../../assets/ground.png';
 import layer1 from '../../assets/layer1.png';
+import layer2 from '../../assets/layer2.png';
 
 import Player from '../classes/Player';
-import Ground from '../classes/Ground';
 import ChunkGroup from '../classes/ChunkGroup';
+
 
 export default class GameScene extends Scene {
   constructor() {
@@ -22,6 +23,7 @@ export default class GameScene extends Scene {
       endFrame: 63
     });
     this.load.image('bg-layer1', layer1);
+    this.load.image('bg-layer2', layer2);
     this.load.image('image-ground', imageGround);
   }
 
@@ -36,12 +38,12 @@ export default class GameScene extends Scene {
     // An object containing the properties: up, down, left, right, space and shift.
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    // this.ground = new Ground(this);
-
-    this.background1 = new ChunkGroup(this, 0, 500, 'bg-layer1', 400, 194, 3);
+    this.background1 = new ChunkGroup(this, 0, 480, 'bg-layer1', 400, 194, 5);
     this.background1.setScrollFactor(0.2, 0.2);
+    this.background2 = new ChunkGroup(this, 0, 500, 'bg-layer2', 400, 108, 5);
+    this.background2.setScrollFactor(0.5, 0.5);
 
-    this.ground = new ChunkGroup(this, 0, 560, 'image-ground', 200, 75, 4);
+    this.ground = new ChunkGroup(this, 0, 560, 'image-ground', 200, 75, 15);
 
     this.player = new Player(this, 300, 506, 'sheep-spritesheet', null, this.cursor);
     this.physics.add.collider(this.ground, this.player);
@@ -85,13 +87,9 @@ export default class GameScene extends Scene {
   }
 
   update(time, delta) {
-    this.updateDeadline();
     this.player.update(time, delta);
     this.ground.update();
     this.background1.update();
-  }
-
-  updateDeadline() {
-    this.deadline = this.cameras.main.scrollX - 200;
+    this.background2.update();
   }
 }

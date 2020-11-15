@@ -5,10 +5,11 @@ import sheepSpritesheet from '../../assets/sheep-spritesheet.png';
 import imageGround from '../../assets/ground.png';
 import layer1 from '../../assets/layer1.png';
 import layer2 from '../../assets/layer2.png';
+import scenery from '../../assets/scenery-100x150x25.png';
 
 import Player from '../classes/Player';
 import ChunkGroup from '../classes/ChunkGroup';
-
+import TiledChunkGroup from '../classes/TiledChunkGroup';
 
 export default class GameScene extends Scene {
   constructor() {
@@ -24,6 +25,12 @@ export default class GameScene extends Scene {
     });
     this.load.image('bg-layer1', layer1);
     this.load.image('bg-layer2', layer2);
+    this.load.spritesheet('scenery', scenery, {
+      frameWidth: 100,
+      frameHeight: 150,
+      startFrame: 0,
+      endFrame: 24
+    });
     this.load.image('image-ground', imageGround);
   }
 
@@ -42,6 +49,8 @@ export default class GameScene extends Scene {
     this.background1.setScrollFactor(0.2, 0.2);
     this.background2 = new ChunkGroup(this, 0, 500, 'bg-layer2', 400, 108, 5);
     this.background2.setScrollFactor(0.5, 0.5);
+
+    this.scenery = new TiledChunkGroup(this, 0, 478, 'scenery', 100, 150, 25, 25); // TODO: fix generation more than 25
 
     this.ground = new ChunkGroup(this, 0, 560, 'image-ground', 200, 75, 15);
 
@@ -91,5 +100,6 @@ export default class GameScene extends Scene {
     this.ground.update();
     this.background1.update();
     this.background2.update();
+    this.scenery.update();
   }
 }

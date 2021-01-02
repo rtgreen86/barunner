@@ -1,15 +1,14 @@
 import { Scene } from 'Phaser';
 
-// import resources
+import backgroundLayerImage1 from '../../assets/background-layer-1.png'
+import backgroundLayerImage2 from '../../assets/background-layer-2.png'
+import backgroundLayerImage3 from '../../assets/background-layer-3.png'
+
 import sheepSpritesheet from '../../assets/sheep-spritesheet.png';
 import imageGround from '../../assets/ground.png';
-import layer1 from '../../assets/layer1.png';
-import layer2 from '../../assets/layer2.png';
-import scenery from '../../assets/scenery-100x150x25.png';
 
 import Player from '../classes/Player';
 import ChunkGroup from '../classes/ChunkGroup';
-import TiledChunkGroup from '../classes/TiledChunkGroup';
 
 export default class GameScene extends Scene {
   constructor() {
@@ -17,21 +16,18 @@ export default class GameScene extends Scene {
   }
 
   preload() {
+    this.load.image('background-layer-1', backgroundLayerImage1);
+    this.load.image('background-layer-2', backgroundLayerImage2);
+    this.load.image('background-layer-3', backgroundLayerImage3);
+
+    this.load.image('image-ground', imageGround);
+
     this.load.spritesheet('sheep-spritesheet', sheepSpritesheet, {
       frameWidth: 60,
       frameHeight: 60,
       startFrame: 0,
       endFrame: 63
     });
-    this.load.image('bg-layer1', layer1);
-    this.load.image('bg-layer2', layer2);
-    this.load.spritesheet('scenery', scenery, {
-      frameWidth: 100,
-      frameHeight: 150,
-      startFrame: 0,
-      endFrame: 24
-    });
-    this.load.image('image-ground', imageGround);
   }
 
   init() {
@@ -45,19 +41,28 @@ export default class GameScene extends Scene {
     // An object containing the properties: up, down, left, right, space and shift.
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    this.background1 = new ChunkGroup(this, 0, 480, 'bg-layer1', 400, 194, 5);
-    this.background1.setScrollFactor(0.2, 0.2);
-    this.background2 = new ChunkGroup(this, 0, 500, 'bg-layer2', 400, 108, 5);
-    this.background2.setScrollFactor(0.5, 0.5);
+    this.createBackground();
+    this.createForeground();
+    this.createPlayer();
 
-    this.scenery = new TiledChunkGroup(this, 0, 478, 'scenery', 100, 150, 25, 25); // TODO: fix generation more than 25
-
-    this.ground = new ChunkGroup(this, 0, 560, 'image-ground', 200, 75, 15);
-
-    this.player = new Player(this, 300, 506, 'sheep-spritesheet', null, this.cursor);
     this.physics.add.collider(this.ground, this.player);
     this.camera();
+  }
 
+  createBackground() {
+    this.backgroundLayers = [
+      (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, 5)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1),
+      (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, 5)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1),
+      new ChunkGroup(this, 0, 600, 'background-layer-3', 1389, 350, 3).setOrigin(0.5, 1)
+    ];
+  }
+
+  createForeground() {
+    this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, 15);
+  }
+
+  createPlayer() {
+    this.player = new Player(this, 300, 507.5, 'sheep-spritesheet', null, this.cursor);
   }
 
   camera() {
@@ -66,7 +71,7 @@ export default class GameScene extends Scene {
       this.player,
       false,
       0.2, 0,
-      -200, 220
+      -200, 207,5
     );
   }
 
@@ -98,8 +103,6 @@ export default class GameScene extends Scene {
   update(time, delta) {
     this.player.update(time, delta);
     this.ground.update();
-    this.background1.update();
-    this.background2.update();
-    this.scenery.update();
+    this.backgroundLayers.forEach(item => item.update());
   }
 }

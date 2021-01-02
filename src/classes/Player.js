@@ -7,7 +7,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
     this.cursor = cursor;
-    this.setSize(50, 35);
+    this.setSize(45, 30);
     this.idle();
   }
 
@@ -34,22 +34,22 @@ export default class Player extends Physics.Arcade.Sprite {
       this.fall();
     }
     if (this.status === 'idle') {
-      this.play('sheep-idle', true);
+      this.play('ram-idle', true);
     }
     if (this.status === 'running') {
-      this.play('sheep-run', true);
+      this.play('ram-run', true);
     }
   }
 
   idle() {
     this.status = 'idle';
-    this.play('sheep-idle');
+    this.play('ram-idle');
   }
 
   jump() {
     this.status = 'jumping';
     this.jumpTime = 0;
-    this.play('sheep-jump-up', true, 0);
+    this.play('ram-jump', true, 0);
 
     // start game on first jumb
     this.scene.gameStarted = true;
@@ -62,6 +62,6 @@ export default class Player extends Physics.Arcade.Sprite {
 
   fall() {
     this.status = 'falling';
-    this.play('sheep-jump-down', true);
+    this.play('ram-fall', true);
   }
 }

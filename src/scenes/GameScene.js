@@ -1,11 +1,13 @@
 import { Scene } from 'Phaser';
 
-import backgroundLayerImage1 from '../../assets/background-layer-1.png'
-import backgroundLayerImage2 from '../../assets/background-layer-2.png'
-import backgroundLayerImage3 from '../../assets/background-layer-3.png'
+import backgroundLayer1 from '../../assets/images/background-layer-1.png'
+import backgroundLayer2 from '../../assets/images/background-layer-2.png'
+import backgroundLayer3 from '../../assets/images/background-layer-3.png'
+
+import spritesheet from '../../assets/images/spritesheet.png';
+import ground from '../../assets/images/ground.png';
 
 import sheepSpritesheet from '../../assets/sheep-spritesheet.png';
-import imageGround from '../../assets/ground.png';
 
 import Player from '../classes/Player';
 import ChunkGroup from '../classes/ChunkGroup';
@@ -16,11 +18,17 @@ export default class GameScene extends Scene {
   }
 
   preload() {
-    this.load.image('background-layer-1', backgroundLayerImage1);
-    this.load.image('background-layer-2', backgroundLayerImage2);
-    this.load.image('background-layer-3', backgroundLayerImage3);
+    this.load.image('background-layer-1', backgroundLayer1);
+    this.load.image('background-layer-2', backgroundLayer2);
+    this.load.image('background-layer-3', backgroundLayer3);
+    this.load.image('image-ground', ground);
 
-    this.load.image('image-ground', imageGround);
+    this.load.spritesheet('spritesheet-50', spritesheet, {
+      frameWidth: 50,
+      frameHeight: 50,
+      startFrame: 0,
+      endFrame: 399
+    });
 
     this.load.spritesheet('sheep-spritesheet', sheepSpritesheet, {
       frameWidth: 60,
@@ -62,7 +70,7 @@ export default class GameScene extends Scene {
   }
 
   createPlayer() {
-    this.player = new Player(this, 300, 507.5, 'sheep-spritesheet', null, this.cursor);
+    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.cursor);
   }
 
   camera() {
@@ -77,24 +85,29 @@ export default class GameScene extends Scene {
 
   createAnimations() {
     this.anims.create({
-      key: 'sheep-idle',
-      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [0, 1, 2, 3] }),
+      key: 'ram-idle',
+      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [1, 2, 3, 4] }),
       frameRate: 8,
       repeat: -1
     });
     this.anims.create({
-      key: 'sheep-jump-up',
-      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [5, 6, 7, 8, 9] }),
+      key: 'ram-jump',
+      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [28, 29, 30, 31, 32] }),
       frameRate: 20,
     });
     this.anims.create({
-      key: 'sheep-jump-down',
-      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [10, 11, 12] }),
+      key: 'ram-fall',
+      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [33, 34] }),
       frameRate: 20
     });
     this.anims.create({
-      key: 'sheep-run',
-      frames: this.anims.generateFrameNumbers('sheep-spritesheet', { frames: [16, 17, 18, 19, 20, 21] }),
+      key: 'ram-landing',
+      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [35] }),
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'ram-run',
+      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [6, 7, 8, 9, 10, 11] }),
       frameRate: 20,
       repeat: -1
     });

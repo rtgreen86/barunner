@@ -94,16 +94,19 @@ export default class GameScene extends Scene {
       key: 'ram-jump',
       frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [28, 29, 30, 31, 32] }),
       frameRate: 20,
+      repeat: 0
     });
     this.anims.create({
       key: 'ram-fall',
       frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [33, 34] }),
-      frameRate: 20
+      frameRate: 20,
+      repeat: 0
     });
     this.anims.create({
       key: 'ram-landing',
       frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [35] }),
-      frameRate: 20
+      frameRate: 20,
+      repeat: 0
     });
     this.anims.create({
       key: 'ram-run',

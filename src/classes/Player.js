@@ -18,12 +18,16 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
     this.setSize(45, 30);
+    this.time = 0;
 
     this.animation = IDLE;
     this.animationTime = 0;
+    this.animationStartTime = null;
 
     this.cursor = cursor;
     this.jumpKeyPressed = false;
+    this.jumpKeyPressedTime = null;
+    this.gameStartedTime = null;
   }
 
   setAnimation(animation) {
@@ -32,6 +36,7 @@ export default class Player extends Physics.Arcade.Sprite {
     }
     this.animation = animation;
     this.animationTime = 0;
+    this.animationStartTime = this.time;
     this.play(this.animation, true);
   }
 
@@ -64,30 +69,50 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   onJumpPressed() {
-    if (
-      this.jumpKeyPressed && this.animation === JUMP || // continue jump
-      !this.jumpKeyPressed && this.animation === RUN && this.isMoving() // start jump
-    ) {
+    // continue jump
+    if (this.animation === JUMP && this.jumpKeyPressedTime === this.animationStartTime) {
+      console.log(1);
       this.jump();
+      return;
     }
-    if (!this.isMoving()) { // start game
+
+    // start jump
+    // ram on the ground, run and button just pressed
+    if (
+      this.animation === RUN &&
+      (this.jumpKeyPressedTime === null || this.time - this.jumpKeyPressedTime < 200) &&
+      this.jumpKeyPressedTime !== this.gameStartedTime
+    ) {
+      console.log(2);
+      this.jump();
+      this.jumpKeyPressedTime = this.time;
+    }
+
+    if (this.jumpKeyPressedTime === null) {
+      this.jumpKeyPressedTime = this.time;
+    }
+
+    // start game
+    if (!this.isMoving()) {
       this.run();
+      this.gameStartedTime = this.time;
     }
-    this.jumpKeyPressed = true;
   }
 
   onJumpReleased() {
-    this.jumpKeyPressed = false;
+    console.log(3);
+    this.jumpKeyPressedTime = null;
   }
 
   update(time, delta) {
     this.animationTime += delta;
+    this.time = time;
 
     // process user input
     if (this.cursor.space.isDown) {
       this.onJumpPressed();
     }
-    if (this.jumpKeyPressed && !this.cursor.space.isDown) {
+    if (this.jumpKeyPressedTime !== null && !this.cursor.space.isDown) {
       this.onJumpReleased();
     }
 
@@ -101,11 +126,5 @@ export default class Player extends Physics.Arcade.Sprite {
     if (this.animation === LANDING && this.animationTime > LANDING_TIME) {
       this.run();
     }
-
-    // if (this.animation === RUN) this.play(RUN, true);
-    // if (this.animation === JUMP) this.play(JUMP, true);
-
-    // play animation
-    // this.play(this.animation, true);
   }
 }

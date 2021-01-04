@@ -71,7 +71,6 @@ export default class Player extends Physics.Arcade.Sprite {
   onJumpPressed() {
     // continue jump
     if (this.animation === JUMP && this.jumpKeyPressedTime === this.animationStartTime) {
-      console.log(1);
       this.jump();
       return;
     }
@@ -83,7 +82,6 @@ export default class Player extends Physics.Arcade.Sprite {
       (this.jumpKeyPressedTime === null || this.time - this.jumpKeyPressedTime < 200) &&
       this.jumpKeyPressedTime !== this.gameStartedTime
     ) {
-      console.log(2);
       this.jump();
       this.jumpKeyPressedTime = this.time;
     }
@@ -100,7 +98,6 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   onJumpReleased() {
-    console.log(3);
     this.jumpKeyPressedTime = null;
   }
 

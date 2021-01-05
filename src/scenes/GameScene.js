@@ -7,14 +7,20 @@ import backgroundLayer3 from '../../assets/images/background-layer-3.png'
 import spritesheet from '../../assets/images/spritesheet.png';
 import ground from '../../assets/images/ground.png';
 
-import sheepSpritesheet from '../../assets/sheep-spritesheet.png';
-
 import Player from '../classes/Player';
 import ChunkGroup from '../classes/ChunkGroup';
+import Obstacle from '../classes/Obstacle';
+
+const SPAWN_DISTANCE = 10000;
+const BACKGROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
+const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
+
+const DEADLINE_OFFSET = -500;
 
 export default class GameScene extends Scene {
   constructor() {
     super('game');
+    this.deadline = DEADLINE_OFFSET;
   }
 
   preload() {
@@ -22,68 +28,25 @@ export default class GameScene extends Scene {
     this.load.image('background-layer-2', backgroundLayer2);
     this.load.image('background-layer-3', backgroundLayer3);
     this.load.image('image-ground', ground);
-
     this.load.spritesheet('spritesheet-50', spritesheet, {
       frameWidth: 50,
       frameHeight: 50,
       startFrame: 0,
-      endFrame: 399
+      endFrame: 79
     });
-
-    this.load.spritesheet('sheep-spritesheet', sheepSpritesheet, {
-      frameWidth: 60,
-      frameHeight: 60,
-      startFrame: 0,
-      endFrame: 63
+    this.load.spritesheet('spritesheet-100', spritesheet, {
+      frameWidth: 100,
+      frameHeight: 100,
+      startFrame: 20,
+      endFrame: 79
     });
   }
 
   init() {
-    this.gameStarted = false;
+    this.spawnedObject = 300;
   }
 
   create() {
-    this.createAnimations();
-    // use Phaser.Input.Keyboard. KeyboardPlugin
-    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
-    // An object containing the properties: up, down, left, right, space and shift.
-    this.cursor = this.input.keyboard.createCursorKeys();
-
-    this.createBackground();
-    this.createForeground();
-    this.createPlayer();
-
-    this.physics.add.collider(this.ground, this.player);
-    this.camera();
-  }
-
-  createBackground() {
-    this.backgroundLayers = [
-      (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, 5)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1),
-      (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, 5)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1),
-      new ChunkGroup(this, 0, 600, 'background-layer-3', 1389, 350, 3).setOrigin(0.5, 1)
-    ];
-  }
-
-  createForeground() {
-    this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, 15);
-  }
-
-  createPlayer() {
-    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.cursor);
-  }
-
-  camera() {
-    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.startFollow(
-      this.player,
-      false,
-      0.2, 0,
-      -200, 207,5
-    );
-  }
-
-  createAnimations() {
     this.anims.create({
       key: 'ram-idle',
       frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [1, 2, 3, 4] }),
@@ -114,11 +77,72 @@ export default class GameScene extends Scene {
       frameRate: 20,
       repeat: -1
     });
+
+    // use Phaser.Input.Keyboard. KeyboardPlugin
+    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
+    // An object containing the properties: up, down, left, right, space and shift.
+    this.cursor = this.input.keyboard.createCursorKeys();
+
+    this.backgroundLayers = [
+      (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1).setDepth(-100),
+      (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1).setDepth(-50),
+      (new ChunkGroup(this, 0, 600, 'background-layer-3', 1389, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(1, 1).setOrigin(0.5, 1).setDepth(-25),
+    ]
+    this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
+    this.obstacles = this.physics.add.group();
+    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.cursor).setDepth(50);
+
+    this.physics.add.collider(this.ground, this.player);
+    this.physics.add.collider(this.ground, this.obstacles);
+    this.physics.add.collider(this.player, this.obstacles);
+
+    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    this.cameras.main.startFollow(
+      this.player,
+      false,
+      0.2, 0,
+      -200, 207,5
+    );
   }
 
   update(time, delta) {
+    this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
     this.player.update(time, delta);
-    this.ground.update();
-    this.backgroundLayers.forEach(item => item.update());
+    this.ground.update(time, delta, this.deadline);
+    this.backgroundLayers.forEach(item => item.update(time, delta, this.deadline));
+    this.respawnObjects();
   }
+
+  dice() {
+    return Math.floor(Math.random() * 10);
+  }
+
+  spawnBigObstacle() {
+    const distance = [500, 550, 560, 570, 580, 590, 600, 650, 670, 680][this.dice()];
+    this.spawnedObject += distance;
+    console.log(this.spawnedObject, distance);
+    let obstacle = this.obstacles.getFirstDead(false, this.spawnedObject, 400);
+    if (!obstacle) {
+      obstacle = new Obstacle(this, this.spawnedObject, 400, 'spritesheet-100', 25);
+      this.obstacles.add(obstacle);
+      return;
+    }
+    obstacle.setActive(true).setVisible(true).refreshBody();
+  }
+
+  killDeadlineCrossed() {
+    this.obstacles.children.each(obstacle => {
+      if (obstacle.x < this.deadline) {
+        obstacle.setActive(false).setVisible(false);
+      }
+    });
+  }
+
+  respawnObjects() {
+    this.killDeadlineCrossed();
+    while (this.spawnedObject < this.deadline + 1000) {
+      this.spawnBigObstacle();
+    }
+  }
+
 }

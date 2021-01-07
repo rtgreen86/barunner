@@ -60,6 +60,11 @@ export default class Player extends Physics.Arcade.Sprite {
     this.setAnimation(LANDING);
   }
 
+  stop() {
+    this.setVelocityX(0);
+    this.setAnimation(IDLE);
+  }
+
   isMoving() {
     return this.body.velocity.x !== 0;
   }

@@ -21,6 +21,7 @@ export default class GameScene extends Scene {
   constructor() {
     super('game');
     this.deadline = DEADLINE_OFFSET;
+    this.onKeyPressed = this.onKeyPressed.bind(this);
   }
 
   preload() {
@@ -90,7 +91,7 @@ export default class GameScene extends Scene {
     ]
     this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
     this.obstacles = this.physics.add.group();
-    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.cursor).setDepth(50);
+    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.cursor).setDepth(50).setBounceX(0);
 
     this.physics.add.collider(this.ground, this.player);
     this.physics.add.collider(this.ground, this.obstacles);
@@ -103,14 +104,16 @@ export default class GameScene extends Scene {
       0.2, 0,
       -200, 207,5
     );
+
+    this.input.keyboard.on('keydown', this.onKeyPressed);
   }
 
   update(time, delta) {
     this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
+    this.respawnObjects();
     this.player.update(time, delta);
     this.ground.update(time, delta, this.deadline);
     this.backgroundLayers.forEach(item => item.update(time, delta, this.deadline));
-    this.respawnObjects();
   }
 
   dice() {
@@ -118,30 +121,36 @@ export default class GameScene extends Scene {
   }
 
   spawnBigObstacle() {
-    const distance = [500, 550, 560, 570, 580, 590, 600, 650, 670, 680][this.dice()];
+    const distance = [400, 500, 540, 580, 600, 650, 700, 800, 900, 1000][this.dice()];
     this.spawnedObject += distance;
-    console.log(this.spawnedObject, distance);
-    let obstacle = this.obstacles.getFirstDead(false, this.spawnedObject, 400);
+    let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {
-      obstacle = new Obstacle(this, this.spawnedObject, 400, 'spritesheet-100', 25);
+      obstacle = (new Obstacle(this, this.spawnedObject, 500, 'spritesheet-100', 25)).setSize(70, 50);
       this.obstacles.add(obstacle);
-      return;
     }
-    obstacle.setActive(true).setVisible(true).refreshBody();
+    obstacle.spawn(this.spawnedObject, 500);
   }
 
   killDeadlineCrossed() {
     this.obstacles.children.each(obstacle => {
       if (obstacle.x < this.deadline) {
-        obstacle.setActive(false).setVisible(false);
+        obstacle.setActive(false).setVisible(false).setGravity(0);
+        this.physics.world.disable(obstacle);
       }
     });
   }
 
   respawnObjects() {
     this.killDeadlineCrossed();
-    while (this.spawnedObject < this.deadline + 1000) {
+    while (this.spawnedObject < this.deadline + SPAWN_DISTANCE) {
       this.spawnBigObstacle();
+    }
+  }
+
+  onKeyPressed({ code }) {
+    if (code === 'Pause') {
+      this.paused = true;
+      this.player.stop();
     }
   }
 

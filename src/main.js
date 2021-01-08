@@ -3,9 +3,9 @@ import GameScene from './scenes/GameScene';
 
 import './main.css';
 
-const scene = new GameScene();
+const scene = new GameScene('game');
 
-new Game({
+window.game = new Game({
   type: AUTO,
   width: 1024,
   height: 600,

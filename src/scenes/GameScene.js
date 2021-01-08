@@ -1,4 +1,4 @@
-import { Scene } from 'Phaser';
+import Phaser from 'Phaser';
 
 import backgroundLayer1 from '../../assets/images/background-layer-1.png'
 import backgroundLayer2 from '../../assets/images/background-layer-2.png'
@@ -7,9 +7,9 @@ import backgroundLayer3 from '../../assets/images/background-layer-3.png'
 import spritesheet from '../../assets/images/spritesheet.png';
 import ground from '../../assets/images/ground.png';
 
-import Player from '../classes/Player';
-import ChunkGroup from '../classes/ChunkGroup';
-import Obstacle from '../classes/Obstacle';
+import Player from '../entities/Player';
+import ChunkGroup from '../entities/ChunkGroup';
+import Obstacle from '../entities/Obstacle';
 
 const SPAWN_DISTANCE = 10000;
 const BACKGROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
@@ -17,12 +17,7 @@ const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
 const DEADLINE_OFFSET = -500;
 
-export default class GameScene extends Scene {
-  constructor() {
-    super('game');
-    this.deadline = DEADLINE_OFFSET;
-    this.onKeyPressed = this.onKeyPressed.bind(this);
-  }
+export default class GameScene extends Phaser.Scene {
 
   preload() {
     this.load.image('background-layer-1', backgroundLayer1);
@@ -44,7 +39,9 @@ export default class GameScene extends Scene {
   }
 
   init() {
+    this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 300;
+    this.paused = false;
   }
 
   create() {
@@ -84,6 +81,9 @@ export default class GameScene extends Scene {
     // An object containing the properties: up, down, left, right, space and shift.
     this.cursor = this.input.keyboard.createCursorKeys();
 
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
+    this.pauseKey.on('down', this.onPauseKeyDown, this);
+
     this.backgroundLayers = [
       (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1).setDepth(-100),
       (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1).setDepth(-50),
@@ -104,8 +104,6 @@ export default class GameScene extends Scene {
       0.2, 0,
       -200, 207,5
     );
-
-    this.input.keyboard.on('keydown', this.onKeyPressed);
   }
 
   update(time, delta) {
@@ -147,11 +145,13 @@ export default class GameScene extends Scene {
     }
   }
 
-  onKeyPressed({ code }) {
-    if (code === 'Pause') {
+  onPauseKeyDown() {
+    if (!this.paused) {
       this.paused = true;
       this.player.stop();
+    } else {
+      this.paused = false;
+      this.player.run();
     }
   }
-
 }

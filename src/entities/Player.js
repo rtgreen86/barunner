@@ -19,6 +19,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene.add.existing(this);
     this.setSize(45, 30);
     this.time = 0;
+
     this.isDead = false;
 
     this.animation = IDLE;
@@ -142,5 +143,12 @@ export default class Player extends Physics.Arcade.Sprite {
     if (this.animation === LANDING && this.animationTime > LANDING_TIME) {
       this.run();
     }
+  }
+
+  respawn() {
+    this.isDead = false;
+    this.idle();
+    this.setOffset(0, 0);
+    this.setFlipY(false);
   }
 }

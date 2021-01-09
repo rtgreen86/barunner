@@ -17,6 +17,8 @@ const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
 const DEADLINE_OFFSET = -500;
 
+const PLAYER_RESPAWN_TIMEOUT = 1000;
+
 export default class GameScene extends Phaser.Scene {
 
   preload() {
@@ -42,6 +44,8 @@ export default class GameScene extends Phaser.Scene {
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 300;
     this.paused = false;
+    this.playerAlive = true;
+    this.timeOfDeath = null;
   }
 
   create() {
@@ -113,6 +117,21 @@ export default class GameScene extends Phaser.Scene {
     this.player.update(time, delta);
     this.ground.update(time, delta, this.deadline);
     this.backgroundLayers.forEach(item => item.update(time, delta, this.deadline));
+
+    if (this.player.isDead && !this.timeOfDeath) {
+      this.timeOfDeath = time;
+      this.playerAlive = false;
+    }
+
+    if (
+      !this.playerAlive &&
+      this.cursor.space.isDown &&
+      time - this.timeOfDeath >= PLAYER_RESPAWN_TIMEOUT
+    ) {
+      this.respawnScene();
+    }
+
+
   }
 
   dice() {
@@ -144,6 +163,19 @@ export default class GameScene extends Phaser.Scene {
     while (this.spawnedObject < this.deadline + SPAWN_DISTANCE) {
       this.spawnBigObstacle();
     }
+  }
+
+  respawnScene() {
+    this.player.respawn();
+    this.spawnedObject = this.player.x;
+    this.obstacles.children.each(obstacle => {
+      obstacle.setActive(false).setVisible(false).setGravity(0);
+      this.physics.world.disable(obstacle);
+    });
+    this.respawnObjects();
+    this.playerAlive = true;
+    this.timeOfDeath = null;
+    this.player.setY(510);
   }
 
   onPauseKeyDown() {

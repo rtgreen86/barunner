@@ -19,6 +19,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene.add.existing(this);
     this.setSize(45, 30);
     this.time = 0;
+    this.isDead = false;
 
     this.animation = IDLE;
     this.animationTime = 0;
@@ -60,9 +61,18 @@ export default class Player extends Physics.Arcade.Sprite {
     this.setAnimation(LANDING);
   }
 
-  stop() {
+  idle() {
     this.setVelocityX(0);
     this.setAnimation(IDLE);
+  }
+
+  die() {
+    this.isDead = true;
+    this.setVelocity(0, 0);
+    this.setAnimation(IDLE);
+    this.stop();
+    this.setFlipY(true);
+    this.setOffset(0, -20);
   }
 
   isMoving() {
@@ -107,6 +117,10 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   update(time, delta) {
+    if (this.isDead) {
+      return;
+    }
+
     this.animationTime += delta;
     this.time = time;
 

@@ -93,9 +93,10 @@ export default class GameScene extends Phaser.Scene {
     this.obstacles = this.physics.add.group();
     this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.cursor).setDepth(50).setBounceX(0);
 
+
     this.physics.add.collider(this.ground, this.player);
     this.physics.add.collider(this.ground, this.obstacles);
-    this.physics.add.collider(this.player, this.obstacles);
+    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
 
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
     this.cameras.main.startFollow(
@@ -148,10 +149,20 @@ export default class GameScene extends Phaser.Scene {
   onPauseKeyDown() {
     if (!this.paused) {
       this.paused = true;
-      this.player.stop();
+      this.player.idle();
     } else {
       this.paused = false;
       this.player.run();
     }
+  }
+
+  onFacedObstacle(player, obstacle) {
+    const { x: px, y: py } = player.getBottomRight();
+    const { x: ox, y: oy} = obstacle.getTopLeft();
+    const side = py - oy >= px - ox;
+    if (side) {
+      player.die();
+    }
+    return true;
   }
 }

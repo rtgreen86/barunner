@@ -7,7 +7,7 @@ const scene = new GameScene('game');
 
 window.game = new Game({
   type: AUTO,
-  width: 1024,
+  width: 800,
   height: 600,
   scene,
   physics: {

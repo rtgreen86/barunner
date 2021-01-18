@@ -12,7 +12,7 @@ const LANDING_TIME = 80;
 const RUN_VELOCITY = 600;
 
 export default class Player extends Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, frame, cursor) {
+  constructor(scene, x, y, texture, frame, controller) {
     super(scene, x, y, texture, frame);
     this.scene = scene;
     this.scene.physics.world.enable(this);
@@ -26,7 +26,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.animationTime = 0;
     this.animationStartTime = null;
 
-    this.cursor = cursor;
+    this.controller = controller;
     this.jumpKeyPressed = false;
     this.jumpKeyPressedTime = null;
     this.gameStartedTime = null;
@@ -126,10 +126,10 @@ export default class Player extends Physics.Arcade.Sprite {
     this.time = time;
 
     // process user input
-    if (this.cursor.space.isDown) {
+    if (this.controller.isJumpDown) {
       this.onJumpPressed();
     }
-    if (this.jumpKeyPressedTime !== null && !this.cursor.space.isDown) {
+    if (this.jumpKeyPressedTime !== null && !this.controller.isJumpDown) {
       this.onJumpReleased();
     }
 

@@ -7,9 +7,10 @@ import backgroundLayer3 from '../../assets/images/background-layer-3.png'
 import spritesheet from '../../assets/images/spritesheet.png';
 import ground from '../../assets/images/ground.png';
 
-import Player from '../entities/Player';
 import ChunkGroup from '../entities/ChunkGroup';
 import Obstacle from '../entities/Obstacle';
+import Player from '../entities/Player';
+import PlayerController from '../entities/PlayerController';
 
 const SPAWN_DISTANCE = 10000;
 const BACKGROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
@@ -80,10 +81,7 @@ export default class GameScene extends Phaser.Scene {
       repeat: -1
     });
 
-    // use Phaser.Input.Keyboard. KeyboardPlugin
-    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
-    // An object containing the properties: up, down, left, right, space and shift.
-    this.cursor = this.input.keyboard.createCursorKeys();
+    this.controller = new PlayerController(this);
 
     this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
     this.pauseKey.on('down', this.onPauseKeyDown, this);
@@ -95,7 +93,7 @@ export default class GameScene extends Phaser.Scene {
     ]
     this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
     this.obstacles = this.physics.add.group();
-    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.cursor).setDepth(50).setBounceX(0);
+    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.controller).setDepth(50).setBounceX(0);
 
 
     this.physics.add.collider(this.ground, this.player);
@@ -125,7 +123,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (
       !this.playerAlive &&
-      this.cursor.space.isDown &&
+      this.controller.isJumpDown &&
       time - this.timeOfDeath >= PLAYER_RESPAWN_TIMEOUT
     ) {
       this.respawnScene();

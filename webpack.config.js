@@ -16,7 +16,7 @@ module.exports = {
       title: 'BaRunner',
       filename: 'index.html',
       meta: {
-        viewport: 'width=1000, height=800, initial-scale=0.25, maximum-scale=2, minimum-scale=0.25'
+        viewport: 'width=device-width, initial-scale=1'
       }
     })
   ],

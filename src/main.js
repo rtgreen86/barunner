@@ -1,20 +1,31 @@
-import { Game, AUTO, } from 'Phaser';
+import Phaser from 'Phaser';
 import GameScene from './scenes/GameScene';
 
 import './main.css';
 
 const scene = new GameScene('game');
 
-window.game = new Game({
-  type: AUTO,
-  width: 800,
-  height: 600,
+window.game = new Phaser.Game({
+  type: Phaser.AUTO,
   scene,
   physics: {
     default: 'arcade',
     arcade: {
       debug: false,
       gravity: { x: 0, y: 2000 }
+    }
+  },
+  scale: {
+    width: 1024,
+    height: 600,
+    mode: Phaser.Scale.FIT,
+    min: {
+      width: 512,
+      height: 300
+    },
+    max: {
+      width: 1024,
+      height: 600
     }
   }
 });

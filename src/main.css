@@ -6,9 +6,5 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-canvas {
-
-  max-width: 1024px;
-  max-height: 600px;
+  background-color: #000000;
 }

@@ -105,7 +105,7 @@ export default class GameScene extends Phaser.Scene {
       this.player,
       false,
       0.2, 0,
-      -200, 207,5
+      -200, 210
     );
   }
 

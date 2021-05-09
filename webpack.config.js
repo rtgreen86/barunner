@@ -8,13 +8,14 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist',
-    host: 'localhost'
+    host: 'localhost',
+    index: 'game.html'
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new HtmlWebpackPlugin({
       title: 'BaRunner',
-      filename: 'index.html',
+      filename: 'game.html',
       meta: {
         viewport: 'width=device-width, initial-scale=1'
       }

@@ -27,17 +27,17 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('background-layer-2', backgroundLayer2);
     this.load.image('background-layer-3', backgroundLayer3);
     this.load.image('image-ground', ground);
-    this.load.spritesheet('spritesheet-50', spritesheet, {
-      frameWidth: 50,
-      frameHeight: 50,
+    this.load.spritesheet('spritesheet-small', spritesheet, {
+      frameWidth: 64,
+      frameHeight: 64,
       startFrame: 0,
-      endFrame: 79
+      endFrame: 59
     });
-    this.load.spritesheet('spritesheet-100', spritesheet, {
-      frameWidth: 100,
-      frameHeight: 100,
-      startFrame: 20,
-      endFrame: 79
+    this.load.spritesheet('spritesheet-large', spritesheet, {
+      frameWidth: 128,
+      frameHeight: 128,
+      startFrame: 15,
+      endFrame: 25
     });
   }
 
@@ -52,34 +52,40 @@ export default class GameScene extends Phaser.Scene {
   create() {
     this.anims.create({
       key: 'ram-idle',
-      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [1, 2, 3, 4] }),
+      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [0, 1, 2, 3] }),
       frameRate: 8,
       repeat: -1
     });
     this.anims.create({
       key: 'ram-jump',
-      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [28, 29, 30, 31, 32] }),
+      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [22, 23, 24, 25, 26] }),
       frameRate: 20,
       repeat: 0
     });
     this.anims.create({
       key: 'ram-fall',
-      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [33, 34] }),
+      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [27, 28] }),
       frameRate: 20,
       repeat: 0
     });
     this.anims.create({
       key: 'ram-landing',
-      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [35] }),
+      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [29] }),
       frameRate: 20,
       repeat: 0
     });
     this.anims.create({
       key: 'ram-run',
-      frames: this.anims.generateFrameNumbers('spritesheet-50', { frames: [6, 7, 8, 9, 10, 11] }),
+      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [4, 5, 6, 7, 8, 9] }),
       frameRate: 20,
       repeat: -1
     });
+    this.anims.create({
+      key: 'ram-die',
+      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [18] }),
+      frameRate: 20,
+      repeat: 0
+    })
 
     this.controller = new PlayerController(this);
 
@@ -93,7 +99,7 @@ export default class GameScene extends Phaser.Scene {
     ]
     this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
     this.obstacles = this.physics.add.group();
-    this.player = new Player(this, 300, 510, 'spritesheet-50', 1, this.controller).setDepth(50).setBounceX(0);
+    this.player = new Player(this, 300, 510, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
 
 
     this.physics.add.collider(this.ground, this.player);
@@ -141,7 +147,7 @@ export default class GameScene extends Phaser.Scene {
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {
-      obstacle = (new Obstacle(this, this.spawnedObject, 500, 'spritesheet-100', 25)).setSize(70, 50);
+      obstacle = (new Obstacle(this, this.spawnedObject, 500, 'spritesheet-large', 15)).setSize(70, 50);
       this.obstacles.add(obstacle);
     }
     obstacle.spawn(this.spawnedObject, 500);

@@ -5,6 +5,7 @@ const JUMP = 'ram-jump';
 const FALL = 'ram-fall';
 const LANDING = 'ram-landing';
 const RUN = 'ram-run';
+const DIE = 'ram-die';
 
 const MAX_JUMP_TIME = 300;
 const LANDING_TIME = 80;
@@ -70,10 +71,8 @@ export default class Player extends Physics.Arcade.Sprite {
   die() {
     this.isDead = true;
     this.setVelocity(0, 0);
-    this.setAnimation(IDLE);
+    this.setAnimation(DIE);
     this.stop();
-    this.setFlipY(true);
-    this.setOffset(0, -20);
   }
 
   isMoving() {
@@ -148,7 +147,5 @@ export default class Player extends Physics.Arcade.Sprite {
   respawn() {
     this.isDead = false;
     this.idle();
-    this.setOffset(0, 0);
-    this.setFlipY(false);
   }
 }

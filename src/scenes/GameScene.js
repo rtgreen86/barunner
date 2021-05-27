@@ -53,37 +53,37 @@ export default class GameScene extends Phaser.Scene {
     this.anims.create({
       key: 'ram-idle',
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [0, 1, 2, 3] }),
-      frameRate: 8,
+      frameRate: 5,
       repeat: -1
     });
     this.anims.create({
       key: 'ram-jump',
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [22, 23, 24, 25, 26] }),
-      frameRate: 20,
+      frameRate: 30,
       repeat: 0
     });
     this.anims.create({
       key: 'ram-fall',
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [27, 28] }),
-      frameRate: 20,
-      repeat: 0
+      frameRate: 30,
+      repeat: -1
     });
     this.anims.create({
       key: 'ram-landing',
-      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [29] }),
-      frameRate: 20,
+      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [28, 29] }),
+      frameRate: 30,
       repeat: 0
     });
     this.anims.create({
       key: 'ram-run',
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [4, 5, 6, 7, 8, 9] }),
-      frameRate: 20,
+      frameRate: 30,
       repeat: -1
     });
     this.anims.create({
       key: 'ram-die',
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [18] }),
-      frameRate: 20,
+      frameRate: 30,
       repeat: 0
     })
 

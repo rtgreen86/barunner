@@ -1,12 +1,5 @@
 import Phaser from 'Phaser';
 
-import backgroundLayer1 from '../../assets/images/background-layer-1.png'
-import backgroundLayer2 from '../../assets/images/background-layer-2.png'
-import backgroundLayer3 from '../../assets/images/background-layer-3.png'
-
-import spritesheet from '../../assets/images/spritesheet.png';
-import ground from '../../assets/images/ground.png';
-
 import ChunkGroup from '../entities/ChunkGroup';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
@@ -21,24 +14,8 @@ const DEADLINE_OFFSET = -500;
 const PLAYER_RESPAWN_TIMEOUT = 1000;
 
 export default class GameScene extends Phaser.Scene {
-
-  preload() {
-    this.load.image('background-layer-1', backgroundLayer1);
-    this.load.image('background-layer-2', backgroundLayer2);
-    this.load.image('background-layer-3', backgroundLayer3);
-    this.load.image('image-ground', ground);
-    this.load.spritesheet('spritesheet-small', spritesheet, {
-      frameWidth: 64,
-      frameHeight: 64,
-      startFrame: 0,
-      endFrame: 59
-    });
-    this.load.spritesheet('spritesheet-large', spritesheet, {
-      frameWidth: 128,
-      frameHeight: 128,
-      startFrame: 15,
-      endFrame: 25
-    });
+  constructor() {
+    super('Game');
   }
 
   init() {
@@ -134,8 +111,6 @@ export default class GameScene extends Phaser.Scene {
     ) {
       this.respawnScene();
     }
-
-
   }
 
   dice() {

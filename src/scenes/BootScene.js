@@ -7,15 +7,17 @@ import ground from '../../assets/images/ground.png';
 
 import spritesheet from '../../assets/images/spritesheet.png';
 
+import jump from '../../assets/sound/jump.wav';
+
 export default class BootScene extends Phaser.Scene {
   constructor() {
     super('Boot');
   }
 
-
   preload() {
     this.loadImages();
     this.loadSpriteSheets();
+    this.loadSounds();
   }
 
   loadImages() {
@@ -38,6 +40,10 @@ export default class BootScene extends Phaser.Scene {
       startFrame: 15,
       endFrame: 25
     });
+  }
+
+  loadSounds() {
+    this.load.audio('jump', [jump]);
   }
 
   create() {

@@ -90,6 +90,8 @@ export default class GameScene extends Phaser.Scene {
       0.2, 0,
       -200, 210
     );
+
+    this.jumpSound = this.sound.add('jump');
   }
 
   update(time, delta) {

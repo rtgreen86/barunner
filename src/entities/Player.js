@@ -90,6 +90,8 @@ export default class Player extends Physics.Arcade.Sprite {
       return;
     }
 
+    this.scene.jumpSound.play();
+
     // start jump
     // ram on the ground, run and button just pressed
     if (

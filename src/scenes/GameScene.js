@@ -31,6 +31,70 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.createAnimation();
+
+    this.controller = new PlayerController(this);
+
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
+    this.pauseKey.on('down', this.onPauseKeyDown, this);
+
+    this.backgroundLayers = [
+      // (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1).setDepth(-100),
+      // (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1).setDepth(-50),
+      // (new ChunkGroup(this, 0, 600, 'background-layer-3', 1389, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(1, 1).setOrigin(0.5, 1).setDepth(-25),
+    ];
+
+    // this.background = new Phaser.Physics.Arcade.Image(this, 100, 100, 'background-layer-2');
+    // this.background = new Phaser.GameObjects.Image(this, 100, 100, 'background-layer-2');
+
+    // this.background2 = this.add.image(0, 600, 'background-layer-2')
+    //   .setOrigin(0.5, 1)
+    //   .setScrollFactor(0.8, 0.8)
+    //   .setDepth(-100);
+    // this.background3 = this.add.image(0, 600, 'background-layer-3')
+    //   .setOrigin(0.5, 1)
+    //   .setScrollFactor(0.95, 0.95)
+    //   .setDepth(-100);
+
+    // this.backgroundLayer1 = this.add.layer([
+    //   this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
+      // this.add.image(533, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
+      // this.add.image(1066, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
+    // ]).setDepth(-100);
+
+    this.createBackgound();
+
+
+    this.ground1 = this.physics.add.staticGroup({
+      classType: Phaser.Physics.Arcade.StaticImage,
+      name: 'ground',
+      defaultKey: 'image-ground'
+    }).setOrigin(0.5, 1);
+
+    this.ground1.get(0, 0).setOrigin(0.5, 1).refreshBody();
+
+    this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
+    this.obstacles = this.physics.add.group();
+    this.player = new Player(this, 0, -75 -15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0)
+
+    this.physics.add.collider(this.ground, this.player);
+    this.physics.add.collider(this.ground, this.obstacles);
+    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
+    this.physics.add.collider(this.ground1, this.player);
+
+
+    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    this.cameras.main.startFollow(
+      this.player,
+      false,
+      0.2, 0,
+      -200, 210
+    );
+
+    this.jumpSound = this.sound.add('jump');
+  }
+
+  createAnimation() {
     this.anims.create({
       key: 'ram-idle',
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [0, 1, 2, 3] }),
@@ -66,64 +130,19 @@ export default class GameScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [18] }),
       frameRate: 30,
       repeat: 0
-    })
+    });
+  }
 
-    this.controller = new PlayerController(this);
-
-    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
-    this.pauseKey.on('down', this.onPauseKeyDown, this);
-
-    this.backgroundLayers = [
-      (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1).setDepth(-100),
-      (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1).setDepth(-50),
-      (new ChunkGroup(this, 0, 600, 'background-layer-3', 1389, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(1, 1).setOrigin(0.5, 1).setDepth(-25),
-    ];
-
-    this.background = new Phaser.Physics.Arcade.Image(this, 100, 100, 'background-layer-2');
-    this.background = new Phaser.GameObjects.Image(this, 100, 100, 'background-layer-2');
-
-    this.background2 = this.add.image(0, 600, 'background-layer-2')
-      .setOrigin(0.5, 1)
-      .setScrollFactor(0.8, 0.8)
-      .setDepth(-100);
-    this.background3 = this.add.image(0, 600, 'background-layer-3')
-      .setOrigin(0.5, 1)
-      .setScrollFactor(0.95, 0.95)
-      .setDepth(-100);
-
-    this.backgroundLayer1 = this.add.layer([
-      this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
-      this.add.image(533, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
-      this.add.image(1066, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
-    ]).setDepth(-100);
-
-    this.ground1 = this.physics.add.staticGroup({
-      classType: Phaser.Physics.Arcade.StaticImage,
-      name: 'ground',
-      defaultKey: 'image-ground'
-    }).setOrigin(0.5, 1);
-
-    this.ground1.get(0, 0).setOrigin(0.5, 1).refreshBody();
-
-    this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
-    this.obstacles = this.physics.add.group();
-    this.player = new Player(this, 0, -75 -15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0)
-
-    this.physics.add.collider(this.ground, this.player);
-    this.physics.add.collider(this.ground, this.obstacles);
-    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
-    this.physics.add.collider(this.ground1, this.player);
-
-
-    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.startFollow(
-      this.player,
-      false,
-      0.2, 0,
-      -200, 210
-    );
-
-    this.jumpSound = this.sound.add('jump');
+  createBackgound() {
+    this.backgroundLayer = this.add.group(
+      [
+        this.add.image(0, 0, 'background-layer-1')
+      ],
+      {
+        classType: Phaser.GameObjects.Image,
+        name: 'background-layer-1',
+      }
+    ).setOrigin(0.5, 1);
   }
 
   update(time, delta) {
@@ -149,16 +168,12 @@ export default class GameScene extends Phaser.Scene {
     this.ground1.getMatching('active', true).forEach(item => {
       if (item.x < this.deadline) {
         this.ground1.kill(item);
-        console.log('kill', item.x);
-        console.log(this.ground1.getLength(), this.ground1.getMatching('active', false).length);
       }
     })
 
     while (this.nextGround < this.deadline + 700) {
-      const obj = this.ground1.get(this.nextGround, 0).setActive(true);
+      this.ground1.get(this.nextGround, 0).setActive(true);
       this.nextGround += 200;
-      console.log('create', this.nextGround, obj.x);
-      console.log(this.ground1.getLength(), this.ground1.getMatching('active', false).length);
     }
 
     this.ground1.setOrigin(0.5, 1).refresh();
@@ -210,7 +225,6 @@ export default class GameScene extends Phaser.Scene {
 
   updateDeadline() {
     this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
-
   }
 
   updateGround() {

@@ -27,6 +27,7 @@ export default class GameScene extends Phaser.Scene {
     this.timeOfDeath = null;
 
     this.nextGround = 200;
+    this.nextBackground = 533 * 3;
 
   }
 
@@ -136,11 +137,14 @@ export default class GameScene extends Phaser.Scene {
   createBackgound() {
     this.backgroundLayer = this.add.group(
       [
-        this.add.image(0, 0, 'background-layer-1')
+        this.add.image(0, 0, 'background-layer-1'),
+        this.add.image(533, 0, 'background-layer-1'),
+        this.add.image(533 * 2, 0, 'background-layer-1')
       ],
       {
         classType: Phaser.GameObjects.Image,
         name: 'background-layer-1',
+        maxSize: 3,
       }
     ).setOrigin(0.5, 1);
   }
@@ -177,6 +181,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.ground1.setOrigin(0.5, 1).refresh();
+    this.updateBackground();
   }
 
   dice() {
@@ -229,6 +234,20 @@ export default class GameScene extends Phaser.Scene {
 
   updateGround() {
 
+  }
+
+  updateBackground() {
+    this.backgroundLayer.getMatching('active', true).forEach(item => {
+      if (item.x < this.deadline) {
+        this.backgroundLayer.kill(item);
+      }
+    });
+    let item = this.backgroundLayer.getFirstDead(true, this.nextBackground, 0);
+    while (item !== null) {
+      this.nextBackground += 533;
+      item.setActive(true).setVisible(true);
+      item = this.backgroundLayer.getFirstDead(true, this.nextBackground, 0);
+    }
   }
 
   onPauseKeyDown() {

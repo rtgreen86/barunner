@@ -1,6 +1,5 @@
 import Phaser from 'Phaser';
 
-import ChunkGroup from '../entities/ChunkGroup';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
@@ -38,19 +37,15 @@ export default class GameScene extends Phaser.Scene {
 
     this.createBackgound();
     this.createGround();
-
-    this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
-
     this.createObstacles();
+    this.createPlayer();
+    this.createCollaider();
+    this.createCamera();
 
-    this.player = new Player(this, 250, -75 -15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0)
+    this.jumpSound = this.sound.add('jump');
+  }
 
-    this.physics.add.collider(this.ground, this.player);
-    this.physics.add.collider(this.ground, this.obstacles);
-    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
-    this.physics.add.collider(this.ground1, this.player);
-    this.physics.add.collider(this.ground1, this.obstacles);
-
+  createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
     this.cameras.main.startFollow(
       this.player,
@@ -58,8 +53,12 @@ export default class GameScene extends Phaser.Scene {
       0.2, 0,
       -200, 210
     );
+  }
 
-    this.jumpSound = this.sound.add('jump');
+  createCollaider() {
+    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
+    this.physics.add.collider(this.ground, this.player);
+    this.physics.add.collider(this.ground, this.obstacles);
   }
 
   createAnimation() {
@@ -116,24 +115,28 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createGround() {
-    this.ground1 = this.physics.add.staticGroup({
+    this.ground = this.physics.add.staticGroup({
       classType: Phaser.Physics.Arcade.StaticImage,
       name: 'ground',
       defaultKey: 'image-ground'
     }).setOrigin(0.5, 1);
-    this.ground1.get(0, 0).setOrigin(0.5, 1).refreshBody();
-    this.ground1.get(200, 0).setOrigin(0.5, 1).refreshBody();
+    this.ground.get(0, 0).setOrigin(0.5, 1).refreshBody();
+    this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
   createObstacles() {
     this.obstacles = this.physics.add.group();
   }
 
+  createPlayer() {
+    this.player = new Player(this, 250, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+    this.player.setDepth(2000);
+  }
+
   update(time, delta) {
     this.updateDeadline();
     this.respawnObjects();
     this.player.update(time, delta);
-    this.ground.update(time, delta, this.deadline);
 
     if (this.player.isDead && !this.timeOfDeath) {
       this.timeOfDeath = time;
@@ -153,16 +156,16 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateGround() {
-    this.ground1.getMatching('active', true).forEach(item => {
+    this.ground.getMatching('active', true).forEach(item => {
       if (item.x < this.deadline) {
-        this.ground1.kill(item);
+        this.ground.kill(item);
       }
     });
     while (this.nextGround < this.deadline + GROUND_SPAWN_DISTANCE) {
-      this.ground1.get(this.nextGround, 0).setActive(true);
+      this.ground.get(this.nextGround, 0).setActive(true);
       this.nextGround += 200;
     }
-    this.ground1.setOrigin(0.5, 1).refresh();
+    this.ground.setOrigin(0.5, 1).refresh();
   }
 
   dice() {
@@ -174,12 +177,12 @@ export default class GameScene extends Phaser.Scene {
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {
-      obstacle = (new Obstacle(this, this.spawnedObject, -500, 'spritesheet-large', 15))
+      obstacle = (new Obstacle(this, this.spawnedObject, -25-75, 'spritesheet-large', 15))
         .setSize(70, 50)
         .setDepth(1000);
       this.obstacles.add(obstacle);
     }
-    obstacle.spawn(this.spawnedObject, -500);
+    obstacle.spawn(this.spawnedObject, -25-75);
   }
 
   killDeadlineCrossed() {
@@ -208,7 +211,6 @@ export default class GameScene extends Phaser.Scene {
     this.respawnObjects();
     this.playerAlive = true;
     this.timeOfDeath = null;
-    this.player.setY(510);
   }
 
   updateDeadline() {

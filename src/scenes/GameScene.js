@@ -4,9 +4,9 @@ import ChunkGroup from '../entities/ChunkGroup';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
+import BackgroundLayer from '../entities/BackgroundLayer';
 
 const SPAWN_DISTANCE = 10000;
-const BACKGROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
 const DEADLINE_OFFSET = -100;
@@ -25,10 +25,7 @@ export default class GameScene extends Phaser.Scene {
     this.paused = false;
     this.playerAlive = true;
     this.timeOfDeath = null;
-
     this.nextGround = 200;
-    this.nextBackground = 533 * 3;
-
   }
 
   create() {
@@ -39,40 +36,8 @@ export default class GameScene extends Phaser.Scene {
     this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
     this.pauseKey.on('down', this.onPauseKeyDown, this);
 
-    this.backgroundLayers = [
-      // (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1).setDepth(-100),
-      // (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1).setDepth(-50),
-      // (new ChunkGroup(this, 0, 600, 'background-layer-3', 1389, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(1, 1).setOrigin(0.5, 1).setDepth(-25),
-    ];
-
-    // this.background = new Phaser.Physics.Arcade.Image(this, 100, 100, 'background-layer-2');
-    // this.background = new Phaser.GameObjects.Image(this, 100, 100, 'background-layer-2');
-
-    // this.background2 = this.add.image(0, 600, 'background-layer-2')
-    //   .setOrigin(0.5, 1)
-    //   .setScrollFactor(0.8, 0.8)
-    //   .setDepth(-100);
-    // this.background3 = this.add.image(0, 600, 'background-layer-3')
-    //   .setOrigin(0.5, 1)
-    //   .setScrollFactor(0.95, 0.95)
-    //   .setDepth(-100);
-
-    // this.backgroundLayer1 = this.add.layer([
-    //   this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
-      // this.add.image(533, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
-      // this.add.image(1066, 0, 'background-layer-1').setOrigin(0.5, 1).setScrollFactor(0.5, 0.5),
-    // ]).setDepth(-100);
-
     this.createBackgound();
-
-
-    this.ground1 = this.physics.add.staticGroup({
-      classType: Phaser.Physics.Arcade.StaticImage,
-      name: 'ground',
-      defaultKey: 'image-ground'
-    }).setOrigin(0.5, 1);
-
-    this.ground1.get(0, 0).setOrigin(0.5, 1).refreshBody();
+    this.createGround();
 
     this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
     this.obstacles = this.physics.add.group();
@@ -82,7 +47,6 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.ground, this.obstacles);
     this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
     this.physics.add.collider(this.ground1, this.player);
-
 
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
     this.cameras.main.startFollow(
@@ -135,18 +99,27 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createBackgound() {
-    this.backgroundLayer = this.add.group(
-      [
-        this.add.image(0, 0, 'background-layer-1'),
-        this.add.image(533, 0, 'background-layer-1'),
-        this.add.image(533 * 2, 0, 'background-layer-1')
-      ],
-      {
-        classType: Phaser.GameObjects.Image,
-        name: 'background-layer-1',
-        maxSize: 3,
-      }
-    ).setOrigin(0.5, 1);
+    this.backgroundLayer1 = new BackgroundLayer(this);
+    this.backgroundLayer2 = new BackgroundLayer(this);
+    this.backgroundLayer3 = new BackgroundLayer(this);
+    for (let i = 0; i < 5; i++) {
+      this.backgroundLayer1.add(this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1)).setScrollFactor(0.5, 1);
+      this.backgroundLayer2.add(this.add.image(0, 0, 'background-layer-2').setOrigin(0.5, 1)).setScrollFactor(0.8, 1);
+      this.backgroundLayer3.add(this.add.image(0, 0, 'background-layer-3').setOrigin(0.5, 1));
+    }
+    this.backgroundLayer1.update(5000);
+    this.backgroundLayer2.update(5000);
+    this.backgroundLayer3.update(5000);
+  }
+
+  createGround() {
+    this.ground1 = this.physics.add.staticGroup({
+      classType: Phaser.Physics.Arcade.StaticImage,
+      name: 'ground',
+      defaultKey: 'image-ground'
+    }).setOrigin(0.5, 1);
+    this.ground1.get(0, 0).setOrigin(0.5, 1).refreshBody();
+    this.ground1.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
   update(time, delta) {
@@ -154,7 +127,6 @@ export default class GameScene extends Phaser.Scene {
     this.respawnObjects();
     this.player.update(time, delta);
     this.ground.update(time, delta, this.deadline);
-    this.backgroundLayers.forEach(item => item.update(time, delta, this.deadline));
 
     if (this.player.isDead && !this.timeOfDeath) {
       this.timeOfDeath = time;
@@ -169,19 +141,21 @@ export default class GameScene extends Phaser.Scene {
       this.respawnScene();
     }
 
+    this.updateGround();
+    this.updateBackground();
+  }
+
+  updateGround() {
     this.ground1.getMatching('active', true).forEach(item => {
       if (item.x < this.deadline) {
         this.ground1.kill(item);
       }
-    })
-
-    while (this.nextGround < this.deadline + 700) {
+    });
+    while (this.nextGround < this.deadline + GROUND_SPAWN_DISTANCE) {
       this.ground1.get(this.nextGround, 0).setActive(true);
       this.nextGround += 200;
     }
-
     this.ground1.setOrigin(0.5, 1).refresh();
-    this.updateBackground();
   }
 
   dice() {
@@ -232,22 +206,10 @@ export default class GameScene extends Phaser.Scene {
     this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
   }
 
-  updateGround() {
-
-  }
-
   updateBackground() {
-    this.backgroundLayer.getMatching('active', true).forEach(item => {
-      if (item.x < this.deadline) {
-        this.backgroundLayer.kill(item);
-      }
-    });
-    let item = this.backgroundLayer.getFirstDead(true, this.nextBackground, 0);
-    while (item !== null) {
-      this.nextBackground += 533;
-      item.setActive(true).setVisible(true);
-      item = this.backgroundLayer.getFirstDead(true, this.nextBackground, 0);
-    }
+    this.backgroundLayer1.update(this.deadline);
+    this.backgroundLayer2.update(this.deadline);
+    this.backgroundLayer3.update(this.deadline);
   }
 
   onPauseKeyDown() {

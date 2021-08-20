@@ -40,13 +40,16 @@ export default class GameScene extends Phaser.Scene {
     this.createGround();
 
     this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
-    this.obstacles = this.physics.add.group();
-    this.player = new Player(this, 0, -75 -15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0)
+
+    this.createObstacles();
+
+    this.player = new Player(this, 250, -75 -15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0)
 
     this.physics.add.collider(this.ground, this.player);
     this.physics.add.collider(this.ground, this.obstacles);
     this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
     this.physics.add.collider(this.ground1, this.player);
+    this.physics.add.collider(this.ground1, this.obstacles);
 
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
     this.cameras.main.startFollow(
@@ -122,6 +125,10 @@ export default class GameScene extends Phaser.Scene {
     this.ground1.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
+  createObstacles() {
+    this.obstacles = this.physics.add.group();
+  }
+
   update(time, delta) {
     this.updateDeadline();
     this.respawnObjects();
@@ -167,10 +174,12 @@ export default class GameScene extends Phaser.Scene {
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {
-      obstacle = (new Obstacle(this, this.spawnedObject, 500, 'spritesheet-large', 15)).setSize(70, 50);
+      obstacle = (new Obstacle(this, this.spawnedObject, -500, 'spritesheet-large', 15))
+        .setSize(70, 50)
+        .setDepth(1000);
       this.obstacles.add(obstacle);
     }
-    obstacle.spawn(this.spawnedObject, 500);
+    obstacle.spawn(this.spawnedObject, -500);
   }
 
   killDeadlineCrossed() {

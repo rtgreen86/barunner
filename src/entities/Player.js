@@ -1,4 +1,4 @@
-import { Physics } from 'Phaser';
+import { Physics } from 'phaser';
 
 const IDLE = 'ram-idle';
 const JUMP = 'ram-jump';

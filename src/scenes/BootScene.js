@@ -1,4 +1,4 @@
-import Phaser from 'Phaser';
+import Phaser from 'phaser';
 
 import backgroundLayer1 from '../../assets/images/background-layer-1.png'
 import backgroundLayer2 from '../../assets/images/background-layer-2.png'

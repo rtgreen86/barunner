@@ -1,4 +1,4 @@
-import Phaser from 'Phaser';
+import Phaser from 'phaser';
 
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';

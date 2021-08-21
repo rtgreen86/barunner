@@ -1,4 +1,4 @@
-import { Physics } from 'Phaser';
+import { Physics } from 'phaser';
 
 export default class Obstacle extends Physics.Arcade.Image {
   constructor(scene, x, y, texture, frame) {

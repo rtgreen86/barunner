@@ -7,15 +7,17 @@ module.exports = {
   entry: './src/main.js',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist',
     host: 'localhost',
-    index: 'game.html'
+    port: 'auto',
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+    }
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new HtmlWebpackPlugin({
       title: 'BaRunner',
-      filename: 'game.html',
+      filename: 'index.html',
       meta: {
         viewport: 'width=device-width, initial-scale=1'
       }

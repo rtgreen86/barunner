@@ -19,8 +19,7 @@ export default class GameScene extends Phaser.Scene {
 
   init() {
     this.deadline = DEADLINE_OFFSET;
-
-    this.spawnedObject = 300;
+    this.spawnedObject = 500;
     this.paused = false;
     this.playerAlive = true;
     this.timeOfDeath = null;
@@ -31,7 +30,6 @@ export default class GameScene extends Phaser.Scene {
     this.createAnimation();
 
     this.controller = new PlayerController(this);
-
     this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
     this.pauseKey.on('down', this.onPauseKeyDown, this);
 
@@ -51,7 +49,7 @@ export default class GameScene extends Phaser.Scene {
       this.player,
       false,
       0.2, 0,
-      -200, 210
+      -200, 270
     );
   }
 
@@ -129,7 +127,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = new Player(this, 250, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+    this.player = new Player(this, 350, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
     this.player.setDepth(2000);
   }
 

@@ -16,16 +16,16 @@ window.game = new Phaser.Game({
     }
   },
   scale: {
-    width: 1024,
-    height: 600,
+    width: 1280,
+    height: 720,
     mode: Phaser.Scale.FIT,
     min: {
-      width: 512,
-      height: 300
+      width: 320,
+      height: 180
     },
     max: {
-      width: 1024,
-      height: 600
+      width: 1280,
+      height: 720
     }
   }
 });

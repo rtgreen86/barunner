@@ -1,15 +1,14 @@
 import Phaser from 'Phaser';
 
-import ChunkGroup from '../entities/ChunkGroup';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
+import BackgroundLayer from '../entities/BackgroundLayer';
 
 const SPAWN_DISTANCE = 10000;
-const BACKGROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
-const DEADLINE_OFFSET = -500;
+const DEADLINE_OFFSET = -100;
 
 const PLAYER_RESPAWN_TIMEOUT = 1000;
 
@@ -20,13 +19,49 @@ export default class GameScene extends Phaser.Scene {
 
   init() {
     this.deadline = DEADLINE_OFFSET;
+
     this.spawnedObject = 300;
     this.paused = false;
     this.playerAlive = true;
     this.timeOfDeath = null;
+    this.nextGround = 200;
   }
 
   create() {
+    this.createAnimation();
+
+    this.controller = new PlayerController(this);
+
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
+    this.pauseKey.on('down', this.onPauseKeyDown, this);
+
+    this.createBackgound();
+    this.createGround();
+    this.createObstacles();
+    this.createPlayer();
+    this.createCollaider();
+    this.createCamera();
+
+    this.jumpSound = this.sound.add('jump');
+  }
+
+  createCamera() {
+    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    this.cameras.main.startFollow(
+      this.player,
+      false,
+      0.2, 0,
+      -200, 210
+    );
+  }
+
+  createCollaider() {
+    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
+    this.physics.add.collider(this.ground, this.player);
+    this.physics.add.collider(this.ground, this.obstacles);
+  }
+
+  createAnimation() {
     this.anims.create({
       key: 'ram-idle',
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [0, 1, 2, 3] }),
@@ -62,44 +97,46 @@ export default class GameScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [18] }),
       frameRate: 30,
       repeat: 0
-    })
+    });
+  }
 
-    this.controller = new PlayerController(this);
+  createBackgound() {
+    this.backgroundLayer1 = new BackgroundLayer(this);
+    this.backgroundLayer2 = new BackgroundLayer(this);
+    this.backgroundLayer3 = new BackgroundLayer(this);
+    for (let i = 0; i < 5; i++) {
+      this.backgroundLayer1.add(this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1)).setScrollFactor(0.5, 1);
+      this.backgroundLayer2.add(this.add.image(0, 0, 'background-layer-2').setOrigin(0.5, 1)).setScrollFactor(0.8, 1);
+      this.backgroundLayer3.add(this.add.image(0, 0, 'background-layer-3').setOrigin(0.5, 1));
+    }
+    this.backgroundLayer1.update(5000);
+    this.backgroundLayer2.update(5000);
+    this.backgroundLayer3.update(5000);
+  }
 
-    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
-    this.pauseKey.on('down', this.onPauseKeyDown, this);
+  createGround() {
+    this.ground = this.physics.add.staticGroup({
+      classType: Phaser.Physics.Arcade.StaticImage,
+      name: 'ground',
+      defaultKey: 'image-ground'
+    }).setOrigin(0.5, 1);
+    this.ground.get(0, 0).setOrigin(0.5, 1).refreshBody();
+    this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
+  }
 
-    this.backgroundLayers = [
-      (new ChunkGroup(this, 0, 600, 'background-layer-1', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.2, 0.2).setOrigin(0.5, 1).setDepth(-100),
-      (new ChunkGroup(this, 0, 600, 'background-layer-2', 533, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(0.5, 0.5).setOrigin(0.5, 1).setDepth(-50),
-      (new ChunkGroup(this, 0, 600, 'background-layer-3', 1389, 350, BACKGROUND_SPAWN_DISTANCE)).setScrollFactor(1, 1).setOrigin(0.5, 1).setDepth(-25),
-    ]
-    this.ground = new ChunkGroup(this, 0, 562.5, 'image-ground', 200, 75, GROUND_SPAWN_DISTANCE).setDepth(-10);
+  createObstacles() {
     this.obstacles = this.physics.add.group();
-    this.player = new Player(this, 300, 510, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+  }
 
-
-    this.physics.add.collider(this.ground, this.player);
-    this.physics.add.collider(this.ground, this.obstacles);
-    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
-
-    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.startFollow(
-      this.player,
-      false,
-      0.2, 0,
-      -200, 210
-    );
-
-    this.jumpSound = this.sound.add('jump');
+  createPlayer() {
+    this.player = new Player(this, 250, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+    this.player.setDepth(2000);
   }
 
   update(time, delta) {
-    this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
+    this.updateDeadline();
     this.respawnObjects();
     this.player.update(time, delta);
-    this.ground.update(time, delta, this.deadline);
-    this.backgroundLayers.forEach(item => item.update(time, delta, this.deadline));
 
     if (this.player.isDead && !this.timeOfDeath) {
       this.timeOfDeath = time;
@@ -113,6 +150,22 @@ export default class GameScene extends Phaser.Scene {
     ) {
       this.respawnScene();
     }
+
+    this.updateGround();
+    this.updateBackground();
+  }
+
+  updateGround() {
+    this.ground.getMatching('active', true).forEach(item => {
+      if (item.x < this.deadline) {
+        this.ground.kill(item);
+      }
+    });
+    while (this.nextGround < this.deadline + GROUND_SPAWN_DISTANCE) {
+      this.ground.get(this.nextGround, 0).setActive(true);
+      this.nextGround += 200;
+    }
+    this.ground.setOrigin(0.5, 1).refresh();
   }
 
   dice() {
@@ -124,10 +177,12 @@ export default class GameScene extends Phaser.Scene {
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {
-      obstacle = (new Obstacle(this, this.spawnedObject, 500, 'spritesheet-large', 15)).setSize(70, 50);
+      obstacle = (new Obstacle(this, this.spawnedObject, -25-75, 'spritesheet-large', 15))
+        .setSize(70, 50)
+        .setDepth(1000);
       this.obstacles.add(obstacle);
     }
-    obstacle.spawn(this.spawnedObject, 500);
+    obstacle.spawn(this.spawnedObject, -25-75);
   }
 
   killDeadlineCrossed() {
@@ -156,7 +211,16 @@ export default class GameScene extends Phaser.Scene {
     this.respawnObjects();
     this.playerAlive = true;
     this.timeOfDeath = null;
-    this.player.setY(510);
+  }
+
+  updateDeadline() {
+    this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
+  }
+
+  updateBackground() {
+    this.backgroundLayer1.update(this.deadline);
+    this.backgroundLayer2.update(this.deadline);
+    this.backgroundLayer3.update(this.deadline);
   }
 
   onPauseKeyDown() {

@@ -40,7 +40,8 @@ export default class GameScene extends Phaser.Scene {
     this.createCollaider();
     this.createCamera();
 
-    this.jumpSound = this.sound.add('jump');
+    // TODO: enable sound after add settings
+    // this.jumpSound = this.sound.add('jump');
   }
 
   createCamera() {

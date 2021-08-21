@@ -7,7 +7,8 @@ import ground from '../../assets/images/ground.png';
 
 import spritesheet from '../../assets/images/spritesheet.png';
 
-import jump from '../../assets/sound/jump.wav';
+// TODO: enable sound after add settings
+// import jump from '../../assets/sound/jump.wav';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -43,7 +44,8 @@ export default class BootScene extends Phaser.Scene {
   }
 
   loadSounds() {
-    this.load.audio('jump', [jump]);
+    // TODO: enable sound after add settings
+    // this.load.audio('jump', [jump]);
   }
 
   create() {

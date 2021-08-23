@@ -2,17 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-module.exports = {
-  mode: 'development',
+const config = {
   entry: './src/main.js',
-  devtool: 'inline-source-map',
-  devServer: {
-    host: 'localhost',
-    port: 'auto',
-    static: {
-      directory: path.resolve(__dirname, 'dist'),
-    }
-  },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new HtmlWebpackPlugin({
@@ -23,10 +14,6 @@ module.exports = {
       }
     })
   ],
-  output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
   module: {
     rules: [
       {
@@ -45,3 +32,30 @@ module.exports = {
     ]
   }
 }
+
+module.exports = [
+  Object.assign({
+    name: 'dev',
+    mode: 'development',
+    devtool: 'inline-source-map',
+    devServer: {
+      host: 'localhost',
+      port: 'auto',
+      static: {
+        directory: path.resolve(__dirname, 'dist'),
+      }
+    },
+    output: {
+      filename: 'main.js',
+      path: path.resolve(__dirname, 'dist'),
+    },
+  }, config),
+  Object.assign({
+    name: 'prod',
+    mode: 'production',
+    output: {
+      filename: 'main.min.js',
+      path: path.resolve(__dirname, 'dist'),
+    },
+  }, config),
+];

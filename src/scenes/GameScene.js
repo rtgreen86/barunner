@@ -173,7 +173,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   spawnBigObstacle() {
-    const distance = [400, 500, 540, 580, 600, 650, 700, 800, 900, 1000][this.dice()];
+    const distance = [540, 580, 600, 650, 700, 700, 800, 800, 900, 1000][this.dice()];
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {

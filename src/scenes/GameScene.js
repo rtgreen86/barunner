@@ -19,7 +19,7 @@ export default class GameScene extends Phaser.Scene {
 
   init() {
     this.deadline = DEADLINE_OFFSET;
-    this.spawnedObject = 500;
+    this.spawnedObject = 300;
     this.paused = false;
     this.playerAlive = true;
     this.timeOfDeath = null;
@@ -39,9 +39,8 @@ export default class GameScene extends Phaser.Scene {
     this.createPlayer();
     this.createCollaider();
     this.createCamera();
-
-    // TODO: enable sound after add settings
-    // this.jumpSound = this.sound.add('jump');
+    
+    this.jumpSound = this.sound.add('jump');
   }
 
   createCamera() {
@@ -50,7 +49,7 @@ export default class GameScene extends Phaser.Scene {
       this.player,
       false,
       0.2, 0,
-      -200, 270
+      -200, 210
     );
   }
 
@@ -128,7 +127,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = new Player(this, 350, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+    this.player = new Player(this, 250, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
     this.player.setDepth(2000);
   }
 
@@ -172,7 +171,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   spawnBigObstacle() {
-    const distance = [400, 500, 540, 580, 600, 650, 700, 800, 900, 1000][this.dice()];
+    const distance = [540, 580, 600, 650, 700, 700, 800, 800, 900, 1000][this.dice()];
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {

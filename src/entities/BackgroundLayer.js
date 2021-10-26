@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import Phaser from 'Phaser';
 
 export default class BackgroundLayer extends Phaser.GameObjects.Layer {
   constructor(scene, children) {

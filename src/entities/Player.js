@@ -72,7 +72,6 @@ export default class Player extends Physics.Arcade.Sprite {
     this.isDead = true;
     this.setVelocity(0, 0);
     this.setAnimation(DIE);
-    this.stop();
   }
 
   isMoving() {

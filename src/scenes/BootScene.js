@@ -6,6 +6,8 @@ import backgroundLayer3 from '../../assets/images/background-layer-3.png'
 import ground from '../../assets/images/ground.png';
 
 import spritesheet from '../../assets/images/spritesheet.png';
+import spritesheet64 from '../../assets/images/spritesheet-64.png';
+import spritesheet64Tiles from '../../assets/images/spritesheet-64.json';
 
 import jump from '../../assets/sound/jump.wav';
 
@@ -40,6 +42,11 @@ export default class BootScene extends Phaser.Scene {
       startFrame: 15,
       endFrame: 25
     });
+    this.load.spritesheet('spritesheet-64', spritesheet64, {
+      frameWidth: 64,
+      frameHeight: 64
+    });
+    this.load.json('spritesheet-64-tiles', spritesheet64Tiles, 'tiles');
   }
 
   loadSounds() {

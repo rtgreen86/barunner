@@ -39,7 +39,7 @@ export default class GameScene extends Phaser.Scene {
     this.createPlayer();
     this.createCollaider();
     this.createCamera();
-    
+
     this.jumpSound = this.sound.add('jump');
   }
 
@@ -60,41 +60,20 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createAnimation() {
-    this.anims.create({
-      key: 'ram-idle',
-      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [0, 1, 2, 3] }),
-      frameRate: 5,
-      repeat: -1
-    });
-    this.anims.create({
-      key: 'ram-jump',
-      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [22, 23, 24, 25, 26] }),
-      frameRate: 30,
-      repeat: 0
-    });
-    this.anims.create({
-      key: 'ram-fall',
-      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [27, 28] }),
-      frameRate: 30,
-      repeat: -1
-    });
-    this.anims.create({
-      key: 'ram-landing',
-      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [28, 29] }),
-      frameRate: 30,
-      repeat: 0
-    });
-    this.anims.create({
-      key: 'ram-run',
-      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [4, 5, 6, 7, 8, 9] }),
-      frameRate: 30,
-      repeat: -1
-    });
-    this.anims.create({
-      key: 'ram-die',
-      frames: this.anims.generateFrameNumbers('spritesheet-small', { frames: [18] }),
-      frameRate: 30,
-      repeat: 0
+    const data = this.cache.json.get('spritesheet-64-tiles');
+
+    data.forEach((tile) => {
+      if (tile.type !== 'animation') return;
+
+      const frames = tile.animation.map(frame => frame.tileid);
+      const animationProps = tile.properties.reduce((props, prop) => {
+        props[prop.name] = prop.value;
+        return props;
+      }, {
+        frames: this.anims.generateFrameNumbers('spritesheet-64', { frames })
+      });
+
+      this.anims.create(animationProps);
     });
   }
 

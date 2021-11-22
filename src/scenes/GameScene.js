@@ -150,16 +150,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   spawnBigObstacle() {
-    const distance = [540, 580, 600, 650, 700, 700, 800, 800, 900, 1000][this.dice()];
+    const yPosition = -16-75-1; // half of height and screen position
+    const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
+    const frame = [19, 19, 19, 19, 19, 18, 18, 18, 29, 29][this.dice()];
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {
-      obstacle = (new Obstacle(this, this.spawnedObject, -25-75, 'spritesheet-large', 15))
-        .setSize(70, 50)
+      obstacle = (new Obstacle(this, this.spawnedObject, yPosition, 'spritesheet-64', frame))
+        .setSize(50, 32)
         .setDepth(1000);
       this.obstacles.add(obstacle);
     }
-    obstacle.spawn(this.spawnedObject, -25-75);
+    obstacle.spawn(this.spawnedObject, yPosition);
   }
 
   killDeadlineCrossed() {

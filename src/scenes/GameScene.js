@@ -152,7 +152,7 @@ export default class GameScene extends Phaser.Scene {
   spawnBigObstacle() {
     const yPosition = -16-75-1; // half of height and screen position
     const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
-    const frame = [19, 19, 19, 19, 19, 18, 18, 18, 29, 29][this.dice()];
+    const frame = [19, 19, 19, 19, 19, 18, 18, 18, 18, 29][this.dice()];
     this.spawnedObject += distance;
     let obstacle = this.obstacles.getFirstDead(false);
     if (!obstacle) {
@@ -205,10 +205,14 @@ export default class GameScene extends Phaser.Scene {
   onPauseKeyDown() {
     if (!this.paused) {
       this.paused = true;
-      this.player.idle();
+      if (!this.player.isDead) {
+        this.player.idle();
+      }
     } else {
       this.paused = false;
-      this.player.run();
+      if (!this.player.isDead) {
+        this.player.run();
+      }
     }
   }
 

@@ -31,6 +31,8 @@ export default class Player extends Physics.Arcade.Sprite {
     this.jumpKeyPressed = false;
     this.jumpKeyPressedTime = null;
     this.gameStartedTime = null;
+
+    this.isJumpSoundPlayed = false;
   }
 
   setAnimation(animation) {
@@ -49,6 +51,10 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   jump() {
+    if (!this.isJumpSoundPlayed) {
+      this.scene.jumpSound.play();
+      this.isJumpSoundPlayed = true;
+    }
     this.setAnimation(JUMP);
     if (this.animationTime <= MAX_JUMP_TIME) {
       this.body.setVelocityY(-250);
@@ -61,6 +67,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   landing() {
     this.setAnimation(LANDING);
+    this.isJumpSoundPlayed = false;
   }
 
   idle() {
@@ -70,6 +77,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   die() {
     this.isDead = true;
+    this.isJumpSoundPlayed = false;
     this.setVelocity(0, 0);
     this.setAnimation(DIE);
   }
@@ -88,8 +96,6 @@ export default class Player extends Physics.Arcade.Sprite {
       this.jump();
       return;
     }
-
-    this.scene.jumpSound.play();
 
     // start jump
     // ram on the ground, run and button just pressed

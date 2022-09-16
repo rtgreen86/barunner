@@ -4,6 +4,8 @@ import backgroundLayer1 from '../../assets/images/background-layer-1.png'
 import backgroundLayer2 from '../../assets/images/background-layer-2.png'
 import backgroundLayer3 from '../../assets/images/background-layer-3.png'
 import ground from '../../assets/images/ground.png';
+import tilesMap5 from '../../assets/map/tiles-map-5.png';
+import map5 from '../../assets/map/map-5-1.json';
 
 import spritesheet from '../../assets/images/spritesheet.png';
 import spritesheet64 from '../../assets/images/spritesheet-64.png';
@@ -20,6 +22,7 @@ export default class BootScene extends Phaser.Scene {
     this.loadImages();
     this.loadSpriteSheets();
     this.loadSounds();
+    this.load.tilemapTiledJSON('mappy', map5);
   }
 
   loadImages() {
@@ -27,6 +30,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('background-layer-2', backgroundLayer2);
     this.load.image('background-layer-3', backgroundLayer3);
     this.load.image('image-ground', ground);
+    this.load.image('terrain', tilesMap5);
   }
 
   loadSpriteSheets() {

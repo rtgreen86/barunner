@@ -36,9 +36,36 @@ export default class GameScene extends Phaser.Scene {
     this.createBackgound();
     this.createGround();
     this.createObstacles();
+
     this.createPlayer();
     this.createCollaider();
     this.createCamera();
+
+
+    const mappy = this.add.tilemap('mappy')
+
+    console.info('DEBUG', mappy.currentLayerIndex);
+    console.info('DEBUG', mappy.height);
+    console.info('DEBUG', mappy.width);
+
+
+    const terrain = mappy.addTilesetImage('tiles-map-5', 'terrain');
+    const layer = mappy.createStaticLayer('foreground-1', [terrain], 0, -640);
+    this.physics.add.collider(this.player, this.layer);
+    layer.setCollisionByProperty({ collides: true });
+    // layer.setCollisionByProperty({ collide: true });
+    // layer.setCollisionByExclusion(-1, true);
+    //layer.setCollision([21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
+    this.physics.add.collider(this.player, layer);
+
+    // const map = this.make.tilemap({ key: 'mappy', tileWidth: 64, tileHeight: 64 });
+    // const map = this.make.tilemap({ key: 'mappy' });
+    // const tileset1 = map.addTilesetImage('terrain');
+    // const tileset = map.addTilesetImage('tiles-map-5', 'terrain');
+    // const platforms = map.createStaticLayer('foreground-1', tileset, 0, 200);
+    // var layer1 = map.createLayer(10, tileset, 0, 0); // layer index, tileset, x, y
+
+
 
     this.jumpSound = this.sound.add('jump');
   }
@@ -51,12 +78,16 @@ export default class GameScene extends Phaser.Scene {
       0.2, 0,
       -200, 210
     );
+    this.cameras.main.zoom = 0.5;
   }
 
   createCollaider() {
-    this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
-    this.physics.add.collider(this.ground, this.player);
-    this.physics.add.collider(this.ground, this.obstacles);
+    // Do not collide with obstacles
+    // this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
+
+
+    // this.physics.add.collider(this.ground, this.player);
+    // this.physics.add.collider(this.ground, this.obstacles);
   }
 
   createAnimation() {
@@ -78,17 +109,17 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createBackgound() {
-    this.backgroundLayer1 = new BackgroundLayer(this);
-    this.backgroundLayer2 = new BackgroundLayer(this);
-    this.backgroundLayer3 = new BackgroundLayer(this);
-    for (let i = 0; i < 5; i++) {
-      this.backgroundLayer1.add(this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1)).setScrollFactor(0.5, 1);
-      this.backgroundLayer2.add(this.add.image(0, 0, 'background-layer-2').setOrigin(0.5, 1)).setScrollFactor(0.8, 1);
-      this.backgroundLayer3.add(this.add.image(0, 0, 'background-layer-3').setOrigin(0.5, 1));
-    }
-    this.backgroundLayer1.update(5000);
-    this.backgroundLayer2.update(5000);
-    this.backgroundLayer3.update(5000);
+    // this.backgroundLayer1 = new BackgroundLayer(this);
+    // this.backgroundLayer2 = new BackgroundLayer(this);
+    // this.backgroundLayer3 = new BackgroundLayer(this);
+    // for (let i = 0; i < 5; i++) {
+    //   this.backgroundLayer1.add(this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1)).setScrollFactor(0.5, 1);
+    //   this.backgroundLayer2.add(this.add.image(0, 0, 'background-layer-2').setOrigin(0.5, 1)).setScrollFactor(0.8, 1);
+    //   this.backgroundLayer3.add(this.add.image(0, 0, 'background-layer-3').setOrigin(0.5, 1));
+    // }
+    // this.backgroundLayer1.update(5000);
+    // this.backgroundLayer2.update(5000);
+    // this.backgroundLayer3.update(5000);
   }
 
   createGround() {
@@ -107,6 +138,7 @@ export default class GameScene extends Phaser.Scene {
 
   createPlayer() {
     this.player = new Player(this, 350, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+    // this.player = new Player(this, 0, 0, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
     this.player.setDepth(2000);
   }
 
@@ -129,7 +161,9 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.updateGround();
-    this.updateBackground();
+
+    // Do not update background
+    // this.updateBackground();
   }
 
   updateGround() {
@@ -175,9 +209,9 @@ export default class GameScene extends Phaser.Scene {
 
   respawnObjects() {
     this.killDeadlineCrossed();
-    while (this.spawnedObject < this.deadline + SPAWN_DISTANCE) {
-      this.spawnBigObstacle();
-    }
+    // while (this.spawnedObject < this.deadline + SPAWN_DISTANCE) {
+    //   this.spawnBigObstacle();
+    // }
   }
 
   respawnScene() {

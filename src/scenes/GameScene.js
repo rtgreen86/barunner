@@ -49,14 +49,16 @@ export default class GameScene extends Phaser.Scene {
     console.info('DEBUG', mappy.width);
 
 
-    const terrain = mappy.addTilesetImage('tiles-map-5', 'terrain');
-    const layer = mappy.createStaticLayer('foreground-1', [terrain], 0, -640);
-    this.physics.add.collider(this.player, this.layer);
-    layer.setCollisionByProperty({ collides: true });
+    // map 64
+
+    // const terrain = mappy.addTilesetImage('tiles-map-5', 'terrain');
+    // const layer = mappy.createStaticLayer('foreground-1', [terrain], 0, -640);
+    // this.physics.add.collider(this.player, this.layer);
+    // layer.setCollisionByProperty({ collides: true });
     // layer.setCollisionByProperty({ collide: true });
     // layer.setCollisionByExclusion(-1, true);
     //layer.setCollision([21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
-    this.physics.add.collider(this.player, layer);
+    // this.physics.add.collider(this.player, layer);
 
     // const map = this.make.tilemap({ key: 'mappy', tileWidth: 64, tileHeight: 64 });
     // const map = this.make.tilemap({ key: 'mappy' });
@@ -64,6 +66,20 @@ export default class GameScene extends Phaser.Scene {
     // const tileset = map.addTilesetImage('tiles-map-5', 'terrain');
     // const platforms = map.createStaticLayer('foreground-1', tileset, 0, 200);
     // var layer1 = map.createLayer(10, tileset, 0, 0); // layer index, tileset, x, y
+
+
+    // New big map level 1
+
+
+    const mapLevel1 = this.add.tilemap('map-level-1')
+    const tilesLevel1 = mapLevel1.addTilesetImage('level-1-tileset', 'tileset-level-1'); // fix names
+    const layer1 = mapLevel1.createStaticLayer('chunk-1', [tilesLevel1], 0, -1450);
+    this.physics.add.collider(this.player, this.layer1);
+    layer1.setCollisionByProperty({ collides: true });
+    // layer.setCollisionByProperty({ collide: true });
+    // layer.setCollisionByExclusion(-1, true);
+    //layer.setCollision([21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
+    this.physics.add.collider(this.player, layer1);
 
 
 
@@ -76,9 +92,9 @@ export default class GameScene extends Phaser.Scene {
       this.player,
       false,
       0.2, 0,
-      -200, 210
+      -200, 50
     );
-    this.cameras.main.zoom = 0.5;
+    this.cameras.main.zoom = 1;
   }
 
   createCollaider() {
@@ -97,6 +113,9 @@ export default class GameScene extends Phaser.Scene {
       if (tile.type !== 'animation') return;
 
       const frames = tile.animation.map(frame => frame.tileid);
+
+
+
       const animationProps = tile.properties.reduce((props, prop) => {
         props[prop.name] = prop.value;
         return props;
@@ -104,8 +123,27 @@ export default class GameScene extends Phaser.Scene {
         frames: this.anims.generateFrameNumbers('spritesheet-64', { frames })
       });
 
+      console.log(animationProps);
+
       this.anims.create(animationProps);
     });
+
+    const data2 = this.cache.json.get('ram-spritesheet-data-128').meta.frameTags[1];
+
+
+
+    const data3 = {
+      frameRate: 5,
+      frames: [
+        {key: 'ram-spritesheet-128', frame: data2.from},
+        {key: 'ram-spritesheet-128', frame: 4},
+        {key: 'ram-spritesheet-128', frame: 5},
+        {key: 'ram-spritesheet-128', frame: data2.to},
+      ],
+      key: data2.name,
+      repeat: -1
+    };
+    this.anims.create(data3);
   }
 
   createBackgound() {
@@ -137,7 +175,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = new Player(this, 350, -75 - 15, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+    this.player = new Player(this, 350, -275 - 15, 'ram-spritesheet-128', 3 /* framenum */, this.controller).setDepth(50).setBounceX(0);
     // this.player = new Player(this, 0, 0, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
     this.player.setDepth(2000);
   }
@@ -167,16 +205,21 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateGround() {
-    this.ground.getMatching('active', true).forEach(item => {
-      if (item.x < this.deadline) {
-        this.ground.kill(item);
-      }
-    });
-    while (this.nextGround < this.deadline + GROUND_SPAWN_DISTANCE) {
-      this.ground.get(this.nextGround, 0).setActive(true);
-      this.nextGround += 200;
-    }
-    this.ground.setOrigin(0.5, 1).refresh();
+
+    // FOR generate ground
+
+    // this.ground.getMatching('active', true).forEach(item => {
+    //   if (item.x < this.deadline) {
+    //     this.ground.kill(item);
+    //   }
+    // });
+    // while (this.nextGround < this.deadline + GROUND_SPAWN_DISTANCE) {
+    //   this.ground.get(this.nextGround, 0).setActive(true);
+    //   this.nextGround += 200;
+    // }
+    // this.ground.setOrigin(0.5, 1).refresh();
+
+
   }
 
   dice() {

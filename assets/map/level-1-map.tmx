@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="128" tileheight="128" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" name="level-1-tileset" tilewidth="128" tileheight="128" tilecount="256" columns="16">
+  <image source="../images/tileset-level-1-128.png" width="2048" height="2048"/>
+  <tile id="16">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer id="1" name="chunk-1" width="16" height="16">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+53,54,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+69,70,115,116,0,0,0,0,0,0,0,0,0,0,0,0,
+85,86,131,132,161,163,0,0,0,0,0,0,0,0,0,164,
+101,102,147,148,177,179,5,6,21,22,165,166,181,2,3,180,
+17,18,19,20,17,18,19,20,17,18,19,20,17,18,19,20,
+33,34,35,36,33,34,35,36,33,34,35,36,33,34,35,36,
+33,34,35,36,33,34,35,36,33,34,35,36,33,34,35,36,
+33,34,35,36,33,34,35,36,33,34,35,36,33,34,35,36,
+33,34,35,36,33,34,35,36,33,34,35,36,33,34,35,36
+</data>
+ </layer>
+</map>

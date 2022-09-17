@@ -1,11 +1,11 @@
 import { Physics } from 'Phaser';
 
-const IDLE = 'ram-idle';
-const JUMP = 'ram-jump';
-const FALL = 'ram-fall';
-const LANDING = 'ram-landing';
-const RUN = 'ram-run';
-const DIE = 'ram-die';
+const IDLE = 'Idle';
+const JUMP = 'Idle'; // 'ram-jump';
+const FALL = 'Idle'; // 'ram-fall';
+const LANDING = 'Idle'; //'ram-landing';
+const RUN = 'Idle'; // 'ram-run';
+const DIE = 'Idle'; //  'ram-die';
 
 const MAX_JUMP_TIME = 300;
 const LANDING_TIME = 80;
@@ -18,7 +18,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
-    this.setSize(45, 30);
+    this.setSize(128, 128);
     this.time = 0;
 
     this.isDead = false;
@@ -51,23 +51,26 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   jump() {
-    if (!this.isJumpSoundPlayed) {
-      this.scene.jumpSound.play();
-      this.isJumpSoundPlayed = true;
-    }
-    this.setAnimation(JUMP);
-    if (this.animationTime <= MAX_JUMP_TIME) {
-      this.body.setVelocityY(-250);
-    }
+    // if (!this.isJumpSoundPlayed) {
+    //   this.scene.jumpSound.play();
+    //   this.isJumpSoundPlayed = true;
+    // }
+    // this.setAnimation(JUMP);
+    // if (this.animationTime <= MAX_JUMP_TIME) {
+    //   this.body.setVelocityY(-250);
+    // }
+    this.idle();
   }
 
   fall() {
-    this.setAnimation(FALL);
+    // this.setAnimation(FALL);
+    this.idle();
   }
 
   landing() {
     this.setAnimation(LANDING);
     this.isJumpSoundPlayed = false;
+    this.idle();
   }
 
   idle() {
@@ -147,7 +150,7 @@ export default class Player extends Physics.Arcade.Sprite {
       this.landing();
     }
     if (this.animation === LANDING && this.animationTime > LANDING_TIME) {
-      this.run();
+      this.idle();
     }
   }
 

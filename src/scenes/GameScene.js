@@ -142,17 +142,14 @@ export default class GameScene extends Phaser.Scene {
     // const ramAnimationConfig = createAnimationConfig(this.cache.json.get('ram-spritesheet-data-128.json'));
     // ramAnimationConfig.forEach(anim => this.anims.create(anim));
 
-    this.anims.createFromAseprite('ram-aseprite');
-
-    this.anims.get('Dash').repeat = -1;
-    this.anims.get('Idle').repeat = -1;
-    this.anims.get('Dizzy').repeat = -1;
-    this.anims.get('Hurt').repeat = -1;
-    this.anims.get('Takeoff run').repeat = -1;
-    this.anims.get('Jump').repeat = -1;
-    this.anims.get('Run').repeat = -1;
-
-
+    this.anims.createFromAseprite('ram-spritesheet');
+    this.anims.get('Ram Dash').repeat = -1;
+    this.anims.get('Ram Idle').repeat = -1;
+    this.anims.get('Ram Dizzy').repeat = -1;
+    this.anims.get('Ram Hurt').repeat = -1;
+    this.anims.get('Ram Takeoff Run').repeat = -1;
+    this.anims.get('Ram Jump').repeat = -1;
+    this.anims.get('Ram Run').repeat = -1;
   }
 
   createBackgound() {
@@ -305,31 +302,31 @@ export default class GameScene extends Phaser.Scene {
   onNumKeyDown(key) {
     switch (key.keyCode) {
       case Phaser.Input.Keyboard.KeyCodes.ONE:
-        this.player.setAnimation('Dash');
+        this.player.dash();
         break;
       case Phaser.Input.Keyboard.KeyCodes.TWO:
-        this.player.setAnimation('Idle');
+        this.player.idle();
         break;
       case Phaser.Input.Keyboard.KeyCodes.THREE:
-        this.player.setAnimation('Dizzy');
+        this.player.dizzy();
         break;
       case Phaser.Input.Keyboard.KeyCodes.FOUR:
-        this.player.setAnimation('Faint');
+        this.player.faint();
         break;
       case Phaser.Input.Keyboard.KeyCodes.FIVE:
-        this.player.setAnimation('Hurt');
+        this.player.hurt();
         break;
       case Phaser.Input.Keyboard.KeyCodes.SIX:
-        this.player.setAnimation('Attack');
+        this.player.attack();
         break;
       case Phaser.Input.Keyboard.KeyCodes.SEVEN:
-        this.player.setAnimation('Takeoff run');
+        this.player.takeoffRun();
         break;
       case Phaser.Input.Keyboard.KeyCodes.EIGHT:
-        this.player.setAnimation('Jump');
+        this.player.jump();
         break;
       case Phaser.Input.Keyboard.KeyCodes.NINE:
-        this.player.setAnimation('Run');
+        this.player.run();
         break;
     }
   }

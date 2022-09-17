@@ -345,7 +345,7 @@
  "meta": {
   "app": "https://www.aseprite.org/",
   "version": "1.2.37-x64",
-  "image": "ram-spritesheet-128.png",
+  "image": "ram-spritesheet.png",
   "format": "RGBA8888",
   "size": { "w": 1286, "h": 516 },
   "scale": "1",

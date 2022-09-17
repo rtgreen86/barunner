@@ -1,11 +1,22 @@
 import { Physics } from 'Phaser';
 
-const IDLE = 'Idle';
-const JUMP = 'Idle'; // 'ram-jump';
+// const IDLE = 'Idle';
+// const JUMP = 'Idle'; // 'ram-jump';
 const FALL = 'Idle'; // 'ram-fall';
 const LANDING = 'Idle'; //'ram-landing';
-const RUN = 'Idle'; // 'ram-run';
+// const RUN = 'Idle'; // 'ram-run';
 const DIE = 'Idle'; //  'ram-die';
+
+
+const DASH = 'Ram Dash';
+const IDLE = 'Ram Idle';
+const DIZZY = 'Ram Dizzy';
+const HURT = 'Ram Hurt';
+const TAKEOFF_RUN = 'Ram Takeoff Run';
+const JUMP = 'Ram Jump';
+const RUN = 'Ram Run';
+const ATTACK = 'Ram Attack';
+const FAINT = 'Ram Faint';
 
 const MAX_JUMP_TIME = 300;
 const LANDING_TIME = 80;
@@ -45,12 +56,29 @@ export default class Player extends Physics.Arcade.Sprite {
     this.play(this.animation, true);
   }
 
-  run() {
-    this.setAnimation(RUN);
-    this.setVelocityX(RUN_VELOCITY);
+  dash() {
+    this.setAnimation(DASH);
+  }
+
+  idle() {
+    // this.setVelocityX(0);
+    this.setAnimation(IDLE);
+  }
+
+  dizzy() {
+    this.setAnimation(DIZZY);
+  }
+
+  hurt() {
+    this.setAnimation(HURT);
+  }
+
+  takeoffRun() {
+    this.setAnimation(TAKEOFF_RUN);
   }
 
   jump() {
+    this.setAnimation(JUMP);
     // if (!this.isJumpSoundPlayed) {
     //   this.scene.jumpSound.play();
     //   this.isJumpSoundPlayed = true;
@@ -59,8 +87,23 @@ export default class Player extends Physics.Arcade.Sprite {
     // if (this.animationTime <= MAX_JUMP_TIME) {
     //   this.body.setVelocityY(-250);
     // }
-    this.idle();
+    // this.idle();
   }
+
+
+  run() {
+    this.setAnimation(RUN);
+    // this.setVelocityX(RUN_VELOCITY);
+  }
+
+  attack() {
+    this.setAnimation(ATTACK);
+  }
+
+  faint() {
+    this.setAnimation(FAINT);
+  }
+
 
   fall() {
     // this.setAnimation(FALL);
@@ -73,10 +116,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.idle();
   }
 
-  idle() {
-    this.setVelocityX(0);
-    this.setAnimation(IDLE);
-  }
+
 
   die() {
     this.isDead = true;

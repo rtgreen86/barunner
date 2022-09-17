@@ -21,6 +21,9 @@ import ramSpritesheetData128 from '../../assets/sprites/ram-spritesheet-128.json
 import ramSpritesheet128a from '../../assets/images/ram-spritesheet-128a.png';
 import ramSpritesheetData128a from '../../assets/sprites/ram-spritesheet-128a.json';
 
+import ramSpritesheetPng from '../../assets/images/ram-spritesheet.png';
+import ramSpritesheetJson from '../../assets/sprites/ram-spritesheet.json';
+
 import jump from '../../assets/sound/jump.wav';
 
 export default class BootScene extends Phaser.Scene {
@@ -72,7 +75,7 @@ export default class BootScene extends Phaser.Scene {
     });
     this.load.json('ram-spritesheet-data-128.json', ramSpritesheetData128);
 
-    this.load.aseprite('ram-aseprite', ramSpritesheet128a, ramSpritesheetData128a);
+    this.load.aseprite('ram-spritesheet', ramSpritesheetPng, ramSpritesheetJson);
   }
 
   loadSounds() {

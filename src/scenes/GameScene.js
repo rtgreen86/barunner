@@ -144,6 +144,15 @@ export default class GameScene extends Phaser.Scene {
 
     this.anims.createFromAseprite('ram-aseprite');
 
+    this.anims.get('Dash').repeat = -1;
+    this.anims.get('Idle').repeat = -1;
+    this.anims.get('Dizzy').repeat = -1;
+    this.anims.get('Hurt').repeat = -1;
+    this.anims.get('Takeoff run').repeat = -1;
+    this.anims.get('Jump').repeat = -1;
+    this.anims.get('Run').repeat = -1;
+
+
   }
 
   createBackgound() {

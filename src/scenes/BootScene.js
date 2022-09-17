@@ -1,15 +1,12 @@
 import Phaser from 'Phaser';
 
+import LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
+import LEVEL_1_TILESET_PNG from '../../assets/images/level-1-tileset.png';
+
 import backgroundLayer1 from '../../assets/images/background-layer-1.png'
 import backgroundLayer2 from '../../assets/images/background-layer-2.png'
 import backgroundLayer3 from '../../assets/images/background-layer-3.png'
 import ground from '../../assets/images/ground.png';
-
-import tilesMap5 from '../../assets/map/tiles-map-5.png';
-import map5 from '../../assets/map/map-5-1.json';
-
-import tilesetLevel1 from '../../assets/images/tileset-level-1-128.png';
-import mapLevel1 from '../../assets/map/level-1-map.json';
 
 import spritesheet from '../../assets/images/spritesheet.png';
 import spritesheet64 from '../../assets/images/spritesheet-64.png';
@@ -18,8 +15,6 @@ import spritesheet64Tiles from '../../assets/images/spritesheet-64.json';
 import ramSpritesheet128 from '../../assets/images/ram-spritesheet-128.png';
 import ramSpritesheetData128 from '../../assets/sprites/ram-spritesheet-128.json';
 
-import ramSpritesheet128a from '../../assets/images/ram-spritesheet-128a.png';
-import ramSpritesheetData128a from '../../assets/sprites/ram-spritesheet-128a.json';
 
 import ramSpritesheetPng from '../../assets/images/ram-spritesheet.png';
 import ramSpritesheetJson from '../../assets/sprites/ram-spritesheet.json';
@@ -32,11 +27,12 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image('level-1-tileset-png', LEVEL_1_TILESET_PNG);
+    this.load.tilemapTiledJSON('level-1-map-json', LEVEL_1_MAP_JSON);
+
     this.loadImages();
     this.loadSpriteSheets();
     this.loadSounds();
-    this.load.tilemapTiledJSON('mappy', map5);
-    this.load.tilemapTiledJSON('map-level-1', mapLevel1);
   }
 
   loadImages() {
@@ -44,8 +40,6 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('background-layer-2', backgroundLayer2);
     this.load.image('background-layer-3', backgroundLayer3);
     this.load.image('image-ground', ground);
-    this.load.image('terrain', tilesMap5);
-    this.load.image('tileset-level-1', tilesetLevel1);
   }
 
   loadSpriteSheets() {

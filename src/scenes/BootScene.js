@@ -13,9 +13,13 @@ import mapLevel1 from '../../assets/map/level-1-map.json';
 
 import spritesheet from '../../assets/images/spritesheet.png';
 import spritesheet64 from '../../assets/images/spritesheet-64.png';
-import ramSpritesheet128 from '../../assets/images/ram-spritesheet-128.png';
 import spritesheet64Tiles from '../../assets/images/spritesheet-64.json';
+
+import ramSpritesheet128 from '../../assets/images/ram-spritesheet-128.png';
 import ramSpritesheetData128 from '../../assets/sprites/ram-spritesheet-128.json';
+
+import ramSpritesheet128a from '../../assets/images/ram-spritesheet-128a.png';
+import ramSpritesheetData128a from '../../assets/sprites/ram-spritesheet-128a.json';
 
 import jump from '../../assets/sound/jump.wav';
 
@@ -67,6 +71,8 @@ export default class BootScene extends Phaser.Scene {
       endFrame: 37
     });
     this.load.json('ram-spritesheet-data-128.json', ramSpritesheetData128);
+
+    this.load.aseprite('ram-aseprite', ramSpritesheet128a, ramSpritesheetData128a);
   }
 
   loadSounds() {

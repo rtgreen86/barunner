@@ -12,7 +12,7 @@ export const createAnimationConfig = spriteSheetJson => {
   }
 
   return frameTags.map(animation => ({
-    frameRate: 5,
+    frameRate: 30,
     key: animation.name,
     repeat: -1,
     frames: [...createFrames(animation.name, animation.from, animation.to)]

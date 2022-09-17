@@ -139,26 +139,10 @@ export default class GameScene extends Phaser.Scene {
       this.anims.create(animationProps);
     });
 
-    const data2 = this.cache.json.get('ram-spritesheet-data-128.json').meta.frameTags[1];
+    // const ramAnimationConfig = createAnimationConfig(this.cache.json.get('ram-spritesheet-data-128.json'));
+    // ramAnimationConfig.forEach(anim => this.anims.create(anim));
 
-    const data3 = {
-      frameRate: 5,
-      frames: [
-        {key: 'ram-spritesheet-128', frame: data2.from},
-        {key: 'ram-spritesheet-128', frame: 4},
-        {key: 'ram-spritesheet-128', frame: 5},
-        {key: 'ram-spritesheet-128', frame: data2.to},
-      ],
-      key: data2.name,
-      repeat: -1
-    };
-    this.anims.create(data3);
-
-
-    const ramAnimationConfig = createAnimationConfig(this.cache.json.get('ram-spritesheet-data-128.json'));
-    console.log(ramAnimationConfig);
-
-
+    this.anims.createFromAseprite('ram-aseprite');
 
   }
 
@@ -312,24 +296,31 @@ export default class GameScene extends Phaser.Scene {
   onNumKeyDown(key) {
     switch (key.keyCode) {
       case Phaser.Input.Keyboard.KeyCodes.ONE:
-        console.log('One');
+        this.player.setAnimation('Dash');
         break;
       case Phaser.Input.Keyboard.KeyCodes.TWO:
-        console.log('Two');
+        this.player.setAnimation('Idle');
         break;
       case Phaser.Input.Keyboard.KeyCodes.THREE:
+        this.player.setAnimation('Dizzy');
         break;
       case Phaser.Input.Keyboard.KeyCodes.FOUR:
+        this.player.setAnimation('Faint');
         break;
       case Phaser.Input.Keyboard.KeyCodes.FIVE:
+        this.player.setAnimation('Hurt');
         break;
       case Phaser.Input.Keyboard.KeyCodes.SIX:
+        this.player.setAnimation('Attack');
         break;
       case Phaser.Input.Keyboard.KeyCodes.SEVEN:
+        this.player.setAnimation('Takeoff run');
         break;
       case Phaser.Input.Keyboard.KeyCodes.EIGHT:
+        this.player.setAnimation('Jump');
         break;
       case Phaser.Input.Keyboard.KeyCodes.NINE:
+        this.player.setAnimation('Run');
         break;
     }
   }

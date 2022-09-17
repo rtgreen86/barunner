@@ -5,6 +5,8 @@ import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
 import BackgroundLayer from '../entities/BackgroundLayer';
 
+import { createAnimationConfig } from '../entities/SpriteSheetParser';
+
 const SPAWN_DISTANCE = 10000;
 const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
@@ -32,6 +34,18 @@ export default class GameScene extends Phaser.Scene {
     this.controller = new PlayerController(this);
     this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
     this.pauseKey.on('down', this.onPauseKeyDown, this);
+
+    this.numKeys = {
+      key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
+      key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),
+      key3: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE, true, false).on('down', this.onNumKeyDown, this),
+      key4: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR, true, false).on('down', this.onNumKeyDown, this),
+      key5: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE, true, false).on('down', this.onNumKeyDown, this),
+      key6: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX, true, false).on('down', this.onNumKeyDown, this),
+      key7: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEVEN, true, false).on('down', this.onNumKeyDown, this),
+      key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
+      key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
+    };
 
     this.createBackgound();
     this.createGround();
@@ -122,15 +136,10 @@ export default class GameScene extends Phaser.Scene {
       }, {
         frames: this.anims.generateFrameNumbers('spritesheet-64', { frames })
       });
-
-      console.log(animationProps);
-
       this.anims.create(animationProps);
     });
 
-    const data2 = this.cache.json.get('ram-spritesheet-data-128').meta.frameTags[1];
-
-
+    const data2 = this.cache.json.get('ram-spritesheet-data-128.json').meta.frameTags[1];
 
     const data3 = {
       frameRate: 5,
@@ -144,6 +153,13 @@ export default class GameScene extends Phaser.Scene {
       repeat: -1
     };
     this.anims.create(data3);
+
+
+    const ramAnimationConfig = createAnimationConfig(this.cache.json.get('ram-spritesheet-data-128.json'));
+    console.log(ramAnimationConfig);
+
+
+
   }
 
   createBackgound() {
@@ -175,7 +191,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = new Player(this, 350, -275 - 15, 'ram-spritesheet-128', 3 /* framenum */, this.controller).setDepth(50).setBounceX(0);
+    this.player = new Player(this, 350, -275 - 15, 'ram-spritesheet-128.png', 3 /* framenum */, this.controller).setDepth(50).setBounceX(0);
     // this.player = new Player(this, 0, 0, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
     this.player.setDepth(2000);
   }
@@ -290,6 +306,31 @@ export default class GameScene extends Phaser.Scene {
       if (!this.player.isDead) {
         this.player.run();
       }
+    }
+  }
+
+  onNumKeyDown(key) {
+    switch (key.keyCode) {
+      case Phaser.Input.Keyboard.KeyCodes.ONE:
+        console.log('One');
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.TWO:
+        console.log('Two');
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.THREE:
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.FOUR:
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.FIVE:
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.SIX:
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.SEVEN:
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.EIGHT:
+        break;
+      case Phaser.Input.Keyboard.KeyCodes.NINE:
+        break;
     }
   }
 

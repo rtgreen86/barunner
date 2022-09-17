@@ -60,13 +60,13 @@ export default class BootScene extends Phaser.Scene {
     });
     this.load.json('spritesheet-64-tiles', spritesheet64Tiles, 'tiles');
 
-    this.load.spritesheet('ram-spritesheet-128', ramSpritesheet128, {
+    this.load.spritesheet('ram-spritesheet-128.png', ramSpritesheet128, {
       frameWidth: 256,
       frameHeight: 256,
       startFrame: 0,
       endFrame: 37
     });
-    this.load.json('ram-spritesheet-data-128', ramSpritesheetData128, 'ramSpritesheetData128');
+    this.load.json('ram-spritesheet-data-128.json', ramSpritesheetData128);
   }
 
   loadSounds() {

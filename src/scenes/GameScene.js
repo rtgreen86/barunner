@@ -30,7 +30,30 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.createAnimation();
+    this.createControls();
+    this.createBackgound();
+    this.createGround();
+    this.createMap();
+    this.createCharacters();
+    this.createObstacles();
+    this.createCollaider();
+    this.createCamera();
 
+    this.jumpSound = this.sound.add('jump');
+  }
+
+  createAnimation() {
+    this.anims.createFromAseprite('ram-spritesheet');
+    this.anims.get('Ram Dash').repeat = -1;
+    this.anims.get('Ram Idle').repeat = -1;
+    this.anims.get('Ram Dizzy').repeat = -1;
+    this.anims.get('Ram Hurt').repeat = -1;
+    this.anims.get('Ram Takeoff Run').repeat = -1;
+    this.anims.get('Ram Jump').repeat = -1;
+    this.anims.get('Ram Run').repeat = -1;
+  }
+
+  createControls() {
     this.controller = new PlayerController(this);
     this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
     this.pauseKey.on('down', this.onPauseKeyDown, this);
@@ -46,93 +69,6 @@ export default class GameScene extends Phaser.Scene {
       key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
       key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
     };
-
-    this.createBackgound();
-    this.createGround();
-    this.createObstacles();
-
-    this.createPlayer();
-    this.createCollaider();
-
-
-    // Maps
-
-    this.map = this.add.tilemap('level-1-map-json');
-    this.mapTiles = this.map.addTilesetImage('level-1-tileset', 'level-1-tileset-png');
-    this.mapLayers = [
-      this.map.createStaticLayer('chunk-1', [this.mapTiles], 0, -1450)
-    ];
-
-
-    // Characters
-
-    this.player = new Player(this, 350, -275 - 15, 'ram-spritesheet', 3, this.controller).setDepth(50).setBounceX(0);
-    this.player.setDepth(2000);
-    // Old Version
-    // this.player = new Player(this, 0, 0, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
-
-
-    // Colliders
-
-    this.mapLayers.forEach(layer => {
-      this.physics.add.collider(this.player, layer);
-      layer.setCollisionByProperty({ collides: true });
-    });
-
-
-    this.createCamera();
-
-    this.jumpSound = this.sound.add('jump');
-  }
-
-  createCamera() {
-    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.startFollow(
-      this.player,
-      false,
-      0.2, 0,
-      -200, 50
-    );
-    this.cameras.main.zoom = 1;
-  }
-
-  createCollaider() {
-    // Do not collide with obstacles
-    // this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
-    // this.physics.add.collider(this.ground, this.player);
-    // this.physics.add.collider(this.ground, this.obstacles);
-  }
-
-  createAnimation() {
-    const data = this.cache.json.get('spritesheet-64-tiles');
-
-    data.forEach((tile) => {
-      if (tile.type !== 'animation') return;
-
-      const frames = tile.animation.map(frame => frame.tileid);
-
-
-
-      const animationProps = tile.properties.reduce((props, prop) => {
-        props[prop.name] = prop.value;
-        return props;
-      }, {
-        frames: this.anims.generateFrameNumbers('spritesheet-64', { frames })
-      });
-      this.anims.create(animationProps);
-    });
-
-    // const ramAnimationConfig = createAnimationConfig(this.cache.json.get('ram-spritesheet-data-128.json'));
-    // ramAnimationConfig.forEach(anim => this.anims.create(anim));
-
-    this.anims.createFromAseprite('ram-spritesheet');
-    this.anims.get('Ram Dash').repeat = -1;
-    this.anims.get('Ram Idle').repeat = -1;
-    this.anims.get('Ram Dizzy').repeat = -1;
-    this.anims.get('Ram Hurt').repeat = -1;
-    this.anims.get('Ram Takeoff Run').repeat = -1;
-    this.anims.get('Ram Jump').repeat = -1;
-    this.anims.get('Ram Run').repeat = -1;
   }
 
   createBackgound() {
@@ -159,14 +95,47 @@ export default class GameScene extends Phaser.Scene {
     this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
+  createMap() {
+    this.map = this.add.tilemap('level-1-map-json');
+    this.mapTiles = this.map.addTilesetImage('level-1-tileset', 'level-1-tileset-png');
+    this.mapLayers = [
+      this.map.createStaticLayer('chunk-1', [this.mapTiles], 0, -1450)
+    ];
+  }
+
+  createCharacters() {
+    this.player = new Player(this, 350, -275 - 15, 'ram-spritesheet', 3, this.controller).setDepth(50).setBounceX(0);
+    this.player.setDepth(2000);
+
+    // Old Version
+    // this.player = new Player(this, 0, 0, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
+  }
+
   createObstacles() {
     this.obstacles = this.physics.add.group();
   }
 
-  createPlayer() {
-    // this.player = new Player(this, 350, -275 - 15, 'ram-spritesheet-128.png', 3 /* framenum */, this.controller).setDepth(50).setBounceX(0);
-    // // this.player = new Player(this, 0, 0, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
-    // this.player.setDepth(2000);
+  createCollaider() {
+    // Do not collide with obstacles
+    // this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
+    // this.physics.add.collider(this.ground, this.player);
+    // this.physics.add.collider(this.ground, this.obstacles);
+
+    this.mapLayers.forEach(layer => {
+      this.physics.add.collider(this.player, layer);
+      layer.setCollisionByProperty({ collides: true });
+    });
+  }
+
+  createCamera() {
+    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    this.cameras.main.startFollow(
+      this.player,
+      false,
+      0.2, 0,
+      -200, 50
+    );
+    this.cameras.main.zoom = 1;
   }
 
   update(time, delta) {

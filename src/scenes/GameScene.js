@@ -5,8 +5,6 @@ import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
 import BackgroundLayer from '../entities/BackgroundLayer';
 
-import { createAnimationConfig } from '../entities/SpriteSheetParser';
-
 const SPAWN_DISTANCE = 10000;
 const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
@@ -69,6 +67,11 @@ export default class GameScene extends Phaser.Scene {
       key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
       key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
     };
+
+    // use Phaser.Input.Keyboard. KeyboardPlugin
+    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
+    // An object containing the properties: up, down, left, right, space and shift.
+    this.cursor = this.input.keyboard.createCursorKeys();
   }
 
   createBackgound() {
@@ -160,6 +163,13 @@ export default class GameScene extends Phaser.Scene {
 
     // Do not update background
     // this.updateBackground();
+
+    if (this.cursor.right.isDown) {
+      this.player.run();
+    }
+    if (this.cursor.left.isDown) {
+      this.player.takeoffRun();
+    }
   }
 
   updateGround() {

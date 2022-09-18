@@ -61,7 +61,7 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   idle() {
-    // this.setVelocityX(0);
+    this.setVelocityX(0);
     this.setAnimation(IDLE);
   }
 
@@ -75,6 +75,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   takeoffRun() {
     this.setAnimation(TAKEOFF_RUN);
+    this.setVelocityX(-100);
   }
 
   jump() {
@@ -93,7 +94,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   run() {
     this.setAnimation(RUN);
-    // this.setVelocityX(RUN_VELOCITY);
+    this.setVelocityX(RUN_VELOCITY);
   }
 
   attack() {

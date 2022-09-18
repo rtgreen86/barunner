@@ -1,4 +1,5 @@
 node_modules
+assets/archives/*
 assets/images
 assets/sound
 assets/map/*.png

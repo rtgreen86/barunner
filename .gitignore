@@ -4,3 +4,4 @@ assets/sound
 assets/map/*.png
 assets/map/*.aseprite
 dist
+*.tiled-session

@@ -11,10 +11,10 @@
     "fileStates": {
         "assets/map/level-1-map.tmx": {
             "scale": 0.47128906249999997,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 1023.7878159966846,
-                "y": 1311.2971404890177
+                "y": 988.7774554496477
             }
         },
         "assets/map/level-1-map.tmx#level-1-tileset": {

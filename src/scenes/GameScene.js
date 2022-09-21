@@ -102,7 +102,9 @@ export default class GameScene extends Phaser.Scene {
     this.map = this.add.tilemap('level-1-map-json');
     this.mapTiles = this.map.addTilesetImage('level-1-tileset', 'level-1-tileset-png');
     this.mapLayers = [
-      this.map.createStaticLayer('chunk-1', [this.mapTiles], 0, -1450)
+      this.map.createStaticLayer('chunk-1', [this.mapTiles], 0, -1450),
+      this.map.createStaticLayer('chunk-2', [this.mapTiles], 16*128, -1450),
+      this.map.createStaticLayer('chunk-3', [this.mapTiles], 16*128*2, -1450)
     ];
   }
 
@@ -138,7 +140,7 @@ export default class GameScene extends Phaser.Scene {
       0.2, 0,
       -200, 50
     );
-    this.cameras.main.zoom = 1;
+    this.cameras.main.zoom = 0.5;
   }
 
   update(time, delta) {

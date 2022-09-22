@@ -92,9 +92,15 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
 
-  run() {
+  run(direction) {
     this.setAnimation(RUN);
+    if (direction === 'backward') {
+      this.setVelocityX(-RUN_VELOCITY);
+      this.flipX = true;
+      return;
+    }
     this.setVelocityX(RUN_VELOCITY);
+    this.flipX = false;
   }
 
   attack() {

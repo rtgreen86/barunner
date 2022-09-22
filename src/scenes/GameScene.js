@@ -167,9 +167,12 @@ export default class GameScene extends Phaser.Scene {
     // this.updateBackground();
 
     if (this.cursor.right.isDown) {
-      this.player.run();
+      this.player.run('forward');
     }
     if (this.cursor.left.isDown) {
+      this.player.run('backward');
+    }
+    if (this.cursor.down.isDown) {
       this.player.takeoffRun();
     }
   }

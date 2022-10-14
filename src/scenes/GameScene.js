@@ -141,6 +141,7 @@ export default class GameScene extends Phaser.Scene {
       -200, 50
     );
     this.cameras.main.zoom = 1;
+    this.cameras.main.roundPixels = true;
   }
 
   update(time, delta) {

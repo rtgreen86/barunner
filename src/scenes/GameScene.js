@@ -5,19 +5,13 @@ import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
 // import BackgroundLayer from '../entities/BackgroundLayer';
 
-
-const MAP_TILE_SIZE = 128;
-const MAP_GROUND_POSITION = 11 * MAP_TILE_SIZE;
-const MAP_CHUNK_SIZE = 16 * MAP_TILE_SIZE;
+import Level1 from '../entities/levels/Level1';
 
 const PLAYER_SIZE = 128;
-const PLAYER_START_X = MAP_CHUNK_SIZE / 2;
-const PLAYER_START_Y = MAP_GROUND_POSITION - PLAYER_SIZE / 2;
+const PLAYER_START_X = Level1.mapChunkSize / 2;
+const PLAYER_START_Y = Level1.mapGroundPosition - PLAYER_SIZE / 2;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
-
-
-
 
 // const SPAWN_DISTANCE = 10000;
 // const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
@@ -25,11 +19,6 @@ const PLAYER_CAMERA_POSITION_Y = 0.25;
 const DEADLINE_OFFSET = -100;
 
 const PLAYER_RESPAWN_TIMEOUT = 1000;
-
-
-
-
-
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -43,6 +32,10 @@ export default class GameScene extends Phaser.Scene {
     this.playerAlive = true;
     this.timeOfDeath = null;
     this.nextGround = 200;
+  }
+
+  preload() {
+    Level1.preload(this);
   }
 
   create() {
@@ -118,9 +111,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createMap() {
-    this.availableChunks = ['chunk-1', 'chunk-2', 'chunk-3'];
-    this.tilemap = this.add.tilemap('level-1-map-json');
-    this.tilesImages = this.tilemap.addTilesetImage('level-1-tileset', 'level-1-tileset-png');
+    this.tilemap = this.add.tilemap(Level1.mapName);
+    this.tilesImages = this.tilemap.addTilesetImage(Level1.tilesetName, Level1.tilesetImage);
+
     this.mapChunks = [
       this.tilemap.createStaticLayer('chunk-1', [this.tilesImages], 0, 0),
       // this.tilemap.createStaticLayer('chunk-2', [this.tilesImages], 16*128, 0),

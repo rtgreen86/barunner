@@ -1,7 +1,5 @@
 import Phaser from 'Phaser';
 
-import LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
-import LEVEL_1_TILESET_PNG from '../../assets/images/level-1-tileset.png';
 import RAM_SPRITESHEET_JSON from '../../assets/images/ram-spritesheet.json';
 import RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
 
@@ -21,8 +19,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('level-1-tileset-png', LEVEL_1_TILESET_PNG);
-    this.load.tilemapTiledJSON('level-1-map-json', LEVEL_1_MAP_JSON);
     this.load.aseprite('ram-spritesheet', RAM_SPRITESHEET_PNG, RAM_SPRITESHEET_JSON);
     this.loadImages();
     this.loadSpriteSheets();

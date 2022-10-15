@@ -12,6 +12,17 @@ export default class Level1 {
 
   static availableChunks = ['chunk-1', 'chunk-2', 'chunk-3'];
 
+  constructor(scene) {
+    this.scene = scene;
+    this.tilemap = this.scene.add.tilemap(Level1.mapName);
+    this.tilesImages = this.tilemap.addTilesetImage(Level1.tilesetName, Level1.tilesetImage);
+    this.mapChunks = [
+      this.tilemap.createStaticLayer(Level1.availableChunks[0], [this.tilesImages], 0, 0),
+      // this.tilemap.createStaticLayer('chunk-2', [this.tilesImages], 16*128, 0),
+      // this.tilemap.createStaticLayer('chunk-3', [this.tilesImages], 16*128*2, 0)
+    ];
+  }
+
   static preload(scene) {
     scene.load.image(Level1.tilesetImage, LEVEL_1_TILESET_PNG);
     scene.load.tilemapTiledJSON(Level1.mapName, LEVEL_1_MAP_JSON);

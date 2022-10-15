@@ -13,6 +13,8 @@ import spritesheet64 from '../../assets/images/spritesheet-64.png';
 
 import jump from '../../assets/sound/jump.wav';
 
+import Level1 from '../entities/levels/Level1';
+
 export default class BootScene extends Phaser.Scene {
   constructor() {
     super('Boot');
@@ -20,6 +22,7 @@ export default class BootScene extends Phaser.Scene {
 
   preload() {
     this.load.aseprite('ram-spritesheet', RAM_SPRITESHEET_PNG, RAM_SPRITESHEET_JSON);
+    Level1.preload(this);
     this.loadImages();
     this.loadSpriteSheets();
     this.loadSounds();

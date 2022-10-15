@@ -34,16 +34,12 @@ export default class GameScene extends Phaser.Scene {
     this.nextGround = 200;
   }
 
-  preload() {
-    Level1.preload(this);
-  }
-
   create() {
     this.createAnimation();
     this.createControls();
     this.createBackgound();
     this.createGround();
-    this.createMap();
+    this.createLevel();
     this.createPlayer();
     this.createObstacles();
     this.createCollaider();
@@ -110,15 +106,8 @@ export default class GameScene extends Phaser.Scene {
     this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
-  createMap() {
-    this.tilemap = this.add.tilemap(Level1.mapName);
-    this.tilesImages = this.tilemap.addTilesetImage(Level1.tilesetName, Level1.tilesetImage);
-
-    this.mapChunks = [
-      this.tilemap.createStaticLayer('chunk-1', [this.tilesImages], 0, 0),
-      // this.tilemap.createStaticLayer('chunk-2', [this.tilesImages], 16*128, 0),
-      // this.tilemap.createStaticLayer('chunk-3', [this.tilesImages], 16*128*2, 0)
-    ];
+  createLevel() {
+    this.level = new Level1(this);
   }
 
   createPlayer() {
@@ -137,7 +126,7 @@ export default class GameScene extends Phaser.Scene {
     // this.physics.add.collider(this.ground, this.player);
     // this.physics.add.collider(this.ground, this.obstacles);
 
-    this.mapChunks.forEach(layer => {
+    this.level.mapChunks.forEach(layer => {
       this.physics.add.collider(this.player, layer);
       layer.setCollisionByProperty({ collides: true });
     });

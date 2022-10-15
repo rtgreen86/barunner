@@ -3,14 +3,33 @@ import Phaser from 'Phaser';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
-import BackgroundLayer from '../entities/BackgroundLayer';
+// import BackgroundLayer from '../entities/BackgroundLayer';
 
-const SPAWN_DISTANCE = 10000;
-const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
+
+const MAP_TILE_SIZE = 128;
+const MAP_GROUND_POSITION = 11 * MAP_TILE_SIZE;
+const MAP_CHUNK_SIZE = 16 * MAP_TILE_SIZE;
+
+const PLAYER_SIZE = 128;
+const PLAYER_START_X = MAP_CHUNK_SIZE / 2;
+const PLAYER_START_Y = MAP_GROUND_POSITION - PLAYER_SIZE / 2;
+const PLAYER_CAMERA_POSITION_X = -0.25;
+const PLAYER_CAMERA_POSITION_Y = 0.25;
+
+
+
+
+// const SPAWN_DISTANCE = 10000;
+// const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
 const DEADLINE_OFFSET = -100;
 
 const PLAYER_RESPAWN_TIMEOUT = 1000;
+
+
+
+
+
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -32,7 +51,7 @@ export default class GameScene extends Phaser.Scene {
     this.createBackgound();
     this.createGround();
     this.createMap();
-    this.createCharacters();
+    this.createPlayer();
     this.createObstacles();
     this.createCollaider();
     this.createCamera();
@@ -99,21 +118,20 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createMap() {
-    this.map = this.add.tilemap('level-1-map-json');
-    this.mapTiles = this.map.addTilesetImage('level-1-tileset', 'level-1-tileset-png');
-    this.mapLayers = [
-      this.map.createStaticLayer('chunk-1', [this.mapTiles], 0, -1450),
-      this.map.createStaticLayer('chunk-2', [this.mapTiles], 16*128, -1450),
-      this.map.createStaticLayer('chunk-3', [this.mapTiles], 16*128*2, -1450)
+    this.availableChunks = ['chunk-1', 'chunk-2', 'chunk-3'];
+    this.tilemap = this.add.tilemap('level-1-map-json');
+    this.tilesImages = this.tilemap.addTilesetImage('level-1-tileset', 'level-1-tileset-png');
+    this.mapChunks = [
+      this.tilemap.createStaticLayer('chunk-1', [this.tilesImages], 0, 0),
+      // this.tilemap.createStaticLayer('chunk-2', [this.tilesImages], 16*128, 0),
+      // this.tilemap.createStaticLayer('chunk-3', [this.tilesImages], 16*128*2, 0)
     ];
   }
 
-  createCharacters() {
-    this.player = new Player(this, 350, -275 - 15, 'ram-spritesheet', 3, this.controller).setDepth(50).setBounceX(0);
+  createPlayer() {
+    this.player = new Player(this, PLAYER_START_X, PLAYER_START_Y, 'ram-spritesheet', 3, this.controller)
+    this.player.setBounceX(0);
     this.player.setDepth(2000);
-
-    // Old Version
-    // this.player = new Player(this, 0, 0, 'spritesheet-small', 1, this.controller).setDepth(50).setBounceX(0);
   }
 
   createObstacles() {
@@ -126,22 +144,22 @@ export default class GameScene extends Phaser.Scene {
     // this.physics.add.collider(this.ground, this.player);
     // this.physics.add.collider(this.ground, this.obstacles);
 
-    this.mapLayers.forEach(layer => {
+    this.mapChunks.forEach(layer => {
       this.physics.add.collider(this.player, layer);
       layer.setCollisionByProperty({ collides: true });
     });
   }
 
   createCamera() {
-    // this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    //this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    this.cameras.main.zoom = 1;
     this.cameras.main.startFollow(
       this.player,
-      false,
-      0.2, 0,
-      -200, 50
+      true,
+      1, 1,
+      this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
+      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
     );
-    this.cameras.main.zoom = 1;
-    this.cameras.main.roundPixels = true;
   }
 
   update(time, delta) {

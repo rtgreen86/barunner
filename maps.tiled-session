@@ -33,10 +33,10 @@
             "scaleInDock": 1
         }
     },
-    "last.exportedFilePath": "C:/Users/Pavel/Code/barunner/assets/map",
+    "last.exportedFilePath": "C:/Users/pavel/Code/barunner/assets/map",
     "last.imagePath": "C:/Users/Pavel/Code/barunner/assets/images",
     "map.height": 16,
-    "map.lastUsedExportFilter": "JSON map-файлы (*.tmj *.json)",
+    "map.lastUsedExportFilter": "JSON map-файлы (*.json)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 128,
     "map.tileWidth": 128,

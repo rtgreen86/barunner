@@ -2,10 +2,6 @@ import LEVEL_1_MAP_JSON from '../../../assets/map/level-1-map.json';
 import LEVEL_1_TILESET_PNG from '../../../assets/images/level-1-tileset.png';
 
 export default class Level1 {
-  static mapTileSize = 128;
-  static mapGroundPosition = 11 * Level1.mapTileSize;
-  static mapChunkSize = 16 * Level1.mapTileSize;
-
   static tilesetName = 'level-1-tileset';
   static tilesetImage = 'level-1-tileset-png';
   static mapName = 'level-1-map-json';
@@ -14,6 +10,11 @@ export default class Level1 {
 
   constructor(scene) {
     this.scene = scene;
+
+    this.mapTileSize = 128;
+    this.mapGroundPosition = 11 * this.mapTileSize;
+    this.mapChunkSize = 16 * this.mapTileSize;
+
     this.tilemap = this.scene.add.tilemap(Level1.mapName);
     this.tilesImages = this.tilemap.addTilesetImage(Level1.tilesetName, Level1.tilesetImage);
     this.mapChunks = [

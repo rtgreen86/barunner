@@ -8,8 +8,6 @@ import PlayerController from '../entities/PlayerController';
 import Level1 from '../entities/levels/Level1';
 
 const PLAYER_SIZE = 128;
-const PLAYER_START_X = Level1.mapChunkSize / 2;
-const PLAYER_START_Y = Level1.mapGroundPosition - PLAYER_SIZE / 2;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
@@ -111,7 +109,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = new Player(this, PLAYER_START_X, PLAYER_START_Y, 'ram-spritesheet', 3, this.controller)
+    const playerStartX = this.level.mapChunkSize / 2;
+    const playerStartY = this.level.mapGroundPosition - PLAYER_SIZE / 2;
+    this.player = new Player(this, playerStartX, playerStartY, 'ram-spritesheet', 3, this.controller)
     this.player.setBounceX(0);
     this.player.setDepth(2000);
   }

@@ -59,9 +59,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    this.text = this.add.text(0, 0, 'Hello World');
-    this.text.setFontSize('24px');
-    // this.scene.start('Game');
     this.scene.run('Game');
+    this.scene.run('DebugScene');
   }
 }

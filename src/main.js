@@ -2,12 +2,13 @@ import Phaser from 'Phaser';
 
 import BootScene from './scenes/BootScene';
 import GameScene from './scenes/GameScene';
+import DebugScene from './scenes/DebugScene';
 
 import './main.css';
 
 window.game = new Phaser.Game({
   type: Phaser.AUTO,
-  scene: [BootScene, GameScene],
+  scene: [BootScene, GameScene, DebugScene],
   physics: {
     default: 'arcade',
     arcade: {

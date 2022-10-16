@@ -133,7 +133,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createCamera() {
-    //this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
     this.cameras.main.zoom = 1;
     this.cameras.main.startFollow(
       this.player,
@@ -177,7 +177,7 @@ export default class GameScene extends Phaser.Scene {
       this.player.takeoffRun();
     }
 
-    const s = this.scene.get('Boot')
+    const s = this.scene.get('DebugScene')
     s.text.setText(`Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}`);
 
   }

@@ -18,8 +18,8 @@ export default class Level1 {
     this.tilemap = this.scene.add.tilemap(Level1.mapName);
     this.tilesImages = this.tilemap.addTilesetImage(Level1.tilesetName, Level1.tilesetImage);
     this.mapChunks = [
-      this.tilemap.createStaticLayer(Level1.availableChunks[0], [this.tilesImages], 0, 0),
-      // this.tilemap.createStaticLayer('chunk-2', [this.tilesImages], 16*128, 0),
+      this.tilemap.createLayer(Level1.availableChunks[0], [this.tilesImages], 0, 0),
+      this.tilemap.createStaticLayer('chunk-2', [this.tilesImages], 16*128, 0),
       // this.tilemap.createStaticLayer('chunk-3', [this.tilesImages], 16*128*2, 0)
     ];
   }

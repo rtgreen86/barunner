@@ -178,7 +178,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     const s = this.scene.get('DebugScene')
-    s.text.setText(`Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}`);
+    s.text.setText(`Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}, block ${this.level.mapChunks[0].displayOriginX} ${this.level.mapChunks[0].displayWidth} ${this.level.mapChunks[1].x}`);
 
   }
 

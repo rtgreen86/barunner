@@ -7,14 +7,13 @@ import DebugScene from './scenes/DebugScene';
 import './main.css';
 
 window.game = new Phaser.Game({
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   scene: [BootScene, GameScene, DebugScene],
   physics: {
     default: 'arcade',
     arcade: {
       debug: true,
-      gravity: { x: 0, y: 2000 }
-      // gravity: { x: 0, y: 0 }
+      gravity: { x: 0, y: 200 }
     }
   },
   scale: {

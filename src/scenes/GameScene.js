@@ -110,7 +110,7 @@ export default class GameScene extends Phaser.Scene {
 
   createPlayer() {
     const playerStartX = this.level.mapChunkSize / 2;
-    const playerStartY = this.level.mapGroundPosition - PLAYER_SIZE / 2;
+    const playerStartY = this.level.mapGroundPosition - PLAYER_SIZE / 3;
     this.player = new Player(this, playerStartX, playerStartY, 'ram-spritesheet', 3, this.controller)
     this.player.setBounceX(0);
     this.player.setDepth(2000);

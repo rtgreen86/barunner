@@ -1,0 +1,13 @@
+To export a compatible JSON file in Aseprite, please do the following:
+
+Go to "File - Export Sprite Sheet"
+
+On the Layout tab: 2a. Set the "Sheet type" to "Packed" 2b. Set the "Constraints" to "None" 2c. Check the "Merge Duplicates" checkbox
+
+On the Sprite tab: 3a. Set "Layers" to "Visible layers" 3b. Set "Frames" to "All frames", unless you only wish to export a sub-set of tags
+
+On the Borders tab: 4a. Check the "Trim Sprite" and "Trim Cells" options 4b. Ensure "Border Padding", "Spacing" and "Inner Padding" are all > 0 (1 is usually enough)
+
+On the Output tab: 5a. Check "Output File", give your image a name and make sure you choose "png files" as the file type 5b. Check "JSON Data" and give your json file a name 5c. The JSON Data type can be either a Hash or Array, Phaser doesn't mind. 5d. Make sure "Tags" is checked in the Meta options 5e. In the "Item Filename" input box, make sure it says just "{frame}" and nothing more.
+
+Click export

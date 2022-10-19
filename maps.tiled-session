@@ -5,9 +5,9 @@
     },
     "activeFile": "assets/map/level-1-map.tmx",
     "expandedProjectPaths": [
-        "assets/images",
+        "assets/map",
         "assets",
-        "assets/map"
+        "assets/images"
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
     "fileStates": {
@@ -15,7 +15,7 @@
             "scale": 0.25,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 112,
+                "x": 1008,
                 "y": 1072
             }
         },

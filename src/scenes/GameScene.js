@@ -105,12 +105,17 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createLevel() {
-    this.level = new Level1(this);
+    this.level = this.add.tilemap(Level1.mapName);
+    const tileset = this.level.addTilesetImage(Level1.tilesetName, Level1.tilesetImage);
+    this.layers = [];
+    Level1.chunks.forEach((chunkName, index) => {
+      this.layers[index] = this.level.createLayer(chunkName, tileset, index * Level1.chunkSize, 0).setName(chunkName);
+    });
   }
 
   createPlayer() {
-    const playerStartX = this.level.mapChunkSize / 2;
-    const playerStartY = this.level.mapGroundPosition - PLAYER_SIZE / 3;
+    const playerStartX = Level1.chunkSize / 2;
+    const playerStartY = Level1.groundPosition - PLAYER_SIZE / 3;
     this.player = new Player(this, playerStartX, playerStartY, 'ram-spritesheet', 3, this.controller)
     this.player.setBounceX(0);
     this.player.setDepth(2000);
@@ -126,9 +131,18 @@ export default class GameScene extends Phaser.Scene {
     // this.physics.add.collider(this.ground, this.player);
     // this.physics.add.collider(this.ground, this.obstacles);
 
-    this.level.mapChunks.forEach(layer => {
+    this.physics.add.collider(this.player, this.layers[0]);
+    this.layers[0].setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.player, this.layers[1]);
+    this.layers[1].setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.player, this.layers[2]);
+    this.layers[2].setCollisionByProperty({ collides: true });
+
+
+    Level1.chunks.forEach((chunkName) => {
+      const layer = this.level.getLayer(chunkName);
       this.physics.add.collider(this.player, layer);
-      layer.setCollisionByProperty({ collides: true });
+      this.level.setCollisionByProperty({ collides: true }, true, true, chunkName);
     });
   }
 
@@ -177,9 +191,15 @@ export default class GameScene extends Phaser.Scene {
       this.player.takeoffRun();
     }
 
+    const debugInfo = [
+      `Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}`,
+      'layers:',
+      `${this.level.getLayer('chunk-1').name} ${this.level.getLayer('chunk-1').x}`,
+      `${this.level.getLayer('chunk-2').name} ${this.level.getLayer('chunk-2').x}`,
+      `${this.level.getLayer(2).name} ${this.level.getLayer(2).x}`,
+    ].join('\n');
     const s = this.scene.get('DebugScene')
-    s.text.setText(`Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}, block ${this.level.mapChunks[0].displayOriginX} ${this.level.mapChunks[0].displayWidth} ${this.level.mapChunks[1].x}`);
-
+    s.text.setText(debugInfo);
   }
 
   updateGround() {

@@ -5,15 +5,15 @@
     },
     "activeFile": "assets/map/level-1-map.tmx",
     "expandedProjectPaths": [
-        "assets/map",
         "assets",
+        "assets/map",
         "assets/images"
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
     "fileStates": {
         "assets/map/level-1-map.tmx": {
             "scale": 0.25,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 1008,
                 "y": 1072
@@ -47,7 +47,7 @@
         "assets/map/level-1-map.tmx"
     ],
     "project": "maps.tiled-project",
-    "property.type": "bool",
+    "property.type": "int",
     "recentFiles": [
         "assets/map/level-1-map.tmx",
         "assets/map/map-5-1.tmx"

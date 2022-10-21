@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="128" tileheight="128" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="128" tileheight="128" infinite="0" nextlayerid="4" nextobjectid="1">
  <editorsettings>
   <export target="level-1-map.json" format="json"/>
  </editorsettings>
+ <properties>
+  <property name="playerX" type="int" value="8"/>
+  <property name="playerY" type="int" value="11"/>
+ </properties>
  <tileset firstgid="1" name="level-1-tileset" tilewidth="128" tileheight="128" tilecount="256" columns="16">
   <image source="../images/level-1-tileset.png" width="2048" height="2048"/>
   <tile id="16">

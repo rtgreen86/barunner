@@ -5,8 +5,8 @@
     },
     "activeFile": "assets/map/level-1-map.tmx",
     "expandedProjectPaths": [
-        "assets",
         "assets/map",
+        "assets",
         "assets/images"
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
@@ -20,6 +20,10 @@
             }
         },
         "assets/map/level-1-map.tmx#level-1-tileset": {
+            "scaleInDock": 0.25,
+            "scaleInEditor": 0.33
+        },
+        "assets/map/level-1-map.tmx#tileset-level-1": {
             "scaleInDock": 0.25,
             "scaleInEditor": 0.33
         },
@@ -37,8 +41,9 @@
     },
     "last.exportedFilePath": "C:/Users/pavel/Code/barunner/assets/map",
     "last.imagePath": "C:/Users/Pavel/Code/barunner/assets/images",
+    "lastUsedTilesetExportFilter": "JSON файлы с наборами тайлов (*.tsj *.json)",
     "map.height": 16,
-    "map.lastUsedExportFilter": "JSON map-файлы (*.json)",
+    "map.lastUsedExportFilter": "Все файлы (*)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 128,
     "map.tileWidth": 128,

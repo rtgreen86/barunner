@@ -108,7 +108,7 @@
          "imageheight":2048,
          "imagewidth":2048,
          "margin":0,
-         "name":"level-1-tileset",
+         "name":"tileset-level-1",
          "spacing":0,
          "tilecount":256,
          "tileheight":128,

@@ -5,8 +5,6 @@ import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
 // import BackgroundLayer from '../entities/BackgroundLayer';
 
-import Level1 from '../entities/levels/Level1';
-
 const PLAYER_SIZE = 128;
 const PLAYER_CAMERA_POSITION_X = 0;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
@@ -37,7 +35,7 @@ export default class GameScene extends Phaser.Scene {
     this.createControls();
     this.createBackgound();
     this.createGround();
-    this.createLevel();
+    this.createMap();
     this.createPlayer();
     this.createObstacles();
     this.createCollaider();
@@ -104,13 +102,17 @@ export default class GameScene extends Phaser.Scene {
     this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
-  createLevel() {
-    this.level = this.add.tilemap(Level1.mapName);
-    const tileset = this.level.addTilesetImage(Level1.tilesetName, Level1.tilesetImage);
-    this.level.layers.forEach((layer, index) => {
-      this.level.createLayer(layer.name, tileset, index * this.level.width * this.level.tileWidth, 0).setName(layer.name);
-    });
-    console.log(this.level);
+  createMap() {
+    this.map = this.add.tilemap('map-level-1');
+    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
+    this.map.layers.forEach((layer, index) =>
+      this.map.createLayer(
+        layer.name,
+        this.map.tilesets,
+        index * this.map.width * this.map.tileWidth,
+        0)
+        .setName(layer.name)
+    );
   }
 
   createPlayer() {
@@ -121,9 +123,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   getPlayerStartPosition() {
-    const playerX = this.level.properties.find(prop => prop.name === 'playerX');
-    const playerY = this.level.properties.find(prop => prop.name === 'playerY');
-    return [playerX.value * this.level.tileWidth, playerY.value * this.level.tileHeight - PLAYER_SIZE / 3];
+    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
+    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
+    return [playerX.value * this.map.tileWidth, playerY.value * this.map.tileHeight - PLAYER_SIZE / 3];
   }
 
   createObstacles() {
@@ -138,9 +140,9 @@ export default class GameScene extends Phaser.Scene {
 
     // collide with level
 
-    this.level.layers.forEach(layer => {
+    this.map.layers.forEach(layer => {
       this.physics.add.collider(this.player, layer.tilemapLayer);
-      this.level.setCollisionByProperty({ collides: true }, true, true, layer.name);
+      this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
   }
 
@@ -192,9 +194,9 @@ export default class GameScene extends Phaser.Scene {
     const debugInfo = [
       `Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}`,
       'layers:',
-      `${this.level.getLayer('chunk-1').name} ${this.level.getLayer('chunk-1').x}`,
-      `${this.level.getLayer('chunk-2').name} ${this.level.getLayer('chunk-2').tilemapLayer.x}`,
-      `${this.level.getLayer(2).name} ${this.level.getLayer(2).tilemapLayer.x}`,
+      `${this.map.getLayer('chunk-1').name} ${this.map.getLayer('chunk-1').x}`,
+      `${this.map.getLayer('chunk-2').name} ${this.map.getLayer('chunk-2').tilemapLayer.x}`,
+      `${this.map.getLayer(2).name} ${this.map.getLayer(2).tilemapLayer.x}`,
     ].join('\n');
     const s = this.scene.get('DebugScene')
     s.text.setText(debugInfo);

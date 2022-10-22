@@ -1,5 +1,8 @@
 import Phaser from 'Phaser';
 
+import LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
+import LEVEL_1_TILESET_PNG from '../../assets/images/level-1-tileset.png';
+
 import RAM_SPRITESHEET_JSON from '../../assets/images/ram-spritesheet.json';
 import RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
 
@@ -13,8 +16,6 @@ import spritesheet64 from '../../assets/images/spritesheet-64.png';
 
 import jump from '../../assets/sound/jump.wav';
 
-import Level1 from '../entities/levels/Level1';
-
 export default class BootScene extends Phaser.Scene {
   constructor() {
     super('Boot');
@@ -22,13 +23,18 @@ export default class BootScene extends Phaser.Scene {
 
   preload() {
     this.load.aseprite('ram-spritesheet', RAM_SPRITESHEET_PNG, RAM_SPRITESHEET_JSON);
-    Level1.preload(this);
+    this.loadMaps();
     this.loadImages();
     this.loadSpriteSheets();
     this.loadSounds();
   }
 
+  loadMaps() {
+    this.load.tilemapTiledJSON('map-level-1', LEVEL_1_MAP_JSON);
+  }
+
   loadImages() {
+    this.load.image('tileset-level-1', LEVEL_1_TILESET_PNG);
     this.load.image('background-layer-1', backgroundLayer1);
     this.load.image('background-layer-2', backgroundLayer2);
     this.load.image('background-layer-3', backgroundLayer3);
@@ -59,6 +65,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
+    console.log('boot scene create');
     this.scene.run('Game');
     this.scene.run('DebugScene');
   }

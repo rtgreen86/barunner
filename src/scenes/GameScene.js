@@ -193,10 +193,36 @@ export default class GameScene extends Phaser.Scene {
     if (this.cursor.down.isDown) {
       this.player.takeoffRun();
     }
+
+    let minLayer = this.map.layer;
+    let minLayerPosition = this.getLayerPosition(minLayer.name);
+    let maxLayer = this.map.layer;
+    let maxLayerPosition = this.getLayerPosition(maxLayer.name);
+
+    for (const layer of this.map.layers) {
+      const layerPosition = this.getLayerPosition(layer.name);
+      if (layerPosition > maxLayerPosition) {
+        maxLayerPosition = layerPosition;
+        maxLayer = layer;
+      }
+      if (layerPosition < minLayerPosition) {
+        minLayerPosition = layerPosition;
+        minLayer = layer;
+      }
+    }
+
+
+
+    if (this.playerChunk === minLayerPosition) {
+      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.map.widthInPixels, maxLayer.y);
+      console.log(this.playerChunk, minLayerPosition)
+    }
+    if (this.playerChunk === maxLayerPosition) {
+      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
+    }
   }
 
   updateGround() {
-
     // FOR generate ground
 
     // this.ground.getMatching('active', true).forEach(item => {

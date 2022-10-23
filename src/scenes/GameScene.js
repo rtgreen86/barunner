@@ -113,6 +113,7 @@ export default class GameScene extends Phaser.Scene {
         0)
         .setName(layer.name)
     );
+    console.log(this.map);
   }
 
   createPlayer() {
@@ -194,9 +195,10 @@ export default class GameScene extends Phaser.Scene {
     const debugInfo = [
       `Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}`,
       'layers:',
-      `${this.map.getLayer('chunk-1').name} ${this.map.getLayer('chunk-1').x}`,
-      `${this.map.getLayer('chunk-2').name} ${this.map.getLayer('chunk-2').tilemapLayer.x}`,
-      `${this.map.getLayer(2).name} ${this.map.getLayer(2).tilemapLayer.x}`,
+      `${this.map.getLayer('chunk-1').name} ${this.map.getLayer('chunk-1').x} ${this.getLayerPosition('chunk-1')}`,
+      `${this.map.getLayer('chunk-2').name} ${this.map.getLayer('chunk-2').tilemapLayer.x} ${this.getLayerPosition('chunk-2')}`,
+      `${this.map.getLayer(2).name} ${this.map.getLayer(2).tilemapLayer.x} ${this.getLayerPosition('chunk-3')}`,
+      `Player chunk: ${this.playerChunk}`
     ].join('\n');
     const s = this.scene.get('DebugScene')
     s.text.setText(debugInfo);
@@ -275,6 +277,14 @@ export default class GameScene extends Phaser.Scene {
     this.backgroundLayer1.update(this.deadline);
     this.backgroundLayer2.update(this.deadline);
     this.backgroundLayer3.update(this.deadline);
+  }
+
+  get playerChunk() {
+    return Math.floor(this.player.x / this.map.widthInPixels);
+  }
+
+  getLayerPosition(layer) {
+    return Math.floor(this.map.getLayer(layer).tilemapLayer.x / this.map.widthInPixels);
   }
 
   onPauseKeyDown() {

@@ -18,7 +18,7 @@ import jump from '../../assets/sound/jump.wav';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
-    super('Boot');
+    super('BootScene');
   }
 
   preload() {
@@ -66,7 +66,7 @@ export default class BootScene extends Phaser.Scene {
 
   create() {
     console.log('boot scene create');
-    this.scene.run('Game');
+    this.scene.run('GameScene');
     this.scene.run('DebugScene');
   }
 }

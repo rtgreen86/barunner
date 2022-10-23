@@ -18,7 +18,7 @@ const PLAYER_RESPAWN_TIMEOUT = 1000;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
-    super('Game');
+    super('GameScene');
   }
 
   init() {
@@ -42,6 +42,8 @@ export default class GameScene extends Phaser.Scene {
     this.createCamera();
 
     this.jumpSound = this.sound.add('jump');
+
+    this.scene.run('DebugScene');
   }
 
   createAnimation() {
@@ -191,17 +193,6 @@ export default class GameScene extends Phaser.Scene {
     if (this.cursor.down.isDown) {
       this.player.takeoffRun();
     }
-
-    const debugInfo = [
-      `Player (${this.player.x}, ${this.player.y}), tick ${Math.round(time)}`,
-      'layers:',
-      `${this.map.getLayer('chunk-1').name} ${this.map.getLayer('chunk-1').x} ${this.getLayerPosition('chunk-1')}`,
-      `${this.map.getLayer('chunk-2').name} ${this.map.getLayer('chunk-2').tilemapLayer.x} ${this.getLayerPosition('chunk-2')}`,
-      `${this.map.getLayer(2).name} ${this.map.getLayer(2).tilemapLayer.x} ${this.getLayerPosition('chunk-3')}`,
-      `Player chunk: ${this.playerChunk}`
-    ].join('\n');
-    const s = this.scene.get('DebugScene')
-    s.text.setText(debugInfo);
   }
 
   updateGround() {

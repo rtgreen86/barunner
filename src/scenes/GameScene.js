@@ -107,15 +107,18 @@ export default class GameScene extends Phaser.Scene {
   createMap() {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
-    this.map.layers.forEach((layer, index) =>
-      this.map.createLayer(
-        layer.name,
-        this.map.tilesets,
-        index * this.map.width * this.map.tileWidth,
-        0)
-        .setName(layer.name)
-    );
-    console.log(this.map);
+
+    Array.from(this.map.layers, (item, index) => index)
+      .sort(() => Math.random() - .5)
+      .map((item) => this.map.layers[item])
+      .forEach((layer, index) =>
+        this.map.createLayer(
+          layer.name,
+          this.map.tilesets,
+          index * this.map.width * this.map.tileWidth,
+          0)
+          .setName(layer.name)
+      );
   }
 
   createPlayer() {

@@ -21,7 +21,7 @@ const FAINT = 'Ram Faint';
 const MAX_JUMP_TIME = 300;
 const LANDING_TIME = 80;
 
-const RUN_VELOCITY = 600;
+const RUN_VELOCITY = 1500;
 
 export default class Player extends Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, frame, controller) {

@@ -6,7 +6,7 @@ import PlayerController from '../entities/PlayerController';
 // import BackgroundLayer from '../entities/BackgroundLayer';
 
 const PLAYER_SIZE = 128;
-const PLAYER_CAMERA_POSITION_X = 0;
+const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
 // const SPAWN_DISTANCE = 10000;

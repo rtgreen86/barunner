@@ -5,6 +5,7 @@ import LEVEL_1_TILESET_PNG from '../../assets/images/level-1-tileset.png';
 
 import RAM_SPRITESHEET_JSON from '../../assets/images/ram-spritesheet.json';
 import RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
+import OBSTACLE_PNG from '../../assets/images/obstacle.png';
 
 import backgroundLayer1 from '../../assets/images/background-layer-1.png'
 import backgroundLayer2 from '../../assets/images/background-layer-2.png'
@@ -39,6 +40,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('background-layer-2', backgroundLayer2);
     this.load.image('background-layer-3', backgroundLayer3);
     this.load.image('image-ground', ground);
+    this.load.spritesheet('obstacle-png', OBSTACLE_PNG, { frameWidth: 128, frameHeight: 128 });
   }
 
   loadSpriteSheets() {

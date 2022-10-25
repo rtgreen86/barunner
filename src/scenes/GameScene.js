@@ -124,7 +124,7 @@ export default class GameScene extends Phaser.Scene {
   createPlayer() {
     const [x, y] = this.getPlayerStartPosition();
     this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
-    this.player.setBounceX(0);
+    this.player.setBounceX(0.3);
     this.player.setDepth(2000);
   }
 
@@ -136,6 +136,12 @@ export default class GameScene extends Phaser.Scene {
 
   createObstacles() {
     this.obstacles = this.physics.add.group();
+    this.obstacles2 = this.physics.add.staticGroup();
+    const obstacle = this.obstacles2.get(1600, 1360, 'obstacle-png', 0, true)
+      .setSize(96, 96);
+
+
+    console.log(obstacle);
   }
 
   createCollaider() {
@@ -148,8 +154,17 @@ export default class GameScene extends Phaser.Scene {
 
     this.map.layers.forEach(layer => {
       this.physics.add.collider(this.player, layer.tilemapLayer);
+      this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
       this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
+
+    const cb = () => {
+      this.player.setVelocityY(-200);
+      this.player.hurt();
+    };
+
+    this.physics.add.collider(this.player, this.obstacles2, cb, null, this);
+
   }
 
   createCamera() {

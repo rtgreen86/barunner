@@ -29,7 +29,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
-    this.setSize(96, 96);
+    this.setSize(96, 64);
 
     this.time = 0;
 

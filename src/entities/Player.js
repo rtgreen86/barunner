@@ -29,7 +29,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
-    this.setSize(96, 64);
+    this.setSize(64, 64);
 
     this.time = 0;
 
@@ -142,32 +142,32 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   onJumpPressed() {
-    // continue jump
-    if (this.animation === JUMP && this.jumpKeyPressedTime === this.animationStartTime) {
-      this.jump();
-      return;
-    }
+    // // continue jump
+    // if (this.animation === JUMP && this.jumpKeyPressedTime === this.animationStartTime) {
+    //   this.jump();
+    //   return;
+    // }
 
-    // start jump
-    // ram on the ground, run and button just pressed
-    if (
-      this.animation === RUN &&
-      (this.jumpKeyPressedTime === null || this.time - this.jumpKeyPressedTime < 200) &&
-      this.jumpKeyPressedTime !== this.gameStartedTime
-    ) {
-      this.jump();
-      this.jumpKeyPressedTime = this.time;
-    }
+    // // start jump
+    // // ram on the ground, run and button just pressed
+    // if (
+    //   this.animation === RUN &&
+    //   (this.jumpKeyPressedTime === null || this.time - this.jumpKeyPressedTime < 200) &&
+    //   this.jumpKeyPressedTime !== this.gameStartedTime
+    // ) {
+    //   this.jump();
+    //   this.jumpKeyPressedTime = this.time;
+    // }
 
-    if (this.jumpKeyPressedTime === null) {
-      this.jumpKeyPressedTime = this.time;
-    }
+    // if (this.jumpKeyPressedTime === null) {
+    //   this.jumpKeyPressedTime = this.time;
+    // }
 
-    // start game
-    if (!this.isMoving()) {
-      this.run();
-      this.gameStartedTime = this.time;
-    }
+    // // start game
+    // if (!this.isMoving()) {
+    //   this.run();
+    //   this.gameStartedTime = this.time;
+    // }
   }
 
   onJumpReleased() {

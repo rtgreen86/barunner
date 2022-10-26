@@ -124,7 +124,7 @@ export default class GameScene extends Phaser.Scene {
   createPlayer() {
     const [x, y] = this.getPlayerStartPosition();
     this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
-    this.player.setBounceX(0.3);
+    this.player.setBounceX(0.7);
     this.player.setDepth(2000);
   }
 
@@ -159,7 +159,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
     const cb = () => {
-      this.player.setVelocityY(-200);
+      this.player.setVelocityY(-1000);
       this.player.hurt();
     };
 
@@ -189,13 +189,14 @@ export default class GameScene extends Phaser.Scene {
       this.playerAlive = false;
     }
 
-    if (
-      !this.playerAlive &&
-      this.controller.isJumpDown &&
-      time - this.timeOfDeath >= PLAYER_RESPAWN_TIMEOUT
-    ) {
-      this.respawnScene();
-    }
+    // Respawn
+    // if (
+    //   !this.playerAlive &&
+    //   this.controller.isJumpDown &&
+    //   time - this.timeOfDeath >= PLAYER_RESPAWN_TIMEOUT
+    // ) {
+    //   this.respawnScene();
+    // }
 
     this.updateGround();
 
@@ -238,6 +239,16 @@ export default class GameScene extends Phaser.Scene {
     if (this.playerChunk === maxLayerPosition) {
       minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
     }
+
+    // player jump
+
+    if (this.cursor.space.isDown) {
+      this.player.jump();
+      this.player.setVelocityY(-600);
+    }
+
+
+
   }
 
   updateGround() {

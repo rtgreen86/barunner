@@ -152,8 +152,12 @@ export default class GameScene extends Phaser.Scene {
 
     // collide with level
 
+    const cb1 = () => {
+      // console.log('ground', a.y, b.y);
+    }
+
     this.map.layers.forEach(layer => {
-      this.physics.add.collider(this.player, layer.tilemapLayer);
+      this.physics.add.collider(this.player, layer.tilemapLayer, cb1);
       this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
       this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
@@ -242,9 +246,13 @@ export default class GameScene extends Phaser.Scene {
 
     // player jump
 
+    Phaser.Physics.Arcade.World.TILE_BIAS = 512;
+    Phaser.Physics.Arcade.World.OVERLAP_BIAS  = 512;
+
+
     if (this.cursor.space.isDown) {
       this.player.jump();
-      this.player.setVelocityY(-600);
+      this.player.setVelocityY(1000);
     }
 
 

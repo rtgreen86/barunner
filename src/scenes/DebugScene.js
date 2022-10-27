@@ -12,16 +12,16 @@ export default class DebugScene extends Phaser.Scene {
   }
 
   update(time) {
+    this.updateDebugInfo(time);
+  }
+
+  updateDebugInfo(time) {
     const gameScene = this.scene.get('GameScene');
-    this.text.setText(
-      [
-        `Ticks: ${Math.round(time)}`,
-
-        `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
-
-        'Layers:',
-        ...gameScene.map.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
-      ].join('\n')
-    );
+    this.text.setText([
+      `Ticks: ${Math.round(time)}`,
+      `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
+      'Layers:',
+      ...gameScene.map.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
+    ].join('\n'));
   }
 }

@@ -74,6 +74,14 @@ export default class GameScene extends Phaser.Scene {
       key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
     };
 
+    const createObstacle = () => {
+      this.obstacles2.get(this.player.x + 800, 1360, 'obstacle-png', 0, true)
+        .setSize(96, 96);
+    }
+
+
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O, true, false).on('down', createObstacle)
+
     // use Phaser.Input.Keyboard. KeyboardPlugin
     // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
     // An object containing the properties: up, down, left, right, space and shift.
@@ -137,11 +145,6 @@ export default class GameScene extends Phaser.Scene {
   createObstacles() {
     this.obstacles = this.physics.add.group();
     this.obstacles2 = this.physics.add.staticGroup();
-    const obstacle = this.obstacles2.get(1600, 1360, 'obstacle-png', 0, true)
-      .setSize(96, 96);
-
-
-    console.log(obstacle);
   }
 
   createCollaider() {

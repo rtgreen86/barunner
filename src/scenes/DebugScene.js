@@ -14,7 +14,7 @@ export default class DebugScene extends Phaser.Scene {
 
   update(time) {
     const gameScene = this.scene.get('GameScene');
-    this.savePlayerPosition(time, gameScene.player.x);
+    this.savePlayerPosition(time, gameScene.player);
     this.cleanupOldPositions(time);
     this.updateDebugInfo(time);
   }
@@ -24,15 +24,14 @@ export default class DebugScene extends Phaser.Scene {
     this.text.setText([
       `Ticks: ${Math.round(time)}`,
       `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
-      `Speed: ${this.getSpeed()} pps`,
-      `Meters count: ${this.positions.length}`,
+      `Speed (h,v): ${this.getSpeed().join()} pps`,
       'Layers:',
       ...gameScene.map.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
     ].join('\n'));
   }
 
-  savePlayerPosition(time, position) {
-    this.positions.push({time, position});
+  savePlayerPosition(time, player) {
+    this.positions.push({time, x: player.x, y: player.y});
   }
 
   cleanupOldPositions(time, delta = 1000) {
@@ -40,17 +39,26 @@ export default class DebugScene extends Phaser.Scene {
   }
 
   getSpeed() {
-    const [minTime, maxTime] = this.positions.reduce(([min, max], record) => [
-      Math.min(min, record.time),
-      Math.max(max, record.time)
-    ], [Infinity, 0]);
-    const [minPosition, maxPosition] = this.positions.reduce(([min, max], record) => [
-      Math.min(min, record.position),
-      Math.max(max, record.position)
-    ], [Infinity, 0]);
+    const [minTime, maxTime] = this.positions
+      .map(({ time }) => time)
+      .reduce(minMaxReducer, [Infinity, 0]);
+    const [minX, maxX] = this.positions
+      .map(rec => rec.x)
+      .reduce(minMaxReducer, [Infinity, 0]);
+    const [minY, maxY] = this.positions
+      .map(rec => rec.y)
+      .reduce(minMaxReducer, [Infinity, 0]);
     const time = (maxTime - minTime) / 1000;
-    const distance = maxPosition - minPosition;
-    return Math.round(distance / time);
+    const horizontalDistance = maxX - minX;
+    const verticalDistance = maxY - minY;
+    return [
+      Math.round(horizontalDistance / time),
+      Math.round(verticalDistance / time)
+    ];
   }
-
 }
+
+const minMaxReducer = ([min, max], value) => [
+  Math.min(min, value),
+  Math.max(max, value)
+];

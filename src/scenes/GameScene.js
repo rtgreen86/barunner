@@ -31,7 +31,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.createAnimation();
     this.createControls();
     this.createBackgound();
     this.createGround();
@@ -44,17 +43,6 @@ export default class GameScene extends Phaser.Scene {
     this.jumpSound = this.sound.add('jump');
 
     this.scene.run('DebugScene');
-  }
-
-  createAnimation() {
-    this.anims.createFromAseprite('ram-spritesheet');
-    this.anims.get('Ram Dash').repeat = -1;
-    this.anims.get('Ram Idle').repeat = -1;
-    this.anims.get('Ram Dizzy').repeat = -1;
-    this.anims.get('Ram Hurt').repeat = -1;
-    this.anims.get('Ram Takeoff Run').repeat = -1;
-    this.anims.get('Ram Jump').repeat = -1;
-    this.anims.get('Ram Run').repeat = -1;
   }
 
   createControls() {
@@ -247,18 +235,9 @@ export default class GameScene extends Phaser.Scene {
       minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
     }
 
-    // player jump
-
-    // Phaser.Physics.Arcade.World.TILE_BIAS = 256;
-    // Phaser.Physics.Arcade.World.OVERLAP_BIAS  = 256;
-
-
     if (this.cursor.space.isDown) {
       this.player.jump();
-      this.player.setVelocityY(-512);
     }
-
-
   }
 
   updateGround() {

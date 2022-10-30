@@ -5,9 +5,9 @@
     },
     "activeFile": "assets/map/level-1-map.tmx",
     "expandedProjectPaths": [
-        "assets/map",
         "assets/images",
-        "assets"
+        "assets",
+        "assets/map"
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
     "fileStates": {

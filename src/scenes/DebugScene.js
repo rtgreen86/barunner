@@ -4,6 +4,7 @@ export default class DebugScene extends Phaser.Scene {
   constructor(name = 'DebugScene') {
     super(name);
     this.positions = [];
+    this.speedRecords = [];
   }
 
   create() {
@@ -16,15 +17,24 @@ export default class DebugScene extends Phaser.Scene {
     const gameScene = this.scene.get('GameScene');
     this.savePlayerPosition(time, gameScene.player);
     this.cleanupOldPositions(time);
-    this.updateDebugInfo(time);
+    const speed = this.getSpeed();
+    const [speedX, speedY] = speed;
+    this.savePlayerSpeed(time, speedX, speedY);
+    const delta = this.getDelta();
+    this.updateDebugInfo({
+      time,
+      speed,
+      delta
+    });
   }
 
-  updateDebugInfo(time) {
+  updateDebugInfo({ time, speed, delta }) {
     const gameScene = this.scene.get('GameScene');
     this.text.setText([
       `Ticks: ${Math.round(time)}`,
       `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
-      `Speed (h,v): ${this.getSpeed().join()} pps`,
+      `Speed (h,v): ${speed.join()} pps`,
+      `Delta: ${delta.join(', ')}`,
       'Layers:',
       ...gameScene.map.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
     ].join('\n'));
@@ -34,20 +44,19 @@ export default class DebugScene extends Phaser.Scene {
     this.positions.push({time, x: player.x, y: player.y});
   }
 
+  savePlayerSpeed(time, speedX, speedY) {
+    this.speedRecords.push({ time, speedX, speedY });
+    this.speedRecords = this.speedRecords.filter(record => record.time + 1000 >= time);
+  }
+
   cleanupOldPositions(time, delta = 1000) {
     this.positions = this.positions.filter(record => record.time + delta >= time);
   }
 
   getSpeed() {
-    const [minTime, maxTime] = this.positions
-      .map(({ time }) => time)
-      .reduce(minMaxReducer, [Infinity, 0]);
-    const [minX, maxX] = this.positions
-      .map(rec => rec.x)
-      .reduce(minMaxReducer, [Infinity, 0]);
-    const [minY, maxY] = this.positions
-      .map(rec => rec.y)
-      .reduce(minMaxReducer, [Infinity, 0]);
+    const [minTime, maxTime] = getMinMaxRecord(this.positions, ({ time }) => time);
+    const [minX, maxX] = getMinMaxRecord(this.positions, rec => rec.x);
+    const [minY, maxY] = getMinMaxRecord(this.positions, rec => rec.y);
     const time = (maxTime - minTime) / 1000;
     const horizontalDistance = maxX - minX;
     const verticalDistance = maxY - minY;
@@ -56,9 +65,25 @@ export default class DebugScene extends Phaser.Scene {
       Math.round(verticalDistance / time)
     ];
   }
+
+  getDelta() {
+    const [minTime, maxTime] = getMinMaxRecord(this.speedRecords, ({ time }) => time);
+    const [minSpeedX, maxSpeedX] = getMinMaxRecord(this.speedRecords, rec => rec.speedX);
+    const [minSpeedY, maxSpeedY] = getMinMaxRecord(this.speedRecords, rec => rec.speedY);
+    const time = (maxTime - minTime) / 1000;
+    const deltaX = maxSpeedX - minSpeedX;
+    const deltaY = maxSpeedY - minSpeedY;
+    return [
+      Math.round(deltaX / time),
+      Math.round(deltaY / time)
+    ];
+  }
 }
 
-const minMaxReducer = ([min, max], value) => [
-  Math.min(min, value),
-  Math.max(max, value)
-];
+const getMinMaxRecord = (prop, mapper) => prop.map(mapper).reduce(
+  ([min, max], value) => [
+    Math.min(min, value),
+    Math.max(max, value)
+  ],
+  [Infinity, 0]
+);

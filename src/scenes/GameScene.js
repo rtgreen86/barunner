@@ -249,15 +249,14 @@ export default class GameScene extends Phaser.Scene {
 
     // player jump
 
-    Phaser.Physics.Arcade.World.TILE_BIAS = 512;
-    Phaser.Physics.Arcade.World.OVERLAP_BIAS  = 512;
+    // Phaser.Physics.Arcade.World.TILE_BIAS = 256;
+    // Phaser.Physics.Arcade.World.OVERLAP_BIAS  = 256;
 
 
     if (this.cursor.space.isDown) {
       this.player.jump();
-      this.player.setVelocityY(1000);
+      this.player.setVelocityY(-512);
     }
-
 
 
   }

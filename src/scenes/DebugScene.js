@@ -33,6 +33,7 @@ export default class DebugScene extends Phaser.Scene {
     this.text.setText([
       `Ticks: ${Math.round(time)}`,
       `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
+      `Collide: ${gameScene.myColliders.map(collider => collider.active).join()}`,
       `Speed (h,v): ${speed.join()} pps`,
       `Delta: ${delta.join(', ')}`,
       'Layers:',

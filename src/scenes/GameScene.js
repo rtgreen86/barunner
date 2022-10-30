@@ -143,12 +143,12 @@ export default class GameScene extends Phaser.Scene {
 
     // collide with level
 
-    const cb1 = () => {
-      // console.log('ground', a.y, b.y);
-    }
+
+    this.myColliders = [];
 
     this.map.layers.forEach(layer => {
-      this.physics.add.collider(this.player, layer.tilemapLayer, cb1);
+      const collider = this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerLanded, null, this);
+      this.myColliders.push(collider);
       this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
       this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
@@ -159,7 +159,6 @@ export default class GameScene extends Phaser.Scene {
     };
 
     this.physics.add.collider(this.player, this.obstacles2, cb, null, this);
-
   }
 
   createCamera() {
@@ -237,6 +236,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.cursor.space.isDown) {
       this.player.jump();
+      this.jump = true;
     }
   }
 
@@ -376,5 +376,12 @@ export default class GameScene extends Phaser.Scene {
       player.die();
     }
     return true;
+  }
+
+  onPlayerLanded() {
+    if (this.jump) {
+      this.player.idle();
+      this.jump = false;
+    }
   }
 }

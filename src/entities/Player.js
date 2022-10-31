@@ -18,7 +18,7 @@ const ANIMATION_RUN = 'Ram Run';
 const ANIMATION_ATTACK = 'Ram Attack';
 const ANIMATION_FAINT = 'Ram Faint';
 
-const MAX_JUMP_TIME = 300;
+
 const LANDING_TIME = 80;
 
 const RUN_VELOCITY = 1200;

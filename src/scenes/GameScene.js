@@ -9,12 +9,16 @@ const PLAYER_SIZE = 128;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
+const PLAYER_MAX_JUMP_TIME = 300;
+
 // const SPAWN_DISTANCE = 10000;
 // const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
 const DEADLINE_OFFSET = -100;
 
 const PLAYER_RESPAWN_TIMEOUT = 1000;
+
+
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -28,6 +32,11 @@ export default class GameScene extends Phaser.Scene {
     this.playerAlive = true;
     this.timeOfDeath = null;
     this.nextGround = 200;
+
+    this.playerIsAlive = true;
+    this.playerOnGround = false;
+    this.playerRun = false;
+    this.playerJumpStartTime = 0;
   }
 
   create() {
@@ -144,11 +153,8 @@ export default class GameScene extends Phaser.Scene {
     // collide with level
 
 
-    this.myColliders = [];
-
     this.map.layers.forEach(layer => {
-      const collider = this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerLanded, null, this);
-      this.myColliders.push(collider);
+      this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
       this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
       this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
@@ -167,7 +173,7 @@ export default class GameScene extends Phaser.Scene {
     this.cameras.main.startFollow(
       this.player,
       true,
-      1, 1,
+      1, 0,
       this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
       this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
     );
@@ -197,15 +203,6 @@ export default class GameScene extends Phaser.Scene {
     // Do not update background
     // this.updateBackground();
 
-    if (this.cursor.right.isDown) {
-      this.player.run('forward');
-    }
-    if (this.cursor.left.isDown) {
-      this.player.run('backward');
-    }
-    if (this.cursor.down.isDown) {
-      this.player.takeoffRun();
-    }
 
     let minLayer = this.map.layer;
     let minLayerPosition = this.getLayerPosition(minLayer.name);
@@ -234,9 +231,38 @@ export default class GameScene extends Phaser.Scene {
       minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
     }
 
-    if (this.cursor.space.isDown) {
+    // jump
+
+    if (this.cursor.space.isDown && this.canPlayerStartJump()) {
       this.player.jump();
-      this.jump = true;
+      this.playerJumpStartTime = time;
+      this.playerOnGround = false;
+    }
+    if (this.cursor.space.isDown && this.canPlayerContinueJump(time)) {
+      this.player.jump();
+      this.playerOnGround = false;
+    }
+
+    // on the ground
+
+
+    if (this.cursor.right.isDown && this.canPlayerRun()) {
+      this.player.run('forward');
+      this.playerRun = true;
+    }
+    if (this.cursor.left.isDown && this.canPlayerRun()) {
+      this.player.run('backward');
+      this.playerRun = true;
+    }
+    if (this.cursor.down.isDown && this.canPlayerRun()) {
+      this.player.takeoffRun();
+      this.playerRun = true;
+    }
+    if (this.playerOnGround && !this.playerRun) {
+      this.player.idle();
+    }
+    if (this.playerOnGround && this.playerRun) {
+      this.player.run('forward');
     }
   }
 
@@ -322,6 +348,18 @@ export default class GameScene extends Phaser.Scene {
     return Math.floor(this.map.getLayer(layer).tilemapLayer.x / this.map.widthInPixels);
   }
 
+  canPlayerStartJump() {
+    return this.playerOnGround;
+  }
+
+  canPlayerContinueJump(time) {
+    return time < this.playerJumpStartTime + PLAYER_MAX_JUMP_TIME;
+  }
+
+  canPlayerRun() {
+    return this.playerOnGround;
+  }
+
   onPauseKeyDown() {
     if (!this.paused) {
       this.paused = true;
@@ -378,10 +416,14 @@ export default class GameScene extends Phaser.Scene {
     return true;
   }
 
-  onPlayerLanded() {
-    if (this.jump) {
-      this.player.idle();
-      this.jump = false;
-    }
+  // onPlayerLanded() {
+  //   if (this.jump) {
+  //     this.player.idle();
+  //     this.jump = false;
+  //   }
+  // }
+
+  onPlayerCollideGround() {
+    this.playerOnGround = true;
   }
 }

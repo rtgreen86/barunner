@@ -48,6 +48,12 @@ export default class Player extends Physics.Arcade.Sprite {
 
     this.isJumpSoundPlayed = false;
 
+    this.isAlive = true;
+    this.onTheGround = false;
+    this.isRunning = false;
+    this.direction = 'right';
+    this.jumpStartTime = 0;
+
     this.createAnimation();
   }
 

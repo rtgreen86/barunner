@@ -32,11 +32,6 @@ export default class GameScene extends Phaser.Scene {
     this.playerAlive = true;
     this.timeOfDeath = null;
     this.nextGround = 200;
-
-    this.playerIsAlive = true;
-    this.playerOnGround = false;
-    this.playerRun = false;
-    this.playerJumpStartTime = 0;
   }
 
   create() {
@@ -235,12 +230,12 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.cursor.space.isDown && this.canPlayerStartJump()) {
       this.player.jump();
-      this.playerJumpStartTime = time;
-      this.playerOnGround = false;
+      this.player.jumpStartTime = time;
+      this.player.onTheGround = false;
     }
     if (this.cursor.space.isDown && this.canPlayerContinueJump(time)) {
       this.player.jump();
-      this.playerOnGround = false;
+      this.player.onTheGround = false;
     }
 
     // on the ground
@@ -248,20 +243,20 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.cursor.right.isDown && this.canPlayerRun()) {
       this.player.run('forward');
-      this.playerRun = true;
+      this.player.isRunning = true;
     }
     if (this.cursor.left.isDown && this.canPlayerRun()) {
       this.player.run('backward');
-      this.playerRun = true;
+      this.player.isRunning = true;
     }
     if (this.cursor.down.isDown && this.canPlayerRun()) {
       this.player.takeoffRun();
-      this.playerRun = true;
+      this.player.isRunning = true;
     }
-    if (this.playerOnGround && !this.playerRun) {
+    if (this.player.onTheGround && !this.player.isRunning) {
       this.player.idle();
     }
-    if (this.playerOnGround && this.playerRun) {
+    if (this.player.onTheGround && this.player.isRunning) {
       this.player.run('forward');
     }
   }
@@ -349,15 +344,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   canPlayerStartJump() {
-    return this.playerOnGround;
+    return this.player.onTheGround;
   }
 
   canPlayerContinueJump(time) {
-    return time < this.playerJumpStartTime + PLAYER_MAX_JUMP_TIME;
+    return time < this.player.jumpStartTime + PLAYER_MAX_JUMP_TIME;
   }
 
   canPlayerRun() {
-    return this.playerOnGround;
+    return this.player.onTheGround;
   }
 
   onPauseKeyDown() {
@@ -424,6 +419,6 @@ export default class GameScene extends Phaser.Scene {
   // }
 
   onPlayerCollideGround() {
-    this.playerOnGround = true;
+    this.player.onTheGround = true;
   }
 }

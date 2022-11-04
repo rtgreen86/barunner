@@ -9,15 +9,12 @@ const PLAYER_SIZE = 128;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
-const PLAYER_MAX_JUMP_TIME = 300;
-
 // const SPAWN_DISTANCE = 10000;
 // const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
 const DEADLINE_OFFSET = -100;
 
-const PLAYER_RESPAWN_TIMEOUT = 1000;
-
+// const PLAYER_RESPAWN_TIMEOUT = 1000;
 
 
 export default class GameScene extends Phaser.Scene {
@@ -177,7 +174,6 @@ export default class GameScene extends Phaser.Scene {
   update(time, delta) {
     this.updateDeadline();
     this.respawnObjects();
-    this.player.update(time, delta);
 
     if (this.player.isDead && !this.timeOfDeath) {
       this.timeOfDeath = time;
@@ -240,7 +236,6 @@ export default class GameScene extends Phaser.Scene {
 
     // on the ground
 
-
     if (this.cursor.right.isDown && this.canPlayerRun()) {
       this.player.run('forward');
       this.player.isRunning = true;
@@ -253,12 +248,13 @@ export default class GameScene extends Phaser.Scene {
       this.player.takeoffRun();
       this.player.isRunning = true;
     }
-    if (this.player.onTheGround && !this.player.isRunning) {
-      this.player.idle();
-    }
-    if (this.player.onTheGround && this.player.isRunning) {
-      this.player.run('forward');
-    }
+    // if (this.player.onTheGround && !this.player.isRunning) {
+    //   this.player.idle();
+    // }
+
+    this.player.update(time, delta);
+
+
   }
 
   updateGround() {
@@ -276,6 +272,10 @@ export default class GameScene extends Phaser.Scene {
     // this.ground.setOrigin(0.5, 1).refresh();
 
 
+  }
+
+  isFalling(obj) {
+    return obj.body.velocity.y > this.startFallingVelocity;
   }
 
   dice() {
@@ -348,7 +348,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   canPlayerContinueJump(time) {
-    return time < this.player.jumpStartTime + PLAYER_MAX_JUMP_TIME;
+    return time < this.player.jumpStartTime + this.player.jumpMaxTime;
   }
 
   canPlayerRun() {
@@ -393,10 +393,10 @@ export default class GameScene extends Phaser.Scene {
         this.player.takeoffRun();
         break;
       case Phaser.Input.Keyboard.KeyCodes.EIGHT:
-        this.player.jump();
+        this.player.fall();
         break;
       case Phaser.Input.Keyboard.KeyCodes.NINE:
-        this.player.run();
+        this.player.landing();
         break;
     }
   }
@@ -419,6 +419,7 @@ export default class GameScene extends Phaser.Scene {
   // }
 
   onPlayerCollideGround() {
-    this.player.onTheGround = true;
+    this.player.landing();
+    // this.player.onTheGround = true;
   }
 }

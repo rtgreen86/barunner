@@ -2,8 +2,6 @@ import { Physics } from 'Phaser';
 
 // const IDLE = 'Idle';
 // const JUMP = 'Idle'; // 'ram-jump';
-const FALL = 'Idle'; // 'ram-fall';
-const LANDING = 'Idle'; //'ram-landing';
 // const RUN = 'Idle'; // 'ram-run';
 const DIE = 'Idle'; //  'ram-die';
 
@@ -14,15 +12,12 @@ const ANIMATION_HURT = 'Ram Hurt';
 const ANIMATION_TAKEOFF_RUN = 'Ram Takeoff Run';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';
 const ANIMATION_FALL = 'Ram Fall';
+const ANIMATION_LANDING = 'Ram Landing';
 const ANIMATION_RUN = 'Ram Run';
 const ANIMATION_ATTACK = 'Ram Attack';
 const ANIMATION_FAINT = 'Ram Faint';
 
-
 const LANDING_TIME = 80;
-
-const RUN_VELOCITY = 1200;
-const JUMP_VELOCITY = -500;
 
 export default class Player extends Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, frame, controller) {
@@ -30,8 +25,14 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
+
     this.setSize(128, 64);
     this.setMaxVelocity(1200, 600)
+
+    this.runVelocity = 1200;
+    this.jumpVelocity = -500;
+    this.jumpMaxTime = 300;
+    this.startFallingVelocity = 10;
 
     this.time = 0;
 
@@ -51,11 +52,14 @@ export default class Player extends Physics.Arcade.Sprite {
     this.isAlive = true;
     this.onTheGround = false;
     this.isRunning = false;
-    this.direction = 'right';
+    this.direction = Player.DIRECTION_RIGHT;
     this.jumpStartTime = 0;
 
     this.createAnimation();
   }
+
+  static DIRECTION_RIGHT = 'right';
+  static DIRECTION_LEFT = 'left';
 
   createAnimation() {
     this.scene.anims.createFromAseprite('ram-spritesheet');
@@ -103,7 +107,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   jump() {
     this.setAnimation(ANIMATION_JUMP_UP);
-    this.setVelocityY(JUMP_VELOCITY);
+    this.setVelocityY(this.jumpVelocity);
 
     // if (!this.isJumpSoundPlayed) {
     //   this.scene.jumpSound.play();
@@ -120,11 +124,11 @@ export default class Player extends Physics.Arcade.Sprite {
   run(direction) {
     this.setAnimation(ANIMATION_RUN);
     if (direction === 'backward') {
-      this.setVelocityX(-RUN_VELOCITY);
+      this.setVelocityX(-this.runVelocity);
       this.flipX = true;
       return;
     }
-    this.setVelocityX(RUN_VELOCITY);
+    this.setVelocityX(this.runVelocity);
     this.flipX = false;
   }
 
@@ -142,9 +146,11 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   landing() {
-    this.setAnimation(LANDING);
-    this.isJumpSoundPlayed = false;
-    this.idle();
+    if (this.onTheGround) return;
+    this.onTheGround = true;
+    this.setAnimation(ANIMATION_LANDING);
+    // this.isJumpSoundPlayed = false;
+    // this.idle();
   }
 
 
@@ -161,7 +167,7 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   isFalling() {
-    return this.body.velocity.y > 10;
+    return this.body.velocity.y > this.startFallingVelocity;
   }
 
   onJumpPressed() {
@@ -198,31 +204,31 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   update(time, delta) {
-    if (this.isDead) {
-      return;
-    }
+    // if (this.isDead) {
+    //   return;
+    // }
 
-    this.animationTime += delta;
-    this.time = time;
+    // this.animationTime += delta;
+    // this.time = time;
 
-    // process user input
-    if (this.controller.isJumpDown) {
-      this.onJumpPressed();
-    }
-    if (this.jumpKeyPressedTime !== null && !this.controller.isJumpDown) {
-      this.onJumpReleased();
-    }
+    // // process user input
+    // if (this.controller.isJumpDown) {
+    //   this.onJumpPressed();
+    // }
+    // if (this.jumpKeyPressedTime !== null && !this.controller.isJumpDown) {
+    //   this.onJumpReleased();
+    // }
 
     // falling and landing
     if (this.isFalling()) {
       this.fall();
     }
-    if (this.animation === FALL && !this.isFalling()) {
-      this.landing();
-    }
-    if (this.animation === LANDING && this.animationTime > LANDING_TIME) {
-      this.idle();
-    }
+    // if (this.animation === FALL && !this.isFalling()) {
+    //   this.landing();
+    // }
+    // if (this.animation === LANDING && this.animationTime > LANDING_TIME) {
+    //   this.idle();
+    // }
   }
 
   respawn() {

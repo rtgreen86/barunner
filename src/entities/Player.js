@@ -5,14 +5,16 @@ import { Physics } from 'Phaser';
 // const RUN = 'Idle'; // 'ram-run';
 const DIE = 'Idle'; //  'ram-die';
 
-const ANIMATION_DASH = 'Ram Dash';
 const ANIMATION_IDLE = 'Ram Idle';
+const ANIMATION_JUMP = 'Ram Jump Up';
+const ANIMATION_FLY = 'Ram Fly';
+const ANIMATION_FALL = 'Ram Fall';
+const ANIMATION_LANDING = 'Ram Landing';
+
+const ANIMATION_DASH = 'Ram Dash';
 const ANIMATION_DIZZY = 'Ram Dizzy';
 const ANIMATION_HURT = 'Ram Hurt';
 const ANIMATION_TAKEOFF_RUN = 'Ram Takeoff Run';
-const ANIMATION_JUMP_UP = 'Ram Jump Up';
-const ANIMATION_FALL = 'Ram Fall';
-const ANIMATION_LANDING = 'Ram Landing';
 const ANIMATION_RUN = 'Ram Run';
 const ANIMATION_ATTACK = 'Ram Attack';
 const ANIMATION_FAINT = 'Ram Faint';
@@ -26,13 +28,15 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
 
-    this.setSize(128, 64);
-    this.setMaxVelocity(1200, 600)
-
     this.runVelocity = 1200;
     this.jumpVelocity = -500;
     this.jumpMaxTime = 300;
-    this.startFallingVelocity = 10;
+
+    this.onTheGround = false;
+    this.jumpTime = 0;
+
+
+    // this.startFallingVelocity = 10;
 
     this.time = 0;
 
@@ -50,16 +54,25 @@ export default class Player extends Physics.Arcade.Sprite {
     this.isJumpSoundPlayed = false;
 
     this.isAlive = true;
-    this.onTheGround = false;
     this.isRunning = false;
     this.direction = Player.DIRECTION_RIGHT;
     this.jumpStartTime = 0;
 
+    this.setSize(128, 64);
+    this.setMaxVelocity(1200, 600)
     this.createAnimation();
   }
 
   static DIRECTION_RIGHT = 'right';
   static DIRECTION_LEFT = 'left';
+
+  get isFalling() {
+    return this.anims.getName() === ANIMATION_FALL;
+  }
+
+  get isJumping() {
+    return this.anims.getName() === ANIMATION_JUMP;
+  }
 
   createAnimation() {
     this.scene.anims.createFromAseprite('ram-spritesheet');
@@ -68,7 +81,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene.anims.get(ANIMATION_DIZZY).repeat = -1;
     this.scene.anims.get(ANIMATION_HURT).repeat = -1;
     this.scene.anims.get(ANIMATION_TAKEOFF_RUN).repeat = -1;
-    this.scene.anims.get(ANIMATION_JUMP_UP).repeat = 0;
+    this.scene.anims.get(ANIMATION_JUMP).repeat = 0;
     this.scene.anims.get(ANIMATION_FALL).repeat = 0;
     this.scene.anims.get(ANIMATION_RUN).repeat = -1;
   }
@@ -89,7 +102,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   idle() {
     this.setVelocityX(0);
-    this.setAnimation(ANIMATION_IDLE);
+    this.play(ANIMATION_IDLE);
   }
 
   dizzy() {
@@ -106,19 +119,37 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   jump() {
-    this.setAnimation(ANIMATION_JUMP_UP);
+    this.jumpTime = 0;
+    this.onTheGround = false;
+    this.play(ANIMATION_JUMP);
     this.setVelocityY(this.jumpVelocity);
-
-    // if (!this.isJumpSoundPlayed) {
-    //   this.scene.jumpSound.play();
-    //   this.isJumpSoundPlayed = true;
-    // }
-    // this.setAnimation(JUMP);
-    // if (this.animationTime <= MAX_JUMP_TIME) {
-    //   this.body.setVelocityY(-250);
-    // }
-    // this.idle();
   }
+
+  continueJump(delta) {
+    this.jumpTime += delta;
+    if (this.jumpTime <= this.jumpMaxTime) {
+      this.setVelocityY(this.jumpVelocity);
+    } else {
+      this.play(ANIMATION_FLY);
+    }
+  }
+
+  fly() {
+    this.play(ANIMATION_FLY);
+  }
+
+  fall() {
+    this.play(ANIMATION_FALL);
+  }
+
+  landing() {
+    this.onTheGround = true;
+    if (this.isFalling) {
+      this.play(ANIMATION_LANDING);
+      this.playAfterRepeat(ANIMATION_IDLE);
+    }
+  }
+
 
 
   run(direction) {
@@ -141,19 +172,6 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
 
-  fall() {
-    this.setAnimation(ANIMATION_FALL);
-  }
-
-  landing() {
-    if (this.onTheGround) return;
-    this.onTheGround = true;
-    this.setAnimation(ANIMATION_LANDING);
-    // this.isJumpSoundPlayed = false;
-    // this.idle();
-  }
-
-
 
   die() {
     this.isDead = true;
@@ -166,9 +184,9 @@ export default class Player extends Physics.Arcade.Sprite {
     return this.body.velocity.x !== 0;
   }
 
-  isFalling() {
-    return this.body.velocity.y > this.startFallingVelocity;
-  }
+  // isFalling() {
+  //   return this.body.velocity.y > this.startFallingVelocity;
+  // }
 
   onJumpPressed() {
     // // continue jump
@@ -220,9 +238,9 @@ export default class Player extends Physics.Arcade.Sprite {
     // }
 
     // falling and landing
-    if (this.isFalling()) {
-      this.fall();
-    }
+    // if (this.isFalling()) {
+    //   this.fall();
+    // }
     // if (this.animation === FALL && !this.isFalling()) {
     //   this.landing();
     // }

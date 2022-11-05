@@ -29,6 +29,7 @@ export default class GameScene extends Phaser.Scene {
     this.playerAlive = true;
     this.timeOfDeath = null;
     this.nextGround = 200;
+    this.startFallingVelocity = 10;
   }
 
   create() {
@@ -224,11 +225,7 @@ export default class GameScene extends Phaser.Scene {
 
     // jump
 
-    if (this.cursor.space.isDown && this.canPlayerStartJump()) {
-      this.player.jump();
-      this.player.jumpStartTime = time;
-      this.player.onTheGround = false;
-    }
+
     if (this.cursor.space.isDown && this.canPlayerContinueJump(time)) {
       this.player.jump();
       this.player.onTheGround = false;
@@ -252,10 +249,39 @@ export default class GameScene extends Phaser.Scene {
     //   this.player.idle();
     // }
 
-    this.player.update(time, delta);
+    // this.player.update(time, delta);
+
+
+    // const playerOnGround = this.isOnTheGround(this.player);
+
+    // if (!playerOnGround) {
+    //   this.player.fall();
+    // }
+    // if (playerOnGround && this.player.isFalling) {
+    //   this.player.landing();
+    // }
+
+    // if (playerOnGround) {
+    //   this.player.idle();
+    // }
+
+    if (this.cursor.space.isDown && this.player.isJumping) {
+      this.player.continueJump(delta);
+    }
+    if (this.cursor.space.isDown && this.canJump(this.player)) {
+      this.player.jump();
+    }
+    if (!this.player.onTheGround && !this.cursor.space.isDown) {
+      this.player.fly();
+    }
+    if (this.isFalling(this.player)) {
+      this.player.fall();
+    }
+
 
 
   }
+
 
   updateGround() {
     // FOR generate ground
@@ -274,8 +300,8 @@ export default class GameScene extends Phaser.Scene {
 
   }
 
-  isFalling(obj) {
-    return obj.body.velocity.y > this.startFallingVelocity;
+  isFalling(object) {
+    return object.body.velocity.y > this.startFallingVelocity;
   }
 
   dice() {
@@ -343,8 +369,8 @@ export default class GameScene extends Phaser.Scene {
     return Math.floor(this.map.getLayer(layer).tilemapLayer.x / this.map.widthInPixels);
   }
 
-  canPlayerStartJump() {
-    return this.player.onTheGround;
+  canJump(object) {
+    return object.onTheGround;
   }
 
   canPlayerContinueJump(time) {
@@ -420,6 +446,5 @@ export default class GameScene extends Phaser.Scene {
 
   onPlayerCollideGround() {
     this.player.landing();
-    // this.player.onTheGround = true;
   }
 }

@@ -232,7 +232,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.cursor.space.isDown && this.canPlayerContinueJump(time)) {
       this.player.jump();
-      this.player.onTheGround = false;
+      this.player.isOnGround = false;
     }
 
     // on the ground
@@ -245,18 +245,18 @@ export default class GameScene extends Phaser.Scene {
     //   this.player.run('backward');
     //   this.player.isRunning = true;
     // }
-    if (this.cursor.down.isDown && this.canPlayerRun()) {
+    if (this.cursor.down.isDown && this.canRun()) {
       this.player.takeoffRun();
       this.player.isRunning = true;
     }
-    // if (this.player.onTheGround && !this.player.isRunning) {
+    // if (this.player.isOnGround && !this.player.isRunning) {
     //   this.player.idle();
     // }
 
     // this.player.update(time, delta);
 
 
-    // const playerOnGround = this.isOnTheGround(this.player);
+    // const playerOnGround = this.isisOnGround(this.player);
 
     // if (!playerOnGround) {
     //   this.player.fall();
@@ -272,7 +272,7 @@ export default class GameScene extends Phaser.Scene {
     if (this.cursor.space.isDown && this.player.isJumping) {
       this.player.continueJump(delta);
     }
-    if (!this.player.onTheGround && !this.cursor.space.isDown) {
+    if (!this.player.isOnGround && !this.cursor.space.isDown) {
       this.player.fly();
     }
     if (this.isFalling(this.player)) {
@@ -371,15 +371,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   canJump(object) {
-    return object.onTheGround;
+    return object.isOnGround;
   }
 
   canPlayerContinueJump(time) {
     return time < this.player.jumpStartTime + this.player.jumpMaxTime;
   }
 
-  canPlayerRun() {
-    return this.player.onTheGround;
+  canRun(object) {
+    return object.isOnGround;
   }
 
   onPauseKeyDown() {
@@ -457,9 +457,15 @@ export default class GameScene extends Phaser.Scene {
 
   onArrowRightDown() {
     this.player.direction = Player.DIRECTION_RIGHT;
+    if (this.canRun(this.player)) {
+      this.player.run();
+    }
   }
 
   onArrowLeftDown() {
     this.player.direction = Player.DIRECTION_LEFT;
+    if (this.canRun(this.player)) {
+      this.player.run();
+    }
   }
 }

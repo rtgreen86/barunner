@@ -32,8 +32,9 @@ export default class Player extends Physics.Arcade.Sprite {
     this.jumpVelocity = -500;
     this.jumpMaxTime = 300;
 
-    this.onTheGround = false;
+    this.isOnGround = false;
     this.jumpTime = 0;
+    this.isRunning = false;
 
 
     // this.startFallingVelocity = 10;
@@ -128,7 +129,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
   jump() {
     this.jumpTime = 0;
-    this.onTheGround = false;
+    this.isOnGround = false;
     this.play(ANIMATION_JUMP);
     this.setVelocityY(this.jumpVelocity);
   }
@@ -151,24 +152,29 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   landing() {
-    this.onTheGround = true;
-    if (this.isFalling) {
+    this.isOnGround = true;
+    if (!this.isFalling) {
+      return;
+    }
+    if (this.isRunning) {
+      this.run();
       this.play(ANIMATION_LANDING);
-      this.playAfterRepeat(ANIMATION_IDLE);
+      this.playAfterRepeat(ANIMATION_RUN);
+    } else {
+      this.idle();
+      this.play(ANIMATION_LANDING);
+      this.play(ANIMATION_IDLE);
     }
   }
 
-
-
-  run(direction) {
-    this.setAnimation(ANIMATION_RUN);
-    if (direction === 'backward') {
-      this.setVelocityX(-this.runVelocity);
-      this.flipX = true;
-      return;
-    }
-    this.setVelocityX(this.runVelocity);
-    this.flipX = false;
+  run() {
+    this.isRunning = true;
+    this.play(ANIMATION_RUN);
+    this.setVelocityX(
+      this.direction === Player.DIRECTION_LEFT
+        ? -this.runVelocity
+        : this.runVelocity
+    );
   }
 
   attack() {

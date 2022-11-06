@@ -33,7 +33,7 @@ export default class DebugScene extends Phaser.Scene {
     this.text.setText([
       `Ticks: ${Math.round(time)}`,
       `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
-      `On the ground: ${gameScene.player.onTheGround}, jump time: ${gameScene.player.jumpTime}, is jumping: ${gameScene.player.isJumping}`,
+      `On the ground: ${gameScene.player.isOnGround}, jump time: ${gameScene.player.jumpTime}, is jumping: ${gameScene.player.isJumping}`,
       `Speed (h,v): ${speed.join()} pps`,
       `Delta: ${delta.join(', ')}`,
       'Layers:',

@@ -74,6 +74,14 @@ export default class Player extends Physics.Arcade.Sprite {
     return this.anims.getName() === ANIMATION_JUMP;
   }
 
+  get direction() {
+    return this.flipX ? Player.DIRECTION_LEFT : Player.DIRECTION_RIGHT;
+  }
+
+  set direction(value) {
+    this.flipX = value === Player.DIRECTION_LEFT;
+  }
+
   createAnimation() {
     this.scene.anims.createFromAseprite('ram-spritesheet');
     this.scene.anims.get(ANIMATION_DASH).repeat = -1;

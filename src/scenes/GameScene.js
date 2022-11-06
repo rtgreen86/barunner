@@ -78,6 +78,8 @@ export default class GameScene extends Phaser.Scene {
     this.cursor = this.input.keyboard.createCursorKeys();
 
     this.cursor.space.on('down', this.onSpaceDown, this);
+    this.cursor.left.on('down', this.onArrowLeftDown, this);
+    this.cursor.right.on('down', this.onArrowRightDown, this);
   }
 
   createBackgound() {
@@ -235,14 +237,14 @@ export default class GameScene extends Phaser.Scene {
 
     // on the ground
 
-    if (this.cursor.right.isDown && this.canPlayerRun()) {
-      this.player.run('forward');
-      this.player.isRunning = true;
-    }
-    if (this.cursor.left.isDown && this.canPlayerRun()) {
-      this.player.run('backward');
-      this.player.isRunning = true;
-    }
+    // if (this.cursor.right.isDown && this.canPlayerRun()) {
+    //   this.player.run('forward');
+    //   this.player.isRunning = true;
+    // }
+    // if (this.cursor.left.isDown && this.canPlayerRun()) {
+    //   this.player.run('backward');
+    //   this.player.isRunning = true;
+    // }
     if (this.cursor.down.isDown && this.canPlayerRun()) {
       this.player.takeoffRun();
       this.player.isRunning = true;
@@ -451,5 +453,13 @@ export default class GameScene extends Phaser.Scene {
     if (this.cursor.space.isDown && this.canJump(this.player)) {
       this.player.jump();
     }
+  }
+
+  onArrowRightDown() {
+    this.player.direction = Player.DIRECTION_RIGHT;
+  }
+
+  onArrowLeftDown() {
+    this.player.direction = Player.DIRECTION_LEFT;
   }
 }

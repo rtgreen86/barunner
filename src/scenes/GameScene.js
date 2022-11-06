@@ -76,6 +76,8 @@ export default class GameScene extends Phaser.Scene {
     // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
     // An object containing the properties: up, down, left, right, space and shift.
     this.cursor = this.input.keyboard.createCursorKeys();
+
+    this.cursor.space.on('down', this.onSpaceDown, this);
   }
 
   createBackgound() {
@@ -268,9 +270,6 @@ export default class GameScene extends Phaser.Scene {
     if (this.cursor.space.isDown && this.player.isJumping) {
       this.player.continueJump(delta);
     }
-    if (this.cursor.space.isDown && this.canJump(this.player)) {
-      this.player.jump();
-    }
     if (!this.player.onTheGround && !this.cursor.space.isDown) {
       this.player.fly();
     }
@@ -446,5 +445,11 @@ export default class GameScene extends Phaser.Scene {
 
   onPlayerCollideGround() {
     this.player.landing();
+  }
+
+  onSpaceDown() {
+    if (this.cursor.space.isDown && this.canJump(this.player)) {
+      this.player.jump();
+    }
   }
 }

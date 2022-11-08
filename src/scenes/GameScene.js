@@ -5,6 +5,10 @@ import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
 // import BackgroundLayer from '../entities/BackgroundLayer';
 
+const CAMERA_STABILIZE_ERROR = 40;
+const CAMERA_STABLE_LERP = 1;
+const CAMERA_MOVE_LERP = 0.4;
+
 const PLAYER_SIZE = 128;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
@@ -15,7 +19,6 @@ const PLAYER_CAMERA_POSITION_Y = 0.25;
 const DEADLINE_OFFSET = -100;
 
 // const PLAYER_RESPAWN_TIMEOUT = 1000;
-
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -279,8 +282,7 @@ export default class GameScene extends Phaser.Scene {
       this.player.fall();
     }
 
-
-
+    this.stabilizeTheCamera();
   }
 
 
@@ -457,6 +459,7 @@ export default class GameScene extends Phaser.Scene {
 
   onArrowRightDown() {
     this.player.direction = Player.DIRECTION_RIGHT;
+    this.setCameraToRight();
     if (this.canRun(this.player)) {
       this.player.run();
     }
@@ -464,8 +467,36 @@ export default class GameScene extends Phaser.Scene {
 
   onArrowLeftDown() {
     this.player.direction = Player.DIRECTION_LEFT;
+    this.setCameraToLeft();
     if (this.canRun(this.player)) {
       this.player.run();
+    }
+  }
+
+  setCameraToRight() {
+    this.setCameraOffset(
+      this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
+      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
+    )
+  }
+
+  setCameraToLeft() {
+    this.setCameraOffset(
+      -this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
+      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
+    )
+  }
+
+  setCameraOffset(offsetX, offsetY) {
+    this.cameras.main.setLerp(CAMERA_MOVE_LERP, 0);
+    this.cameras.main.setFollowOffset(offsetX, offsetY);
+  }
+
+  stabilizeTheCamera() {
+    const error = CAMERA_STABILIZE_ERROR;
+    const focusX = this.cameras.main.scrollX + (this.cameras.main.width / 2 + this.cameras.main.followOffset.x);
+    if (Math.abs(this.player.x - focusX) < error) {
+      this.cameras.main.setLerp(CAMERA_STABLE_LERP, 0);
     }
   }
 }

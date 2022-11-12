@@ -68,8 +68,14 @@ export default class GameScene extends Phaser.Scene {
     };
 
     const createObstacle = () => {
-      this.obstacles2.get(this.player.x + 800, 1360, 'obstacle-png', 0, true)
-        .setSize(96, 96);
+      this.obstacles2.get(this.player.x + 500, 1380, 'objects', 2, true)
+        .setSize(64, 64);
+
+      this.obstacles2.get(this.player.x + 650, 1380, 'objects', 3, true)
+        .setSize(64, 64);
+
+      this.obstacles2.get(this.player.x + 800, 1380, 'objects', 5, true)
+        .setSize(64, 64);
     }
 
 

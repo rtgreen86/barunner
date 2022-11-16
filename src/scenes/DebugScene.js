@@ -36,6 +36,7 @@ export default class DebugScene extends Phaser.Scene {
       `On the ground: ${gameScene.player.isOnGround}, jump time: ${gameScene.player.jumpTime}, is jumping: ${gameScene.player.isJumping}`,
       `Speed (h,v): ${speed.join()} pps`,
       `Delta: ${delta.join(', ')}`,
+      `Obstacles: ${gameScene.obstacles2.countActive()}, ${gameScene.obstacles2.countActive(false)} ${gameScene.obstacles2.getLength()}`,
       'Layers:',
       ...gameScene.map.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
     ].join('\n'));

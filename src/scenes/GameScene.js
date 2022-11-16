@@ -68,16 +68,8 @@ export default class GameScene extends Phaser.Scene {
     };
 
     const createObstacle = () => {
-      this.obstacles2.get(this.player.x + 500, 1380, 'objects', 2, true)
-        .setSize(64, 64);
-
-      this.obstacles2.get(this.player.x + 650, 1380, 'objects', 3, true)
-        .setSize(64, 64);
-
-      this.obstacles2.get(this.player.x + 800, 1380, 'objects', 5, true)
-        .setSize(64, 64);
+      this.getObstacle(this.player.x + 500, 1380)
     }
-
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O, true, false).on('down', createObstacle)
 
@@ -90,6 +82,13 @@ export default class GameScene extends Phaser.Scene {
     this.cursor.left.on('down', this.onArrowLeftDown, this);
     this.cursor.right.on('down', this.onArrowRightDown, this);
   }
+
+  getObstacle(x, y) {
+    return this.obstacles2.get(x, y, 'objects', 2)
+        .setActive(true)
+        .setSize(64, 64);
+  }
+
 
   createBackgound() {
     // this.backgroundLayer1 = new BackgroundLayer(this);
@@ -147,7 +146,15 @@ export default class GameScene extends Phaser.Scene {
 
   createObstacles() {
     this.obstacles = this.physics.add.group();
-    this.obstacles2 = this.physics.add.staticGroup();
+    this.obstacles2 = this.physics.add.group({
+      gravityX: 0,
+      gravityY:	0,
+      maxVelocityX: 0,
+      maxVelocityY: 0,
+      velocityX: 0,
+      velocityY: 0,
+      immovable: true
+    });
   }
 
   createCollaider() {
@@ -289,6 +296,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.stabilizeTheCamera();
+    this.removeDistantObstacles();
   }
 
 
@@ -504,5 +512,11 @@ export default class GameScene extends Phaser.Scene {
     if (Math.abs(this.player.x - focusX) < error) {
       this.cameras.main.setLerp(CAMERA_STABLE_LERP, 0);
     }
+  }
+
+  removeDistantObstacles() {
+    const distance = 1000;
+    const distantObstacles = this.obstacles2.getMatching('active', true).filter(obst => obst.x < this.player.x - distance || obst.x > this.player.x + distance || obst.y < this.player.y - distance || obst.y > this.player.y + distance);
+    distantObstacles.forEach(obst => this.obstacles2.kill(obst));
   }
 }

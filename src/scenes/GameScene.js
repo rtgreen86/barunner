@@ -129,10 +129,36 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createLevel() {
+
+    for (let i = 0; i < 50; i++) {
+      this.add.image(i * 533, 1400  , 'background-layer-1')
+        .setScrollFactor(0.1, 1);
+    }
+
+
+    for (let i = 0; i < 50; i++) {
+      this.add.image(i * 533, 1300  , 'background-layer-2')
+        .setScrollFactor(0.2, 1);
+    }
+
+
+
+    for (let i = 0; i < 10; i++) {
+      this.add.image(i * 1389, 1306  , 'background-layer-3')
+        .setScrollFactor(0.3, 1);
+    }
+
+
+
+    // for (let i = 0; i < 10; i++) {
+    //   this.add.image(i * 2048, 1400  , 'background-experiment')
+    //     .setScrollFactor(0.3, 1);
+    // }
+
+
     this.level = this.add.tilemap(this.levelName);
     this.level.tilesets.forEach(tileset => this.level.addTilesetImage(tileset.name, tileset.name));
     this.createChunks();
-    console.log(this.level);
   }
 
   createChunks() {

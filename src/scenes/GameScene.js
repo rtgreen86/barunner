@@ -270,11 +270,16 @@ export default class GameScene extends Phaser.Scene {
       minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.level.widthInPixels, minLayer.y);
 
       const objs = this.level.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
+
+
       const obj = objs && objs[0];
+      console.log(minChunk, objs.length);
       if (obj) {
         const x = obj.x + (this.playerChunk + 1) * this.level.widthInPixels;
         const y = obj.y + obj.height;
-        this.getObstacle(x, y);
+        console.log(obj, x, y);
+        const o = this.getObstacle(x, y);
+        console.log(o.x, x);
       }
 
 
@@ -552,7 +557,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   removeDistantObstacles() {
-    const distance = 1000;
+    const distance = 5000;
     const distantObstacles = this.obstacles2.getMatching('active', true).filter(obst => obst.x < this.player.x - distance || obst.x > this.player.x + distance || obst.y < this.player.y - distance || obst.y > this.player.y + distance);
     distantObstacles.forEach(obst => this.obstacles2.kill(obst));
   }

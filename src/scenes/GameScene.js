@@ -25,6 +25,10 @@ export default class GameScene extends Phaser.Scene {
     super('GameScene');
   }
 
+  getLevelProperty = (name) => this.level.properties.find(prop => prop.name === name);
+
+  getLevelPropertyTyped = (name, type = 'string') => checkType(this.getLevelProperty(name), name, type);
+
   init() {
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 500;
@@ -33,13 +37,17 @@ export default class GameScene extends Phaser.Scene {
     this.timeOfDeath = null;
     this.nextGround = 200;
     this.startFallingVelocity = 10;
+
+    this.levelName = 'map-level-1';
+    this.levelTileset = 'level-1-tileset';
+    this.levelObjects = 'objects';
   }
 
   create() {
     this.createControls();
     this.createBackgound();
     this.createGround();
-    this.createMap();
+    this.createLevel();
     this.createPlayer();
     this.createObstacles();
     this.createCollaider();
@@ -86,7 +94,8 @@ export default class GameScene extends Phaser.Scene {
   getObstacle(x, y) {
     return this.obstacles2.get(x, y, 'objects', 2)
         .setActive(true)
-        .setSize(64, 64);
+        .setSize(64, 64)
+        .setOrigin(0, 1);
   }
 
 
@@ -114,21 +123,26 @@ export default class GameScene extends Phaser.Scene {
     this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
-  createMap() {
-    this.map = this.add.tilemap('map-level-1');
-    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
+  createLevel() {
+    this.level = this.add.tilemap(this.levelName);
+    this.level.tilesets.forEach(tileset => this.level.addTilesetImage(tileset.name, tileset.name));
+    this.createChunks();
+    console.log(this.level);
+  }
 
-    Array.from(this.map.layers, (item, index) => index)
-      .sort(() => Math.random() - .5)
-      .map((item) => this.map.layers[item])
-      .forEach((layer, index) =>
-        this.map.createLayer(
-          layer.name,
-          this.map.tilesets,
-          index * this.map.width * this.map.tileWidth,
-          0)
-          .setName(layer.name)
-      );
+  createChunks() {
+    const prop = this.getLevelPropertyTyped('chunks', 'string');
+    this.chunks = prop.value.split(',').map(item => item.trim());
+    this.chunks.sort(() => Math.random() - .5).forEach((name, index) => {
+      this.createChunk(name, index);
+    });
+  }
+
+  createChunk(name, position) {
+    const layerName = `${name}/level`;
+    const x = position * this.level.width * this.level.tileWidth
+    const y = 0;
+    this.level.createLayer(layerName, this.level.tilesets, x, y);
   }
 
   createPlayer() {
@@ -139,9 +153,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   getPlayerStartPosition() {
-    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
-    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
-    return [playerX.value * this.map.tileWidth, playerY.value * this.map.tileHeight - PLAYER_SIZE / 3];
+    const playerX = this.level.properties.find(prop => prop.name === 'playerX');
+    const playerY = this.level.properties.find(prop => prop.name === 'playerY');
+    return [playerX.value * this.level.tileWidth, playerY.value * this.level.tileHeight - PLAYER_SIZE / 3];
   }
 
   createObstacles() {
@@ -155,6 +169,15 @@ export default class GameScene extends Phaser.Scene {
       velocityY: 0,
       immovable: true
     });
+
+    const obs = this.level.objects[0].objects[0];
+    this.getObstacle(obs.x, obs.y);
+
+
+    const areas = this.level.filterObjects('room1/objects', obj => obj.name === 'obstacle');
+    areas.forEach(area => {
+      this.getObstacle(area.x, area.y + area.height);
+    });
   }
 
   createCollaider() {
@@ -166,10 +189,10 @@ export default class GameScene extends Phaser.Scene {
     // collide with level
 
 
-    this.map.layers.forEach(layer => {
+    this.level.layers.forEach(layer => {
       this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
       this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
-      this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
+      this.level.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
 
     const cb = () => {
@@ -216,12 +239,12 @@ export default class GameScene extends Phaser.Scene {
     // this.updateBackground();
 
 
-    let minLayer = this.map.layer;
+    let minLayer = this.level.layer;
     let minLayerPosition = this.getLayerPosition(minLayer.name);
-    let maxLayer = this.map.layer;
+    let maxLayer = this.level.layer;
     let maxLayerPosition = this.getLayerPosition(maxLayer.name);
 
-    for (const layer of this.map.layers) {
+    for (const layer of this.level.layers) {
       const layerPosition = this.getLayerPosition(layer.name);
       if (layerPosition > maxLayerPosition) {
         maxLayerPosition = layerPosition;
@@ -236,11 +259,11 @@ export default class GameScene extends Phaser.Scene {
 
 
     if (this.playerChunk === minLayerPosition) {
-      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.map.widthInPixels, maxLayer.y);
+      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.level.widthInPixels, maxLayer.y);
       console.log(this.playerChunk, minLayerPosition)
     }
     if (this.playerChunk === maxLayerPosition) {
-      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
+      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.level.widthInPixels, minLayer.y);
     }
 
     // jump
@@ -379,11 +402,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   get playerChunk() {
-    return Math.floor(this.player.x / this.map.widthInPixels);
+    return Math.floor(this.player.x / this.level.widthInPixels);
   }
 
   getLayerPosition(layer) {
-    return Math.floor(this.map.getLayer(layer).tilemapLayer.x / this.map.widthInPixels);
+    return Math.floor(this.level.getLayer(layer).tilemapLayer.x / this.level.widthInPixels);
   }
 
   canJump(object) {
@@ -519,4 +542,17 @@ export default class GameScene extends Phaser.Scene {
     const distantObstacles = this.obstacles2.getMatching('active', true).filter(obst => obst.x < this.player.x - distance || obst.x > this.player.x + distance || obst.y < this.player.y - distance || obst.y > this.player.y + distance);
     distantObstacles.forEach(obst => this.obstacles2.kill(obst));
   }
+
+
+}
+
+
+function checkType(prop, name, type) {
+  if (typeof prop !== 'object') {
+    throw new TypeError(`Property '${name}' is ${typeof prop}`);
+  }
+  if (prop.type !== type) {
+    throw new TypeError(`Property ${name} should be a ${type}.`)
+  }
+  return prop;
 }

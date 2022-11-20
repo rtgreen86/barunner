@@ -38,7 +38,7 @@ export default class DebugScene extends Phaser.Scene {
       `Delta: ${delta.join(', ')}`,
       `Obstacles: ${gameScene.obstacles2.countActive()}, ${gameScene.obstacles2.countActive(false)} ${gameScene.obstacles2.getLength()}`,
       'Layers:',
-      ...gameScene.map.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
+      ...gameScene.level.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
     ].join('\n'));
   }
 

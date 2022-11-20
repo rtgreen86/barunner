@@ -4,6 +4,7 @@ import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
 // import BackgroundLayer from '../entities/BackgroundLayer';
+import { checkType } from '../utils';
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -239,31 +240,44 @@ export default class GameScene extends Phaser.Scene {
     // this.updateBackground();
 
 
+
+    let minChunk = this.chunks[0];
     let minLayer = this.level.layer;
     let minLayerPosition = this.getLayerPosition(minLayer.name);
+    let maxChunk = this.chunks[0];
     let maxLayer = this.level.layer;
     let maxLayerPosition = this.getLayerPosition(maxLayer.name);
 
-    for (const layer of this.level.layers) {
+    for (const chunk of this.chunks) {
+      const layer = this.level.getLayer(`${chunk}/level`);
       const layerPosition = this.getLayerPosition(layer.name);
       if (layerPosition > maxLayerPosition) {
+        maxChunk = chunk;
         maxLayerPosition = layerPosition;
         maxLayer = layer;
       }
       if (layerPosition < minLayerPosition) {
+        minChunk = chunk;
         minLayerPosition = layerPosition;
         minLayer = layer;
       }
     }
 
-
-
     if (this.playerChunk === minLayerPosition) {
       maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.level.widthInPixels, maxLayer.y);
-      console.log(this.playerChunk, minLayerPosition)
     }
     if (this.playerChunk === maxLayerPosition) {
       minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.level.widthInPixels, minLayer.y);
+
+      const objs = this.level.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
+      const obj = objs && objs[0];
+      if (obj) {
+        const x = obj.x + (this.playerChunk + 1) * this.level.widthInPixels;
+        const y = obj.y + obj.height;
+        this.getObstacle(x, y);
+      }
+
+
     }
 
     // jump
@@ -544,15 +558,4 @@ export default class GameScene extends Phaser.Scene {
   }
 
 
-}
-
-
-function checkType(prop, name, type) {
-  if (typeof prop !== 'object') {
-    throw new TypeError(`Property '${name}' is ${typeof prop}`);
-  }
-  if (prop.type !== type) {
-    throw new TypeError(`Property ${name} should be a ${type}.`)
-  }
-  return prop;
 }

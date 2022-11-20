@@ -26,9 +26,13 @@ export default class GameScene extends Phaser.Scene {
     super('GameScene');
   }
 
-  getLevelProperty = (name) => this.level.properties.find(prop => prop.name === name);
+  getLevelProperty = name => this.level.properties.find(prop => prop.name === name);
 
   getLevelPropertyTyped = (name, type = 'string') => checkType(this.getLevelProperty(name), name, type);
+
+  getChunkLevel = chunkName => this.level.getLayer(`${chunkName}/level`);
+
+  getActiveObstaclesInRange = (fromX, toX) => this.obstacles2.getMatching('active', true).filter(obst => obst.x >= fromX && obst.x <= toX);
 
   init() {
     this.deadline = DEADLINE_OFFSET;
@@ -267,6 +271,7 @@ export default class GameScene extends Phaser.Scene {
       maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.level.widthInPixels, maxLayer.y);
     }
     if (this.playerChunk === maxLayerPosition) {
+      this.clearChunk(minChunk);
       minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.level.widthInPixels, minLayer.y);
 
       const objs = this.level.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
@@ -338,9 +343,15 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.stabilizeTheCamera();
-    this.removeDistantObstacles();
+    // this.removeDistantObstacles();
   }
 
+  clearChunk(chunkName) {
+    const levelLayer = this.getChunkLevel(chunkName)
+    const fromX = levelLayer.tilemapLayer.x;
+    const toX = fromX + levelLayer.tilemapLayer.width;
+    this.getActiveObstaclesInRange(fromX, toX).forEach(obstacle => this.obstacles2.kill(obstacle));
+  }
 
   updateGround() {
     // FOR generate ground

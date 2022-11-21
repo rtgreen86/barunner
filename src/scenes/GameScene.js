@@ -116,6 +116,30 @@ export default class GameScene extends Phaser.Scene {
     // this.backgroundLayer1.update(5000);
     // this.backgroundLayer2.update(5000);
     // this.backgroundLayer3.update(5000);
+
+
+
+
+    this.backgroundLayer1 = this.add.tileSprite(0, 720 - 64, 1280, 350, 'background-layer-1')
+      .setScrollFactor(0)
+      .setOrigin(0, 1);
+
+
+    this.backgroundLayer2 = this.add.tileSprite(0, 720 - 64, 1280, 350, 'background-layer-2')
+      .setScrollFactor(0)
+      .setOrigin(0, 1);
+
+    this.backgroundLayer3 = this.add.tileSprite(0, 720 - 64 + 1, 1280, 350, 'background-layer-3')
+      .setScrollFactor(0)
+      .setOrigin(0, 1);
+
+
+    // another method
+
+    // this.carreteraMap = this.game.add.tilemap('tileMapName');this.carreteraMap.addTilesetImage('tileSetName');this.carreteraLayer = this.carreteraMap.createLayer('tileMapLayerName');this.carreteraLayer.renderable = false;		this.carretera = this.game.add.tileSprite(this.game.world.centerX, 0, this.carreteraLayer.layer.widthInPixels, this.carreteraLayer.layer.heightInPixels, this.carreteraLayer.texture);this.carretera.anchor.x = 0.5;
+
+    // https://www.html5gamedevs.com/topic/12994-tilesprite-from-tilemap-and-tilemaplayer/
+
   }
 
   createGround() {
@@ -130,23 +154,27 @@ export default class GameScene extends Phaser.Scene {
 
   createLevel() {
 
-    for (let i = 0; i < 50; i++) {
-      this.add.image(i * 533, 1400  , 'background-layer-1')
-        .setScrollFactor(0.1, 1);
-    }
-
-
-    for (let i = 0; i < 50; i++) {
-      this.add.image(i * 533, 1300  , 'background-layer-2')
-        .setScrollFactor(0.2, 1);
-    }
 
 
 
-    for (let i = 0; i < 10; i++) {
-      this.add.image(i * 1389, 1306  , 'background-layer-3')
-        .setScrollFactor(0.3, 1);
-    }
+
+    // for (let i = 0; i < 50; i++) {
+    //   this.add.image(i * 533, 1400  , 'background-layer-1')
+    //     .setScrollFactor(0.1, 1);
+    // }
+
+
+    // for (let i = 0; i < 50; i++) {
+    //   this.add.image(i * 533, 1300  , 'background-layer-2')
+    //     .setScrollFactor(0.2, 1);
+    // }
+
+
+
+    // for (let i = 0; i < 10; i++) {
+    //   this.add.image(i * 1389, 1306  , 'background-layer-3')
+    //     .setScrollFactor(0.3, 1);
+    // }
 
 
 
@@ -201,8 +229,8 @@ export default class GameScene extends Phaser.Scene {
       immovable: true
     });
 
-    const obs = this.level.objects[0].objects[0];
-    this.getObstacle(obs.x, obs.y);
+    // const obs = this.level.objects[0].objects[0];
+    // this.getObstacle(obs.x, obs.y);
 
 
     const areas = this.level.filterObjects('room1/objects', obj => obj.name === 'obstacle');
@@ -309,8 +337,9 @@ export default class GameScene extends Phaser.Scene {
         const x = obj.x + (this.playerChunk + 1) * this.level.widthInPixels;
         const y = obj.y + obj.height;
         console.log(obj, x, y);
-        const o = this.getObstacle(x, y);
-        console.log(o.x, x);
+
+        // Generage obstacles
+        // const o = this.getObstacle(x, y);
       }
 
 
@@ -370,6 +399,14 @@ export default class GameScene extends Phaser.Scene {
 
     this.stabilizeTheCamera();
     // this.removeDistantObstacles();
+
+
+
+    this.backgroundLayer1.tilePositionX = this.cameras.main.scrollX * 0.1;
+    this.backgroundLayer2.tilePositionX = this.cameras.main.scrollX * 0.2;
+    this.backgroundLayer3.tilePositionX = this.cameras.main.scrollX * 0.3;
+
+    console.log()
   }
 
   clearChunk(chunkName) {

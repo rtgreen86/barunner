@@ -202,6 +202,9 @@ export default class GameScene extends Phaser.Scene {
     const x = position * this.level.width * this.level.tileWidth
     const y = 0;
     this.level.createLayer(layerName, this.level.tilesets, x, y);
+    const layer = this.level.getLayer(layerName).tilemapLayer
+    layer.setScrollFactor(0, 1);
+    // see https://phaser.io/examples/v3/view/tilemap/endless-map
   }
 
   createPlayer() {
@@ -299,51 +302,51 @@ export default class GameScene extends Phaser.Scene {
 
 
 
-    let minChunk = this.chunks[0];
-    let minLayer = this.level.layer;
-    let minLayerPosition = this.getLayerPosition(minLayer.name);
-    let maxChunk = this.chunks[0];
-    let maxLayer = this.level.layer;
-    let maxLayerPosition = this.getLayerPosition(maxLayer.name);
+    // let minChunk = this.chunks[0];
+    // let minLayer = this.level.layer;
+    // let minLayerPosition = this.getLayerPosition(minLayer.name);
+    // let maxChunk = this.chunks[0];
+    // let maxLayer = this.level.layer;
+    // let maxLayerPosition = this.getLayerPosition(maxLayer.name);
 
-    for (const chunk of this.chunks) {
-      const layer = this.level.getLayer(`${chunk}/level`);
-      const layerPosition = this.getLayerPosition(layer.name);
-      if (layerPosition > maxLayerPosition) {
-        maxChunk = chunk;
-        maxLayerPosition = layerPosition;
-        maxLayer = layer;
-      }
-      if (layerPosition < minLayerPosition) {
-        minChunk = chunk;
-        minLayerPosition = layerPosition;
-        minLayer = layer;
-      }
-    }
+    // for (const chunk of this.chunks) {
+    //   const layer = this.level.getLayer(`${chunk}/level`);
+    //   const layerPosition = this.getLayerPosition(layer.name);
+    //   if (layerPosition > maxLayerPosition) {
+    //     maxChunk = chunk;
+    //     maxLayerPosition = layerPosition;
+    //     maxLayer = layer;
+    //   }
+    //   if (layerPosition < minLayerPosition) {
+    //     minChunk = chunk;
+    //     minLayerPosition = layerPosition;
+    //     minLayer = layer;
+    //   }
+    // }
 
-    if (this.playerChunk === minLayerPosition) {
-      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.level.widthInPixels, maxLayer.y);
-    }
-    if (this.playerChunk === maxLayerPosition) {
-      this.clearChunk(minChunk);
-      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.level.widthInPixels, minLayer.y);
+    // if (this.playerChunk === minLayerPosition) {
+    //   maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.level.widthInPixels, maxLayer.y);
+    // }
+    // if (this.playerChunk === maxLayerPosition) {
+    //   this.clearChunk(minChunk);
+    //   minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.level.widthInPixels, minLayer.y);
 
-      const objs = this.level.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
-
-
-      const obj = objs && objs[0];
-      console.log(minChunk, objs.length);
-      if (obj) {
-        const x = obj.x + (this.playerChunk + 1) * this.level.widthInPixels;
-        const y = obj.y + obj.height;
-        console.log(obj, x, y);
-
-        // Generage obstacles
-        // const o = this.getObstacle(x, y);
-      }
+    //   const objs = this.level.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
 
 
-    }
+    //   const obj = objs && objs[0];
+    //   console.log(minChunk, objs.length);
+    //   if (obj) {
+    //     const x = obj.x + (this.playerChunk + 1) * this.level.widthInPixels;
+    //     const y = obj.y + obj.height;
+    //     console.log(obj, x, y);
+
+    //     // Generage obstacles
+    //     // const o = this.getObstacle(x, y);
+    //   }
+
+
+    // }
 
     // jump
 

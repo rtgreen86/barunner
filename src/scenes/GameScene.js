@@ -191,7 +191,13 @@ export default class GameScene extends Phaser.Scene {
 
   createChunks() {
     const prop = this.getLevelPropertyTyped('chunks', 'string');
-    this.chunks = prop.value.split(',').map(item => item.trim());
+
+    // ver 1 create all chunks from map editor
+    // this.chunks = prop.value.split(',').map(item => item.trim());
+
+    // ver 2 create one chank
+    this.chunks = ['room1'];
+
     this.chunks.sort(() => Math.random() - .5).forEach((name, index) => {
       this.createChunk(name, index);
     });
@@ -267,7 +273,7 @@ export default class GameScene extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = 1;
+    this.cameras.main.zoom = 0.1;
     this.cameras.main.startFollow(
       this.player,
       true,

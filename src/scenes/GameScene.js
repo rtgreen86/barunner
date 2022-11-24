@@ -50,7 +50,7 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.createControls();
-    // this.createBackgound();
+    this.createBackgound();
     this.createGround();
     this.createMap();
     this.createPlayer();
@@ -481,9 +481,9 @@ export default class GameScene extends Phaser.Scene {
 
 
     // Update background
-    // this.backgroundLayer1.tilePositionX = this.cameras.main.scrollX * 0.1;
-    // this.backgroundLayer2.tilePositionX = this.cameras.main.scrollX * 0.2;
-    // this.backgroundLayer3.tilePositionX = this.cameras.main.scrollX * 0.3;
+    this.backgroundLayer1.tilePositionX = this.cameras.main.scrollX * 0.1;
+    this.backgroundLayer2.tilePositionX = this.cameras.main.scrollX * 0.2;
+    this.backgroundLayer3.tilePositionX = this.cameras.main.scrollX * 0.3;
 
     console.log()
   }

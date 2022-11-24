@@ -26,11 +26,11 @@ export default class GameScene extends Phaser.Scene {
     super('GameScene');
   }
 
-  getLevelProperty = name => this.level.properties.find(prop => prop.name === name);
+  getLevelProperty = name => this.map.properties.find(prop => prop.name === name);
 
   getLevelPropertyTyped = (name, type = 'string') => checkType(this.getLevelProperty(name), name, type);
 
-  getChunkLevel = chunkName => this.level.getLayer(`${chunkName}/level`);
+  getChunkLevel = chunkName => this.map.getLayer(`${chunkName}/level`);
 
   getActiveObstaclesInRange = (fromX, toX) => this.obstacles2.getMatching('active', true).filter(obst => obst.x >= fromX && obst.x <= toX);
 
@@ -52,7 +52,7 @@ export default class GameScene extends Phaser.Scene {
     this.createControls();
     // this.createBackgound();
     this.createGround();
-    this.createLevel();
+    this.createMap();
     this.createPlayer();
     this.createObstacles();
     this.createCollaider();
@@ -152,7 +152,7 @@ export default class GameScene extends Phaser.Scene {
     this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
   }
 
-  createLevel() {
+  createMap() {
 
 
 
@@ -184,9 +184,19 @@ export default class GameScene extends Phaser.Scene {
     // }
 
 
-    this.level = this.add.tilemap(this.levelName);
-    this.level.tilesets.forEach(tileset => this.level.addTilesetImage(tileset.name, tileset.name));
-    this.createChunks();
+    this.map = this.add.tilemap(this.levelName);
+    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
+
+    // chunked map
+    // this.createChunks();
+
+
+    const layerName = 'ground';
+    this.chunks = ['ground', 'ground2', 'ground3']
+    this.createChunk3('ground', 0);
+    this.createChunk4('ground', 'ground2', 1);
+    this.createChunk4('ground', 'ground3', 2);
+
   }
 
   createChunks() {
@@ -210,36 +220,66 @@ export default class GameScene extends Phaser.Scene {
 
   createChunk(name, position) {
     const layerName = `${name}/level`;
-    const x = position * this.level.width * this.level.tileWidth
+    const x = position * this.map.width * this.map.tileWidth
     const y = 0;
-    this.level.createLayer(layerName, this.level.tilesets, x, y);
-    const layer = this.level.getLayer(layerName).tilemapLayer
+    this.map.createLayer(layerName, this.map.tilesets, x, y);
+    const layer = this.map.getLayer(layerName).tilemapLayer
+    // layer.setScrollFactor(0, 1);
+    // see https://phaser.io/examples/v3/view/tilemap/endless-map
+  }
+
+  createChunk3(layerName, position) {
+    const x = position * this.map.width * this.map.tileWidth
+    const y = 0;
+    this.map.createLayer(layerName, this.map.tilesets, x, y);
+    const layer = this.map.getLayer(layerName).tilemapLayer
     // layer.setScrollFactor(0, 1);
     // see https://phaser.io/examples/v3/view/tilemap/endless-map
   }
 
   createChunk2(source, name, position) {
     const layerName = `${name}`;
-    const x = position * this.level.width * this.level.tileWidth
+    const x = position * this.map.width * this.map.tileWidth
     const y = 0;
     console.log(1);
-    this.level.createBlankLayer(layerName, this.level.tilesets, x, y, 16, 16, 128, 128);
+    this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 16, 16, 128, 128);
     console.log(2);
     for (let i = 0; i < 16; i++) {
       for (let j = 0; j < 16; j++) {
-        const tile = this.level.getTileAt(i, j, true, `${source}/level`);
-        const dest = this.level.getTileAt(i, j, true, layerName);
+        const tile = this.map.getTileAt(i, j, true, `${source}/level`);
+        const dest = this.map.getTileAt(i, j, true, layerName);
         dest.copy(tile);
       }
     }
     console.log(3);
-    const layer = this.level.getLayer(layerName);
+    const layer = this.map.getLayer(layerName);
     console.log(4);
     console.log(layer.active, layer.visible);
 
     // see https://phaser.io/examples/v3/view/tilemap/endless-map
   }
 
+  createChunk4(source, name, position) {
+    const layerName = `${name}`;
+    const x = position * this.map.width * this.map.tileWidth
+    const y = 0;
+    console.log(1);
+    this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 16, 16, 128, 128);
+    console.log(2);
+    for (let i = 0; i < 16; i++) {
+      for (let j = 0; j < 16; j++) {
+        const tile = this.map.getTileAt(i, j, true, source);
+        const dest = this.map.getTileAt(i, j, true, layerName);
+        dest.copy(tile);
+      }
+    }
+    console.log(3);
+    const layer = this.map.getLayer(layerName);
+    console.log(4);
+    console.log(layer.active, layer.visible);
+
+    // see https://phaser.io/examples/v3/view/tilemap/endless-map
+  }
 
 
   createPlayer() {
@@ -250,9 +290,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   getPlayerStartPosition() {
-    const playerX = this.level.properties.find(prop => prop.name === 'playerX');
-    const playerY = this.level.properties.find(prop => prop.name === 'playerY');
-    return [playerX.value * this.level.tileWidth, playerY.value * this.level.tileHeight - PLAYER_SIZE / 3];
+    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
+    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
+    return [playerX.value * this.map.tileWidth, playerY.value * this.map.tileHeight - PLAYER_SIZE / 3];
   }
 
   createObstacles() {
@@ -271,7 +311,7 @@ export default class GameScene extends Phaser.Scene {
     // this.getObstacle(obs.x, obs.y);
 
 
-    const areas = this.level.filterObjects('room1/objects', obj => obj.name === 'obstacle');
+    const areas = this.map.filterObjects('room1/objects', obj => obj.name === 'obstacle');
     areas.forEach(area => {
       this.getObstacle(area.x, area.y + area.height);
     });
@@ -286,10 +326,10 @@ export default class GameScene extends Phaser.Scene {
     // collide with level
 
 
-    this.level.layers.forEach(layer => {
+    this.map.layers.forEach(layer => {
       this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
       this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
-      this.level.setCollisionByProperty({ collides: true }, true, true, layer.name);
+      this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
 
     const cb = () => {
@@ -302,7 +342,7 @@ export default class GameScene extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = 0.1;
+    this.cameras.main.zoom = 1;
     this.cameras.main.startFollow(
       this.player,
       true,
@@ -337,51 +377,52 @@ export default class GameScene extends Phaser.Scene {
 
 
 
-    // let minChunk = this.chunks[0];
-    // let minLayer = this.level.layer;
-    // let minLayerPosition = this.getLayerPosition(minLayer.name);
-    // let maxChunk = this.chunks[0];
-    // let maxLayer = this.level.layer;
-    // let maxLayerPosition = this.getLayerPosition(maxLayer.name);
+    let minChunk = this.chunks[0];
+    let minLayer = this.map.layer;
+    let minLayerPosition = this.getLayerPosition(minLayer.name);
+    let maxChunk = this.chunks[0];
+    let maxLayer = this.map.layer;
+    let maxLayerPosition = this.getLayerPosition(maxLayer.name);
 
-    // for (const chunk of this.chunks) {
-    //   const layer = this.level.getLayer(`${chunk}/level`);
-    //   const layerPosition = this.getLayerPosition(layer.name);
-    //   if (layerPosition > maxLayerPosition) {
-    //     maxChunk = chunk;
-    //     maxLayerPosition = layerPosition;
-    //     maxLayer = layer;
-    //   }
-    //   if (layerPosition < minLayerPosition) {
-    //     minChunk = chunk;
-    //     minLayerPosition = layerPosition;
-    //     minLayer = layer;
-    //   }
-    // }
+    for (const chunk of this.chunks) {
+      // const layer = this.map.getLayer(`${chunk}/level`);
+      const layer = this.map.getLayer(chunk);
+      const layerPosition = this.getLayerPosition(layer.name);
+      if (layerPosition > maxLayerPosition) {
+        maxChunk = chunk;
+        maxLayerPosition = layerPosition;
+        maxLayer = layer;
+      }
+      if (layerPosition < minLayerPosition) {
+        minChunk = chunk;
+        minLayerPosition = layerPosition;
+        minLayer = layer;
+      }
+    }
 
-    // if (this.playerChunk === minLayerPosition) {
-    //   maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.level.widthInPixels, maxLayer.y);
-    // }
-    // if (this.playerChunk === maxLayerPosition) {
-    //   this.clearChunk(minChunk);
-    //   minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.level.widthInPixels, minLayer.y);
+    if (this.playerChunk === minLayerPosition) {
+      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.map.widthInPixels, maxLayer.y);
+    }
+    if (this.playerChunk === maxLayerPosition) {
+      // this.clearChunk(minChunk);
+      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
 
-    //   const objs = this.level.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
-
-
-    //   const obj = objs && objs[0];
-    //   console.log(minChunk, objs.length);
-    //   if (obj) {
-    //     const x = obj.x + (this.playerChunk + 1) * this.level.widthInPixels;
-    //     const y = obj.y + obj.height;
-    //     console.log(obj, x, y);
-
-    //     // Generage obstacles
-    //     // const o = this.getObstacle(x, y);
-    //   }
+      const objs = this.map.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
 
 
-    // }
+      const obj = objs && objs[0];
+      // console.log(minChunk, objs.length);
+      if (obj) {
+        const x = obj.x + (this.playerChunk + 1) * this.map.widthInPixels;
+        const y = obj.y + obj.height;
+        console.log(obj, x, y);
+
+        // Generage obstacles
+        // const o = this.getObstacle(x, y);
+      }
+
+
+    }
 
     // jump
 
@@ -533,11 +574,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   get playerChunk() {
-    return Math.floor(this.player.x / this.level.widthInPixels);
+    return Math.floor(this.player.x / this.map.widthInPixels);
   }
 
   getLayerPosition(layer) {
-    return Math.floor(this.level.getLayer(layer).tilemapLayer.x / this.level.widthInPixels);
+    return Math.floor(this.map.getLayer(layer).tilemapLayer.x / this.map.widthInPixels);
   }
 
   canJump(object) {

@@ -201,6 +201,11 @@ export default class GameScene extends Phaser.Scene {
     this.chunks.sort(() => Math.random() - .5).forEach((name, index) => {
       this.createChunk(name, index);
     });
+
+    this.createChunk2('room1', 'room2', 1);
+
+
+
   }
 
   createChunk(name, position) {
@@ -209,9 +214,33 @@ export default class GameScene extends Phaser.Scene {
     const y = 0;
     this.level.createLayer(layerName, this.level.tilesets, x, y);
     const layer = this.level.getLayer(layerName).tilemapLayer
-    layer.setScrollFactor(0, 1);
+    // layer.setScrollFactor(0, 1);
     // see https://phaser.io/examples/v3/view/tilemap/endless-map
   }
+
+  createChunk2(source, name, position) {
+    const layerName = `${name}`;
+    const x = position * this.level.width * this.level.tileWidth
+    const y = 0;
+    console.log(1);
+    this.level.createBlankLayer(layerName, this.level.tilesets, x, y, 16, 16, 128, 128);
+    console.log(2);
+    for (let i = 0; i < 16; i++) {
+      for (let j = 0; j < 16; j++) {
+        const tile = this.level.getTileAt(i, j, true, `${source}/level`);
+        const dest = this.level.getTileAt(i, j, true, layerName);
+        dest.copy(tile);
+      }
+    }
+    console.log(3);
+    const layer = this.level.getLayer(layerName);
+    console.log(4);
+    console.log(layer.active, layer.visible);
+
+    // see https://phaser.io/examples/v3/view/tilemap/endless-map
+  }
+
+
 
   createPlayer() {
     const [x, y] = this.getPlayerStartPosition();

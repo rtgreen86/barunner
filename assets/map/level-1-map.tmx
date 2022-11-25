@@ -114,7 +114,7 @@
    <object id="11" name="obstacle" x="1537.33" y="1316" width="256" height="128"/>
    <object id="13" name="obstacle" x="128" y="1314.67" width="128" height="128"/>
   </objectgroup>
-  <layer id="2" name="level" width="16" height="16" visible="0">
+  <layer id="2" name="level" width="16" height="16">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

@@ -21,6 +21,9 @@ const DEADLINE_OFFSET = -100;
 
 // const PLAYER_RESPAWN_TIMEOUT = 1000;
 
+var sx = 0;
+var prevCam;
+
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('GameScene');
@@ -153,31 +156,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createMap() {
-
-
-
-
-
     // for (let i = 0; i < 50; i++) {
     //   this.add.image(i * 533, 1400  , 'background-layer-1')
     //     .setScrollFactor(0.1, 1);
     // }
-
-
     // for (let i = 0; i < 50; i++) {
     //   this.add.image(i * 533, 1300  , 'background-layer-2')
     //     .setScrollFactor(0.2, 1);
     // }
-
-
-
     // for (let i = 0; i < 10; i++) {
     //   this.add.image(i * 1389, 1306  , 'background-layer-3')
     //     .setScrollFactor(0.3, 1);
     // }
-
-
-
     // for (let i = 0; i < 10; i++) {
     //   this.add.image(i * 2048, 1400  , 'background-experiment')
     //     .setScrollFactor(0.3, 1);
@@ -191,11 +181,17 @@ export default class GameScene extends Phaser.Scene {
     // this.createChunks();
 
 
-    const layerName = 'ground';
-    this.chunks = ['ground', 'ground2', 'ground3']
+    // const layerName = 'ground';
+    this.chunks = ['ground'/*, 'ground2', 'ground3'*/]
     this.createChunk3('ground', 0);
-    this.createChunk4('ground', 'ground2', 1);
-    this.createChunk4('ground', 'ground3', 2);
+    // this.createChunk4('ground', 'ground2', 1);
+    // this.createChunk4('ground', 'ground3', 2);
+
+
+    // static map
+    const layer = this.map.getLayer('ground').tilemapLayer
+    layer.setScrollFactor(0, 1);
+    // see https://phaser.io/examples/v3/view/tilemap/endless-map
 
   }
 
@@ -342,7 +338,7 @@ export default class GameScene extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = 1;
+    this.cameras.main.zoom = 0.5;
     this.cameras.main.startFollow(
       this.player,
       true,
@@ -350,6 +346,8 @@ export default class GameScene extends Phaser.Scene {
       this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
       this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
     );
+
+    prevCam = this.cameras.main.scrollX;
   }
 
   update(time, delta) {
@@ -370,59 +368,16 @@ export default class GameScene extends Phaser.Scene {
     //   this.respawnScene();
     // }
 
-    this.updateGround();
 
     // Do not update background
     // this.updateBackground();
 
+    // this.updateGround();
+    // this.updateGround2();
+    this.updateGround3();
 
 
-    let minChunk = this.chunks[0];
-    let minLayer = this.map.layer;
-    let minLayerPosition = this.getLayerPosition(minLayer.name);
-    let maxChunk = this.chunks[0];
-    let maxLayer = this.map.layer;
-    let maxLayerPosition = this.getLayerPosition(maxLayer.name);
 
-    for (const chunk of this.chunks) {
-      // const layer = this.map.getLayer(`${chunk}/level`);
-      const layer = this.map.getLayer(chunk);
-      const layerPosition = this.getLayerPosition(layer.name);
-      if (layerPosition > maxLayerPosition) {
-        maxChunk = chunk;
-        maxLayerPosition = layerPosition;
-        maxLayer = layer;
-      }
-      if (layerPosition < minLayerPosition) {
-        minChunk = chunk;
-        minLayerPosition = layerPosition;
-        minLayer = layer;
-      }
-    }
-
-    if (this.playerChunk === minLayerPosition) {
-      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.map.widthInPixels, maxLayer.y);
-    }
-    if (this.playerChunk === maxLayerPosition) {
-      // this.clearChunk(minChunk);
-      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
-
-      const objs = this.map.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
-
-
-      const obj = objs && objs[0];
-      // console.log(minChunk, objs.length);
-      if (obj) {
-        const x = obj.x + (this.playerChunk + 1) * this.map.widthInPixels;
-        const y = obj.y + obj.height;
-        console.log(obj, x, y);
-
-        // Generage obstacles
-        // const o = this.getObstacle(x, y);
-      }
-
-
-    }
 
     // jump
 
@@ -488,6 +443,51 @@ export default class GameScene extends Phaser.Scene {
     console.log()
   }
 
+  updateGround2() {
+    let minChunk = this.chunks[0];
+    let minLayer = this.map.layer;
+    let minLayerPosition = this.getLayerPosition(minLayer.name);
+    let maxChunk = this.chunks[0];
+    let maxLayer = this.map.layer;
+    let maxLayerPosition = this.getLayerPosition(maxLayer.name);
+
+    for (const chunk of this.chunks) {
+      // const layer = this.map.getLayer(`${chunk}/level`);
+      const layer = this.map.getLayer(chunk);
+      const layerPosition = this.getLayerPosition(layer.name);
+      if (layerPosition > maxLayerPosition) {
+        maxChunk = chunk;
+        maxLayerPosition = layerPosition;
+        maxLayer = layer;
+      }
+      if (layerPosition < minLayerPosition) {
+        minChunk = chunk;
+        minLayerPosition = layerPosition;
+        minLayer = layer;
+      }
+    }
+    if (this.playerChunk === minLayerPosition) {
+      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.map.widthInPixels, maxLayer.y);
+    }
+    if (this.playerChunk === maxLayerPosition) {
+      // this.clearChunk(minChunk);
+      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
+
+      const objs = this.map.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
+
+      const obj = objs && objs[0];
+      // console.log(minChunk, objs.length);
+      if (obj) {
+        const x = obj.x + (this.playerChunk + 1) * this.map.widthInPixels;
+        const y = obj.y + obj.height;
+        console.log(obj, x, y);
+
+        // Generage obstacles
+        // const o = this.getObstacle(x, y);
+      }
+    }
+  }
+
   clearChunk(chunkName) {
     const levelLayer = this.getChunkLevel(chunkName)
     const fromX = levelLayer.tilemapLayer.x;
@@ -508,6 +508,52 @@ export default class GameScene extends Phaser.Scene {
     //   this.nextGround += 200;
     // }
     // this.ground.setOrigin(0.5, 1).refresh();
+
+
+  }
+
+  updateGround3() {
+    var currentCam = this.cameras.main.scrollX;
+
+
+
+    //  Any speed as long as 16 evenly divides by it
+    sx += (currentCam - prevCam);
+
+    console.log(sx);
+    prevCam = currentCam;
+    var map = this.map;
+
+    if (sx >= 128)
+    {
+        //  Reset and create new strip
+
+        var tile;
+        var prev;
+
+        for (var y = 0; y < 16; y++)
+        {
+            for (var x = 1; x < 16; x++)
+            {
+                tile = map.getTileAt(x, y, true);
+                prev = map.getTileAt(x - 1, y, true);
+
+                prev.index = tile.index;
+
+                if (x === 16 - 1)
+                {
+                    tile.index = -1;
+                }
+            }
+        }
+
+        sx = 0;
+    }
+
+    // this.cameras.main.scrollX = sx;
+
+
+
 
 
   }

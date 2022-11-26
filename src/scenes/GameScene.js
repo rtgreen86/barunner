@@ -183,14 +183,20 @@ export default class GameScene extends Phaser.Scene {
 
     // const layerName = 'ground';
     this.chunks = ['ground'/*, 'ground2', 'ground3'*/]
-    this.createChunk3('ground', 0);
+    this.createChunk5('ground', 'ground2', 0);
     // this.createChunk4('ground', 'ground2', 1);
     // this.createChunk4('ground', 'ground3', 2);
 
 
     // static map
-    const layer = this.map.getLayer('ground').tilemapLayer
+    const layer = this.map.getLayer('ground2').tilemapLayer
     layer.setScrollFactor(0, 1);
+    // layer.setVisible(false);
+    // layer.setActive(false);
+
+
+
+    this.groundLayer = layer;
     // see https://phaser.io/examples/v3/view/tilemap/endless-map
 
   }
@@ -237,7 +243,6 @@ export default class GameScene extends Phaser.Scene {
     const layerName = `${name}`;
     const x = position * this.map.width * this.map.tileWidth
     const y = 0;
-    console.log(1);
     this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 16, 16, 128, 128);
     console.log(2);
     for (let i = 0; i < 16; i++) {
@@ -259,9 +264,7 @@ export default class GameScene extends Phaser.Scene {
     const layerName = `${name}`;
     const x = position * this.map.width * this.map.tileWidth
     const y = 0;
-    console.log(1);
     this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 16, 16, 128, 128);
-    console.log(2);
     for (let i = 0; i < 16; i++) {
       for (let j = 0; j < 16; j++) {
         const tile = this.map.getTileAt(i, j, true, source);
@@ -269,14 +272,36 @@ export default class GameScene extends Phaser.Scene {
         dest.copy(tile);
       }
     }
-    console.log(3);
     const layer = this.map.getLayer(layerName);
-    console.log(4);
     console.log(layer.active, layer.visible);
 
     // see https://phaser.io/examples/v3/view/tilemap/endless-map
   }
 
+  createChunk5(source, name, position) {
+    const layerName = `${name}`;
+    const x = position * this.map.width * this.map.tileWidth
+    const y = 0;
+    this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 32, 16, 128, 128);
+    for (let i = 0; i < 16; i++) {
+      for (let j = 0; j < 16; j++) {
+        const tile = this.map.getTileAt(i, j, true, source);
+        const dest = this.map.getTileAt(i, j, true, layerName);
+        dest.copy(tile);
+      }
+    }
+    for (let i = 16; i < 32; i++) {
+      for (let j = 0; j < 16; j++) {
+        const tile = this.map.getTileAt(i - 16, j, true, source);
+        const dest = this.map.getTileAt(i, j, true, layerName);
+        dest.copy(tile);
+      }
+    }
+    const layer = this.map.getLayer(layerName);
+    console.log(layer.active, layer.visible);
+
+    // see https://phaser.io/examples/v3/view/tilemap/endless-map
+  }
 
   createPlayer() {
     const [x, y] = this.getPlayerStartPosition();
@@ -338,7 +363,7 @@ export default class GameScene extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = 0.5;
+    this.cameras.main.zoom = 1;
     this.cameras.main.startFollow(
       this.player,
       true,
@@ -374,8 +399,8 @@ export default class GameScene extends Phaser.Scene {
 
     // this.updateGround();
     // this.updateGround2();
-    this.updateGround3();
-
+    // this.updateGround3();
+    this.updateGround4();
 
 
 
@@ -514,9 +539,6 @@ export default class GameScene extends Phaser.Scene {
 
   updateGround3() {
     var currentCam = this.cameras.main.scrollX;
-
-
-
     //  Any speed as long as 16 evenly divides by it
     sx += (currentCam - prevCam);
 
@@ -527,7 +549,6 @@ export default class GameScene extends Phaser.Scene {
     if (sx >= 128)
     {
         //  Reset and create new strip
-
         var tile;
         var prev;
 
@@ -546,17 +567,20 @@ export default class GameScene extends Phaser.Scene {
                 }
             }
         }
-
         sx = 0;
     }
-
     // this.cameras.main.scrollX = sx;
-
-
-
-
-
   }
+
+
+  updateGround4() {
+    const width = this.groundLayer.width / 2;
+    const cameraX = this.cameras.main.scrollX;
+    const offset = cameraX - Math.floor(cameraX / width) * width //- 1280 / 2;
+    this.groundLayer.x = -offset;
+  }
+
+
 
   isFalling(object) {
     return object.body.velocity.y > this.startFallingVelocity;

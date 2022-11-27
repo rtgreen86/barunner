@@ -21,9 +21,6 @@ const DEADLINE_OFFSET = -100;
 
 // const PLAYER_RESPAWN_TIMEOUT = 1000;
 
-var sx = 0;
-var prevCam;
-
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('GameScene');
@@ -49,12 +46,12 @@ export default class GameScene extends Phaser.Scene {
     this.levelName = 'map-level-1';
     this.levelTileset = 'level-1-tileset';
     this.levelObjects = 'objects';
+    this.groundLayerName = 'ground';
   }
 
   create() {
     this.createControls();
     this.createBackgound();
-    this.createGround();
     this.createMap();
     this.createPlayer();
     this.createObstacles();
@@ -145,162 +142,38 @@ export default class GameScene extends Phaser.Scene {
 
   }
 
-  createGround() {
-    this.ground = this.physics.add.staticGroup({
-      classType: Phaser.Physics.Arcade.StaticImage,
-      name: 'ground',
-      defaultKey: 'image-ground'
-    }).setOrigin(0.5, 1);
-    this.ground.get(0, 0).setOrigin(0.5, 1).refreshBody();
-    this.ground.get(200, 0).setOrigin(0.5, 1).refreshBody();
-  }
-
   createMap() {
-    // for (let i = 0; i < 50; i++) {
-    //   this.add.image(i * 533, 1400  , 'background-layer-1')
-    //     .setScrollFactor(0.1, 1);
-    // }
-    // for (let i = 0; i < 50; i++) {
-    //   this.add.image(i * 533, 1300  , 'background-layer-2')
-    //     .setScrollFactor(0.2, 1);
-    // }
-    // for (let i = 0; i < 10; i++) {
-    //   this.add.image(i * 1389, 1306  , 'background-layer-3')
-    //     .setScrollFactor(0.3, 1);
-    // }
-    // for (let i = 0; i < 10; i++) {
-    //   this.add.image(i * 2048, 1400  , 'background-experiment')
-    //     .setScrollFactor(0.3, 1);
-    // }
-
-
     this.map = this.add.tilemap(this.levelName);
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
+    this.createGroundLayer(this.groundLayerName, 0, 0);
+  }
 
-    // chunked map
-    // this.createChunks();
-
-
-    // const layerName = 'ground';
-    this.chunks = ['ground'/*, 'ground2', 'ground3'*/]
-    this.createChunk5('ground', 'ground2', 0);
-    // this.createChunk4('ground', 'ground2', 1);
-    // this.createChunk4('ground', 'ground3', 2);
-
-
-    // static map
-    const layer = this.map.getLayer('ground2').tilemapLayer
+  createGroundLayer(layerName, x = 0, y = 0) {
+    const layer = this.createDoubleLayer(layerName, x, y);
     layer.setScrollFactor(0, 1);
-    // layer.setVisible(false);
-    // layer.setActive(false);
-
-
-
-    this.groundLayer = layer;
-    // see https://phaser.io/examples/v3/view/tilemap/endless-map
-
   }
 
-  createChunks() {
-    const prop = this.getLevelPropertyTyped('chunks', 'string');
-
-    // ver 1 create all chunks from map editor
-    // this.chunks = prop.value.split(',').map(item => item.trim());
-
-    // ver 2 create one chank
-    this.chunks = ['room1'];
-
-    this.chunks.sort(() => Math.random() - .5).forEach((name, index) => {
-      this.createChunk(name, index);
-    });
-
-    this.createChunk2('room1', 'room2', 1);
-
-
-
+  createDoubleLayer(layerName, x = 0, y = 0) {
+    const sourceLayer = this.map.getLayer(layerName);
+    const width = sourceLayer.width;
+    const height = sourceLayer.height;
+    const destLayer = this.map.createBlankLayer(
+      `double-${layerName}`, this.map.tilesets,
+      x, y, width * 2, height,
+      sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
+    );
+    this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
+    this.copyTilesFrom(layerName, 0, 0, width, height, width, 0);
+    return destLayer;
   }
 
-  createChunk(name, position) {
-    const layerName = `${name}/level`;
-    const x = position * this.map.width * this.map.tileWidth
-    const y = 0;
-    this.map.createLayer(layerName, this.map.tilesets, x, y);
-    const layer = this.map.getLayer(layerName).tilemapLayer
-    // layer.setScrollFactor(0, 1);
-    // see https://phaser.io/examples/v3/view/tilemap/endless-map
-  }
-
-  createChunk3(layerName, position) {
-    const x = position * this.map.width * this.map.tileWidth
-    const y = 0;
-    this.map.createLayer(layerName, this.map.tilesets, x, y);
-    const layer = this.map.getLayer(layerName).tilemapLayer
-    // layer.setScrollFactor(0, 1);
-    // see https://phaser.io/examples/v3/view/tilemap/endless-map
-  }
-
-  createChunk2(source, name, position) {
-    const layerName = `${name}`;
-    const x = position * this.map.width * this.map.tileWidth
-    const y = 0;
-    this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 16, 16, 128, 128);
-    console.log(2);
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 16; j++) {
-        const tile = this.map.getTileAt(i, j, true, `${source}/level`);
-        const dest = this.map.getTileAt(i, j, true, layerName);
-        dest.copy(tile);
+  copyTilesFrom(sourceLayer, x = 0, y = 0, width = 1, height = 1, destX = 0, destY = 0) {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
+        const sourceTile = this.map.getTileAt(x + i, y + j, true, sourceLayer);
+        this.map.getTileAt(destX + i, destY + j, true).copy(sourceTile);
       }
     }
-    console.log(3);
-    const layer = this.map.getLayer(layerName);
-    console.log(4);
-    console.log(layer.active, layer.visible);
-
-    // see https://phaser.io/examples/v3/view/tilemap/endless-map
-  }
-
-  createChunk4(source, name, position) {
-    const layerName = `${name}`;
-    const x = position * this.map.width * this.map.tileWidth
-    const y = 0;
-    this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 16, 16, 128, 128);
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 16; j++) {
-        const tile = this.map.getTileAt(i, j, true, source);
-        const dest = this.map.getTileAt(i, j, true, layerName);
-        dest.copy(tile);
-      }
-    }
-    const layer = this.map.getLayer(layerName);
-    console.log(layer.active, layer.visible);
-
-    // see https://phaser.io/examples/v3/view/tilemap/endless-map
-  }
-
-  createChunk5(source, name, position) {
-    const layerName = `${name}`;
-    const x = position * this.map.width * this.map.tileWidth
-    const y = 0;
-    this.map.createBlankLayer(layerName, this.map.tilesets, x, y, 32, 16, 128, 128);
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 16; j++) {
-        const tile = this.map.getTileAt(i, j, true, source);
-        const dest = this.map.getTileAt(i, j, true, layerName);
-        dest.copy(tile);
-      }
-    }
-    for (let i = 16; i < 32; i++) {
-      for (let j = 0; j < 16; j++) {
-        const tile = this.map.getTileAt(i - 16, j, true, source);
-        const dest = this.map.getTileAt(i, j, true, layerName);
-        dest.copy(tile);
-      }
-    }
-    const layer = this.map.getLayer(layerName);
-    console.log(layer.active, layer.visible);
-
-    // see https://phaser.io/examples/v3/view/tilemap/endless-map
   }
 
   createPlayer() {
@@ -371,8 +244,6 @@ export default class GameScene extends Phaser.Scene {
       this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
       this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
     );
-
-    prevCam = this.cameras.main.scrollX;
   }
 
   update(time, delta) {
@@ -397,10 +268,7 @@ export default class GameScene extends Phaser.Scene {
     // Do not update background
     // this.updateBackground();
 
-    // this.updateGround();
-    // this.updateGround2();
-    // this.updateGround3();
-    this.updateGround4();
+    this.updateGround();
 
 
 
@@ -468,51 +336,6 @@ export default class GameScene extends Phaser.Scene {
     console.log()
   }
 
-  updateGround2() {
-    let minChunk = this.chunks[0];
-    let minLayer = this.map.layer;
-    let minLayerPosition = this.getLayerPosition(minLayer.name);
-    let maxChunk = this.chunks[0];
-    let maxLayer = this.map.layer;
-    let maxLayerPosition = this.getLayerPosition(maxLayer.name);
-
-    for (const chunk of this.chunks) {
-      // const layer = this.map.getLayer(`${chunk}/level`);
-      const layer = this.map.getLayer(chunk);
-      const layerPosition = this.getLayerPosition(layer.name);
-      if (layerPosition > maxLayerPosition) {
-        maxChunk = chunk;
-        maxLayerPosition = layerPosition;
-        maxLayer = layer;
-      }
-      if (layerPosition < minLayerPosition) {
-        minChunk = chunk;
-        minLayerPosition = layerPosition;
-        minLayer = layer;
-      }
-    }
-    if (this.playerChunk === minLayerPosition) {
-      maxLayer.tilemapLayer.setPosition((this.playerChunk - 1) * this.map.widthInPixels, maxLayer.y);
-    }
-    if (this.playerChunk === maxLayerPosition) {
-      // this.clearChunk(minChunk);
-      minLayer.tilemapLayer.setPosition((this.playerChunk + 1) * this.map.widthInPixels, minLayer.y);
-
-      const objs = this.map.filterObjects(`${minChunk}/objects`, (o) => o.name === 'obstacle');
-
-      const obj = objs && objs[0];
-      // console.log(minChunk, objs.length);
-      if (obj) {
-        const x = obj.x + (this.playerChunk + 1) * this.map.widthInPixels;
-        const y = obj.y + obj.height;
-        console.log(obj, x, y);
-
-        // Generage obstacles
-        // const o = this.getObstacle(x, y);
-      }
-    }
-  }
-
   clearChunk(chunkName) {
     const levelLayer = this.getChunkLevel(chunkName)
     const fromX = levelLayer.tilemapLayer.x;
@@ -521,65 +344,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateGround() {
-    // FOR generate ground
-
-    // this.ground.getMatching('active', true).forEach(item => {
-    //   if (item.x < this.deadline) {
-    //     this.ground.kill(item);
-    //   }
-    // });
-    // while (this.nextGround < this.deadline + GROUND_SPAWN_DISTANCE) {
-    //   this.ground.get(this.nextGround, 0).setActive(true);
-    //   this.nextGround += 200;
-    // }
-    // this.ground.setOrigin(0.5, 1).refresh();
-
-
-  }
-
-  updateGround3() {
-    var currentCam = this.cameras.main.scrollX;
-    //  Any speed as long as 16 evenly divides by it
-    sx += (currentCam - prevCam);
-
-    console.log(sx);
-    prevCam = currentCam;
-    var map = this.map;
-
-    if (sx >= 128)
-    {
-        //  Reset and create new strip
-        var tile;
-        var prev;
-
-        for (var y = 0; y < 16; y++)
-        {
-            for (var x = 1; x < 16; x++)
-            {
-                tile = map.getTileAt(x, y, true);
-                prev = map.getTileAt(x - 1, y, true);
-
-                prev.index = tile.index;
-
-                if (x === 16 - 1)
-                {
-                    tile.index = -1;
-                }
-            }
-        }
-        sx = 0;
-    }
-    // this.cameras.main.scrollX = sx;
-  }
-
-
-  updateGround4() {
-    const width = this.groundLayer.width / 2;
+    const width = this.map.layer.tilemapLayer.width / 2;
     const cameraX = this.cameras.main.scrollX;
-    const offset = cameraX - Math.floor(cameraX / width) * width //- 1280 / 2;
-    this.groundLayer.x = -offset;
+    const offset = cameraX - Math.floor(cameraX / width) * width;
+    this.map.layer.tilemapLayer.x = -offset;
   }
-
 
 
   isFalling(object) {

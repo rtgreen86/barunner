@@ -23,6 +23,12 @@
          "id":10,
          "name":"ground",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"looped",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":16,
@@ -146,7 +152,7 @@
                  "name":"level",
                  "opacity":1,
                  "type":"tilelayer",
-                 "visible":false,
+                 "visible":true,
                  "width":16,
                  "x":0,
                  "y":0

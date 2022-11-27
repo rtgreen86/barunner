@@ -65,6 +65,9 @@
   </tile>
  </tileset>
  <layer id="10" name="ground" width="16" height="16">
+  <properties>
+   <property name="looped" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

@@ -30,6 +30,7 @@ export default class DebugScene extends Phaser.Scene {
 
   updateDebugInfo({ time, speed, delta }) {
     const gameScene = this.scene.get('GameScene');
+    const ground = gameScene.map.layer.tilemapLayer;
     this.text.setText([
       `Ticks: ${Math.round(time)}`,
       `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
@@ -38,7 +39,7 @@ export default class DebugScene extends Phaser.Scene {
       `Delta: ${delta.join(', ')}`,
       `Obstacles: ${gameScene.obstacles2.countActive()}, ${gameScene.obstacles2.countActive(false)} ${gameScene.obstacles2.getLength()}`,
       `Camera X: ${gameScene.cameras.main.scrollX}`,
-      `Ground X, W: ${gameScene.groundLayer.x}, ${gameScene.groundLayer.width}`,
+      `Ground X, W: ${ground.x}, ${ground.width}`,
       'Layers:',
       // ...gameScene.level.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
     ].join('\n'));

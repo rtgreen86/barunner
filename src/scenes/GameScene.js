@@ -97,10 +97,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   getObstacle(x, y) {
-    return this.obstacles2.get(x, y, 'objects', 2)
+    return this.obstacles2.get(x, y, 'objects-spritesheet', 2)
         .setActive(true)
         .setSize(64, 64)
-        .setOrigin(0, 1);
+        .setOrigin(0.5, 0.75);
   }
 
 
@@ -206,9 +206,11 @@ export default class GameScene extends Phaser.Scene {
 
 
     const areas = this.map.filterObjects('room1/objects', obj => obj.name === 'obstacle');
-    areas.forEach(area => {
-      this.getObstacle(area.x, area.y + area.height);
-    });
+    // areas.forEach(area => {
+    //   this.getObstacle(area.x, area.y + area.height);
+    // });
+
+    this.getObstacle(8 * 128 + 500, 11 * 128)
   }
 
   createCollaider() {

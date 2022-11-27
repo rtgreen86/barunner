@@ -2,11 +2,16 @@ import Phaser from 'Phaser';
 
 import FILE_LEVEL_1_MAP from '../../assets/map/level-1-map.json';
 import FILE_LEVEL_1_TILESET from '../../assets/images/level-1-tileset.png';
-import FILE_OBJECTS from '../../assets/images/objects.png';
+
+import FILE_OBJECTS_JSON from '../../assets/images/objects.json';
+import FILE_OBJECTS_PNG from '../../assets/images/objects.png';
+
 import FILE_BACKGROUN_EXPERIMENT from '../../assets/images/background-experiment.png';
 
 import RAM_SPRITESHEET_JSON from '../../assets/images/ram-spritesheet.json';
 import RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
+
+
 import OBSTACLE_PNG from '../../assets/images/obstacle.png';
 
 import backgroundLayer1 from '../../assets/images/background-layer-1.png'
@@ -26,6 +31,7 @@ export default class BootScene extends Phaser.Scene {
 
   preload() {
     this.load.aseprite('ram-spritesheet', RAM_SPRITESHEET_PNG, RAM_SPRITESHEET_JSON);
+    this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
     this.loadMaps();
     this.loadImages();
     this.loadSpriteSheets();
@@ -44,7 +50,6 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('image-ground', ground);
     this.load.image('background-experiment', FILE_BACKGROUN_EXPERIMENT);
     this.load.spritesheet('obstacle-png', OBSTACLE_PNG, { frameWidth: 128, frameHeight: 128 });
-    this.load.spritesheet('objects', FILE_OBJECTS, { frameWidth: 128, frameHeight: 128 });
   }
 
   loadSpriteSheets() {

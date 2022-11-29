@@ -97,10 +97,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   getObstacle(x, y) {
-    return this.obstacles2.get(x, y, 'objects-spritesheet', 2)
+    return this.obstacles2
+      .shuffle()
+      .get(x, y)
       .setActive(true)
       .setSize(64, 64)
-      .setOrigin(0.5, 0.75);
+      // .setOrigin(0.5, 0.75);
   }
 
 
@@ -182,15 +184,16 @@ export default class GameScene extends Phaser.Scene {
 
   createObstacles() {
     this.obstacles = this.physics.add.group();
-    this.obstacles2 = this.physics.add.group({
-      gravityX: 0,
-      gravityY: 0,
-      maxVelocityX: 0,
-      maxVelocityY: 0,
-      velocityX: 0,
-      velocityY: 0,
-      immovable: true
-    });
+
+    // this.obstacles2 = this.physics.add.group({
+    //   gravityX: 0,
+    //   gravityY: 0,
+    //   maxVelocityX: 0,
+    //   maxVelocityY: 0,
+    //   velocityX: 0,
+    //   velocityY: 0,
+    //   immovable: true
+    // });
 
     // const obs = this.level.objects[0].objects[0];
     // this.getObstacle(obs.x, obs.y);
@@ -201,7 +204,64 @@ export default class GameScene extends Phaser.Scene {
     //   this.getObstacle(area.x, area.y + area.height);
     // });
 
+
+
+    // this.obstacles2 = this.physics.add.group({
+    //   // classType: function,
+    //   key: 'objects-spritesheet',
+    //   frame: [2, 3],
+    //   // quantity: number,
+    //   visible: true,
+    //   active: false,
+    //   // repeat: number,
+    //   // randomKey: true,
+    //   randomFrame: true,
+    //   // frameQuantity: number,
+    //   // max: number,
+    //   setOrigin: {
+    //     x: 0.5,
+    //     y: 0.75
+    //   }
+    // });
+
+
+
+this.obstacles2 = this.physics.add.group({
+      gravityX: 0,
+      gravityY: 0,
+      maxVelocityX: 0,
+      maxVelocityY: 0,
+      velocityX: 0,
+      velocityY: 0,
+      immovable: true,
+      defaultKey: 'objects-spritesheet',
+      defaultFrame: 2,
+    });
+
+    this.obstacles2.createMultiple(
+      {
+          key: 'objects-spritesheet',
+          frame: [2, 3],
+          quantity: 4,
+          visible: true,
+          active: false,
+          // repeat: number,
+          // randomKey: true,
+          randomFrame: true,
+          // frameQuantity: number,
+          // max: number,
+          setOrigin: {
+            x: 0.5,
+            y: 0.75
+          }
+        }
+    )
+
+    this.obstacles2.shuffle();
+
+
     this.getObstacle(8 * 128 + 500, 11 * 128)
+
   }
 
   createCollaider() {

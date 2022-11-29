@@ -98,9 +98,9 @@ export default class GameScene extends Phaser.Scene {
 
   getObstacle(x, y) {
     return this.obstacles2.get(x, y, 'objects-spritesheet', 2)
-        .setActive(true)
-        .setSize(64, 64)
-        .setOrigin(0.5, 0.75);
+      .setActive(true)
+      .setSize(64, 64)
+      .setOrigin(0.5, 0.75);
   }
 
 
@@ -124,7 +124,6 @@ export default class GameScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setOrigin(0, 1);
 
-
     this.backgroundLayer2 = this.add.tileSprite(0, 720 - 64, 1280, 350, 'background-layer-2')
       .setScrollFactor(0)
       .setOrigin(0, 1);
@@ -132,14 +131,6 @@ export default class GameScene extends Phaser.Scene {
     this.backgroundLayer3 = this.add.tileSprite(0, 720 - 64 + 1, 1280, 350, 'background-layer-3')
       .setScrollFactor(0)
       .setOrigin(0, 1);
-
-
-    // another method
-
-    // this.carreteraMap = this.game.add.tilemap('tileMapName');this.carreteraMap.addTilesetImage('tileSetName');this.carreteraLayer = this.carreteraMap.createLayer('tileMapLayerName');this.carreteraLayer.renderable = false;		this.carretera = this.game.add.tileSprite(this.game.world.centerX, 0, this.carreteraLayer.layer.widthInPixels, this.carreteraLayer.layer.heightInPixels, this.carreteraLayer.texture);this.carretera.anchor.x = 0.5;
-
-    // https://www.html5gamedevs.com/topic/12994-tilesprite-from-tilemap-and-tilemaplayer/
-
   }
 
   createMap() {
@@ -193,7 +184,7 @@ export default class GameScene extends Phaser.Scene {
     this.obstacles = this.physics.add.group();
     this.obstacles2 = this.physics.add.group({
       gravityX: 0,
-      gravityY:	0,
+      gravityY: 0,
       maxVelocityX: 0,
       maxVelocityY: 0,
       velocityX: 0,
@@ -205,7 +196,7 @@ export default class GameScene extends Phaser.Scene {
     // this.getObstacle(obs.x, obs.y);
 
 
-    const areas = this.map.filterObjects('room1/objects', obj => obj.name === 'obstacle');
+    // const areas = this.map.filterObjects('room1/objects', obj => obj.name === 'obstacle');
     // areas.forEach(area => {
     //   this.getObstacle(area.x, area.y + area.height);
     // });
@@ -362,7 +353,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   spawnBigObstacle() {
-    const yPosition = -16-75-1; // half of height and screen position
+    const yPosition = -16 - 75 - 1; // half of height and screen position
     const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
     const frame = [19, 19, 19, 19, 19, 18, 18, 18, 18, 29][this.dice()];
     this.spawnedObject += distance;
@@ -482,7 +473,7 @@ export default class GameScene extends Phaser.Scene {
 
   onFacedObstacle(player, obstacle) {
     const { x: px, y: py } = player.getBottomRight();
-    const { x: ox, y: oy} = obstacle.getTopLeft();
+    const { x: ox, y: oy } = obstacle.getTopLeft();
     const side = py - oy >= px - ox;
     if (side) {
       player.die();

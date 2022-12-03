@@ -51,8 +51,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.createControls();
     this.createBackgound();
+    this.createControls();
     this.createMap();
     this.createPlayer();
     this.createObstacles();
@@ -104,36 +104,6 @@ export default class GameScene extends Phaser.Scene {
       .setActive(true)
       .setSize(64, 64)
       // .setOrigin(0.5, 0.75);
-  }
-
-
-  createBackgound() {
-    // this.backgroundLayer1 = new BackgroundLayer(this);
-    // this.backgroundLayer2 = new BackgroundLayer(this);
-    // this.backgroundLayer3 = new BackgroundLayer(this);
-    // for (let i = 0; i < 5; i++) {
-    //   this.backgroundLayer1.add(this.add.image(0, 0, 'background-layer-1').setOrigin(0.5, 1)).setScrollFactor(0.5, 1);
-    //   this.backgroundLayer2.add(this.add.image(0, 0, 'background-layer-2').setOrigin(0.5, 1)).setScrollFactor(0.8, 1);
-    //   this.backgroundLayer3.add(this.add.image(0, 0, 'background-layer-3').setOrigin(0.5, 1));
-    // }
-    // this.backgroundLayer1.update(5000);
-    // this.backgroundLayer2.update(5000);
-    // this.backgroundLayer3.update(5000);
-
-
-
-
-    this.backgroundLayer1 = this.add.tileSprite(0, 720 - 64, 1280, 350, 'background-layer-1')
-      .setScrollFactor(0)
-      .setOrigin(0, 1);
-
-    this.backgroundLayer2 = this.add.tileSprite(0, 720 - 64, 1280, 350, 'background-layer-2')
-      .setScrollFactor(0)
-      .setOrigin(0, 1);
-
-    this.backgroundLayer3 = this.add.tileSprite(0, 720 - 64 + 1, 1280, 350, 'background-layer-3')
-      .setScrollFactor(0)
-      .setOrigin(0, 1);
   }
 
   createMap() {
@@ -301,6 +271,7 @@ this.obstacles2 = this.physics.add.group({
   }
 
   update(time, delta) {
+    this.updateBackground();
     this.updateDeadline();
     this.respawnObjects();
 
@@ -380,12 +351,36 @@ this.obstacles2 = this.physics.add.group({
 
     this.stabilizeTheCamera();
     // this.removeDistantObstacles();
+  }
 
+  createBackgound() {
+    const width = this.game.config.width;
+    const height = 350;
+    const x = 0;
+    const y = this.game.config.height - 63;
 
-    // Update background
-    this.backgroundLayer1.tilePositionX = this.cameras.main.scrollX * 0.1;
-    this.backgroundLayer2.tilePositionX = this.cameras.main.scrollX * 0.2;
-    this.backgroundLayer3.tilePositionX = this.cameras.main.scrollX * 0.3;
+    this.backgroundLayers = [
+      this.add.tileSprite(x, y, width, height, 'background-layer-1')
+        .setScrollFactor(0)
+        .setOrigin(0, 1)
+        .setData('textureScrollFactor', 0.1),
+
+      this.add.tileSprite(x, y, width, height, 'background-layer-2')
+        .setScrollFactor(0)
+        .setOrigin(0, 1)
+        .setData('textureScrollFactor', 0.2),
+
+      this.add.tileSprite(x, y, width, height, 'background-layer-3')
+        .setScrollFactor(0)
+        .setOrigin(0, 1)
+        .setData('textureScrollFactor', 0.3)
+    ];
+  }
+
+  updateBackground() {
+    for (const backgroundLayer of this.backgroundLayers) {
+      backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
+    }
   }
 
   clearChunk(chunkName) {
@@ -458,11 +453,15 @@ this.obstacles2 = this.physics.add.group({
     this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
   }
 
-  updateBackground() {
-    this.backgroundLayer1.update(this.deadline);
-    this.backgroundLayer2.update(this.deadline);
-    this.backgroundLayer3.update(this.deadline);
-  }
+
+
+
+
+
+
+
+
+
 
   get playerChunk() {
     return Math.floor(this.player.x / this.map.widthInPixels);

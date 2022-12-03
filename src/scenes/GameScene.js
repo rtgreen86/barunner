@@ -3,7 +3,9 @@ import Phaser from 'Phaser';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
+
 // import BackgroundLayer from '../entities/BackgroundLayer';
+
 import { checkType } from '../utils';
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -40,7 +42,6 @@ export default class GameScene extends Phaser.Scene {
     this.paused = false;
     this.playerAlive = true;
     this.timeOfDeath = null;
-    this.nextGround = 200;
     this.startFallingVelocity = 10;
 
     this.levelName = 'map-level-1';
@@ -385,8 +386,6 @@ this.obstacles2 = this.physics.add.group({
     this.backgroundLayer1.tilePositionX = this.cameras.main.scrollX * 0.1;
     this.backgroundLayer2.tilePositionX = this.cameras.main.scrollX * 0.2;
     this.backgroundLayer3.tilePositionX = this.cameras.main.scrollX * 0.3;
-
-    console.log()
   }
 
   clearChunk(chunkName) {
@@ -606,6 +605,4 @@ this.obstacles2 = this.physics.add.group({
     const distantObstacles = this.obstacles2.getMatching('active', true).filter(obst => obst.x < this.player.x - distance || obst.x > this.player.x + distance || obst.y < this.player.y - distance || obst.y > this.player.y + distance);
     distantObstacles.forEach(obst => this.obstacles2.kill(obst));
   }
-
-
 }

@@ -38,8 +38,8 @@ export default class GameScene extends Phaser.Scene {
   create() {
     this.createBackgound();
     this.createMap();
-    this.createControls();
     this.createPlayer();
+    this.createControls();
     this.createObstacles();
     this.createCollaider();
     this.createCamera();
@@ -47,39 +47,6 @@ export default class GameScene extends Phaser.Scene {
     this.jumpSound = this.sound.add('jump');
 
     this.scene.run('DebugScene');
-  }
-
-  createControls() {
-    this.controller = new PlayerController(this);
-    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
-    this.pauseKey.on('down', this.onPauseKeyDown, this);
-
-    this.numKeys = {
-      key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
-      key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),
-      key3: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE, true, false).on('down', this.onNumKeyDown, this),
-      key4: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR, true, false).on('down', this.onNumKeyDown, this),
-      key5: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE, true, false).on('down', this.onNumKeyDown, this),
-      key6: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX, true, false).on('down', this.onNumKeyDown, this),
-      key7: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEVEN, true, false).on('down', this.onNumKeyDown, this),
-      key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
-      key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
-    };
-
-    const createObstacle = () => {
-      this.getObstacle(this.player.x + 500, 1380)
-    }
-
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O, true, false).on('down', createObstacle)
-
-    // use Phaser.Input.Keyboard. KeyboardPlugin
-    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
-    // An object containing the properties: up, down, left, right, space and shift.
-    this.cursor = this.input.keyboard.createCursorKeys();
-
-    this.cursor.space.on('down', this.onSpaceDown, this);
-    this.cursor.left.on('down', this.onArrowLeftDown, this);
-    this.cursor.right.on('down', this.onArrowRightDown, this);
   }
 
   getObstacle(x, y) {
@@ -93,18 +60,7 @@ export default class GameScene extends Phaser.Scene {
 
 
 
-  createPlayer() {
-    const [x, y] = this.getPlayerStartPosition();
-    this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
-    this.player.setBounceX(0.7);
-    this.player.setDepth(2000);
-  }
 
-  getPlayerStartPosition() {
-    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
-    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
-    return [playerX.value * this.map.tileWidth, playerY.value * this.map.tileHeight - PLAYER_SIZE / 3];
-  }
 
   createObstacles() {
     this.obstacles = this.physics.add.group();
@@ -252,10 +208,11 @@ this.obstacles2 = this.physics.add.group({
 
     // jump
 
-
-    if (this.cursor.space.isDown && this.canPlayerContinueJump(time)) {
-      this.player.jump();
-      this.player.isOnGround = false;
+    if (this.player.isJumping && this.cursor.space.isDown) {
+      this.player.jumpContinue(delta);
+    }
+    if (this.player.isJumping && !this.cursor.space.isDown) {
+      this.player.fly();
     }
 
     // on the ground
@@ -332,6 +289,12 @@ this.obstacles2 = this.physics.add.group({
     ];
   }
 
+  updateBackground() {
+    for (const backgroundLayer of this.backgroundLayers) {
+      backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
+    }
+  }
+
   createMap() {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
@@ -366,11 +329,48 @@ this.obstacles2 = this.physics.add.group({
     }
   }
 
-  updateBackground() {
-    for (const backgroundLayer of this.backgroundLayers) {
-      backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
-    }
+  createPlayer() {
+    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
+    const x = playerX.value * this.map.tileWidth;
+    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
+    const y = playerY.value * this.map.tileHeight - PLAYER_SIZE / 3;
+    this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
+    this.player.setDepth(2000);
   }
+
+  createControls() {
+    this.controller = new PlayerController(this);
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
+    this.pauseKey.on('down', this.onPauseKeyDown, this);
+
+    this.numKeys = {
+      key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
+      key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),
+      key3: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE, true, false).on('down', this.onNumKeyDown, this),
+      key4: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR, true, false).on('down', this.onNumKeyDown, this),
+      key5: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE, true, false).on('down', this.onNumKeyDown, this),
+      key6: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX, true, false).on('down', this.onNumKeyDown, this),
+      key7: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEVEN, true, false).on('down', this.onNumKeyDown, this),
+      key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
+      key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
+    };
+
+    const createObstacle = () => {
+      this.getObstacle(this.player.x + 500, 1380)
+    }
+
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O, true, false).on('down', createObstacle)
+
+    // use Phaser.Input.Keyboard. KeyboardPlugin
+    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
+    // An object containing the properties: up, down, left, right, space and shift.
+    this.cursor = this.input.keyboard.createCursorKeys();
+
+    this.cursor.space.on('down', this.onSpaceDown, this);
+    this.cursor.left.on('down', this.onArrowLeftDown, this);
+    this.cursor.right.on('down', this.onArrowRightDown, this);
+  }
+
 
   clearChunk(chunkName) {
     const levelLayer = this.getChunkLevel(chunkName)
@@ -534,13 +534,15 @@ this.obstacles2 = this.physics.add.group({
   // }
 
   onPlayerCollideGround() {
-
+    if (this.cursor.space.isDown) {
+      this.player.jumpStart();
+    }
   }
 
   onSpaceDown() {
-    if (this.cursor.space.isDown && this.canJump(this.player)) {
-      this.player.jump();
-    }
+    // if (this.cursor.space.isDown && this.canJump(this.player)) {
+    //   this.player.jumpStart();
+    // }
   }
 
   onArrowRightDown() {

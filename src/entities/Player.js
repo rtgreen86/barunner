@@ -31,16 +31,17 @@ export default class Player extends Physics.Arcade.Sprite {
     this.isRunning = false;
     this.direction = DIRECTION_RIGHT;
 
+    this.initAnimation();
+
     this.setSize(128, 64);
     this.setMaxVelocity(1200, 600)
-    this.initAnimation();
     this.setData('isAlive', true);
-
-    this.play(ANIMATION_FALL);
+    this.setBounceX(0.7);
+    this.play(ANIMATION_IDLE);
   }
 
   initAnimation() {
-    this.scene.anims.createFromAseprite('ram-spritesheet');
+    this.scene.anims.createFromAseprite(this.texture.key);
     this.scene.anims.get(ANIMATION_DASH).repeat = -1;
     this.scene.anims.get(ANIMATION_IDLE).repeat = -1;
     this.scene.anims.get(ANIMATION_DIZZY).repeat = -1;
@@ -51,13 +52,17 @@ export default class Player extends Physics.Arcade.Sprite {
     this.scene.anims.get(ANIMATION_RUN).repeat = -1;
   }
 
+  get isJumping() {
+    return this.anims.getName() === ANIMATION_JUMP_UP;
+  }
+
+
+
+
   get isFalling() {
     return this.anims.getName() === ANIMATION_FALL;
   }
 
-  get isJumping() {
-    return this.anims.getName() === ANIMATION_JUMP_UP;
-  }
 
   get direction() {
     return this.flipX ? DIRECTION_LEFT : DIRECTION_RIGHT;
@@ -66,6 +71,30 @@ export default class Player extends Physics.Arcade.Sprite {
   set direction(value) {
     this.flipX = value === DIRECTION_LEFT;
   }
+
+
+
+  jumpStart() {
+    this.jumpTime = 0;
+    this.play(ANIMATION_JUMP_UP);
+    this.setVelocityY(this.jumpVelocity);
+  }
+
+  jumpContinue(delta) {
+    this.jumpTime += delta;
+    if (this.jumpTime <= this.jumpMaxTime) {
+      this.setVelocityY(this.jumpVelocity);
+    } else {
+      this.play(ANIMATION_FLY);
+    }
+  }
+
+  fly() {
+    this.play(ANIMATION_FLY);
+  }
+
+
+
 
   idle() {
     this.setVelocityX(0);
@@ -88,9 +117,6 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
 
-
-
-
   dash() {
     this.play(ANIMATION_DASH);
   }
@@ -105,24 +131,8 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
 
-  jump() {
-    this.jumpTime = 0;
-    this.play(ANIMATION_JUMP_UP);
-    this.setVelocityY(this.jumpVelocity);
-  }
 
-  continueJump(delta) {
-    this.jumpTime += delta;
-    if (this.jumpTime <= this.jumpMaxTime) {
-      this.setVelocityY(this.jumpVelocity);
-    } else {
-      this.play(ANIMATION_FLY);
-    }
-  }
 
-  fly() {
-    this.play(ANIMATION_FLY);
-  }
 
   fall() {
     this.play(ANIMATION_FALL);

@@ -2,7 +2,6 @@ import Phaser from 'Phaser';
 
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
-import PlayerController from '../entities/PlayerController';
 
 import { checkType } from '../utils';
 
@@ -30,7 +29,6 @@ export default class GameScene extends Phaser.Scene {
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 500;
     this.paused = false;
-    this.playerAlive = true;
     this.timeOfDeath = null;
     this.startFallingVelocity = 10;
   }
@@ -49,6 +47,8 @@ export default class GameScene extends Phaser.Scene {
     this.scene.run('DebugScene');
   }
 
+
+
   getObstacle(x, y) {
     return this.obstacles2
       .shuffle()
@@ -57,10 +57,6 @@ export default class GameScene extends Phaser.Scene {
       .setSize(64, 64)
       // .setOrigin(0.5, 0.75);
   }
-
-
-
-
 
   createObstacles() {
     this.obstacles = this.physics.add.group();
@@ -84,8 +80,6 @@ export default class GameScene extends Phaser.Scene {
     //   this.getObstacle(area.x, area.y + area.height);
     // });
 
-
-
     // this.obstacles2 = this.physics.add.group({
     //   // classType: function,
     //   key: 'objects-spritesheet',
@@ -104,9 +98,7 @@ export default class GameScene extends Phaser.Scene {
     //   }
     // });
 
-
-
-this.obstacles2 = this.physics.add.group({
+    this.obstacles2 = this.physics.add.group({
       gravityX: 0,
       gravityY: 0,
       maxVelocityX: 0,
@@ -139,10 +131,8 @@ this.obstacles2 = this.physics.add.group({
 
     this.obstacles2.shuffle();
 
-
     // Start Obstacle
     // this.getObstacle(8 * 128 + 500, 11 * 128)
-
   }
 
   createCollaider() {
@@ -152,7 +142,6 @@ this.obstacles2 = this.physics.add.group({
     // this.physics.add.collider(this.ground, this.obstacles);
 
     // collide with level
-
 
     this.map.layers.forEach(layer => {
       this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
@@ -182,13 +171,18 @@ this.obstacles2 = this.physics.add.group({
 
   update(time, delta) {
     this.updateBackground();
+    this.updateGround();
+    this.updatePlayer(time, delta);
+
+
+
     this.updateDeadline();
     this.respawnObjects();
 
-    if (this.player.isDead && !this.timeOfDeath) {
-      this.timeOfDeath = time;
-      this.playerAlive = false;
-    }
+    // if (this.player.isDead && !this.timeOfDeath) {
+    //   this.timeOfDeath = time;
+    //   this.playerAlive = false;
+    // }
 
     // Respawn
     // if (
@@ -199,36 +193,8 @@ this.obstacles2 = this.physics.add.group({
     //   this.respawnScene();
     // }
 
-
     // Do not update background
     // this.updateBackground();
-
-    this.updateGround();
-
-
-
-    // Player control
-
-    if (this.player.isJumping && (this.cursor.space.isDown || this.input.pointer1.isDown)) {
-      this.player.jumpContinue(delta);
-    }
-    if (this.player.isJumping && !(this.cursor.space.isDown || this.input.pointer1.isDown)) {
-      this.player.fly();
-    }
-    if (this.isFalling(this.player)) {
-      this.player.fall();
-    }
-    if (this.cursor.right.isDown) {
-      this.player.direction = 'right';
-      this.setCameraToRight();
-    }
-    if (this.cursor.left.isDown) {
-      this.player.direction = 'left';
-      this.setCameraToLeft();
-    }
-    if (this.numKeys.key1.isDown) {
-      this.player.idle();
-    }
 
     // on the ground
 
@@ -240,16 +206,15 @@ this.obstacles2 = this.physics.add.group({
     //   this.player.run('backward');
     //   this.player.isRunning = true;
     // }
-    if (this.cursor.down.isDown && this.canRun()) {
-      this.player.takeoffRun();
-      this.player.isRunning = true;
-    }
+    // if (this.cursor.down.isDown && this.canRun()) {
+    //   this.player.takeoffRun();
+    //   this.player.isRunning = true;
+    // }
     // if (this.player.isOnGround && !this.player.isRunning) {
     //   this.player.idle();
     // }
 
     // this.player.update(time, delta);
-
 
     // const playerOnGround = this.isisOnGround(this.player);
 
@@ -353,8 +318,36 @@ this.obstacles2 = this.physics.add.group({
     this.player.setDepth(2000);
   }
 
+  updatePlayer(time, delta) {
+    if (this.player.isJumping && (this.cursor.space.isDown || this.input.pointer1.isDown)) {
+      this.player.jumpContinue(delta);
+    }
+    if (this.player.isJumping && !(this.cursor.space.isDown || this.input.pointer1.isDown)) {
+      this.player.fly();
+    }
+    if (this.isFalling(this.player)) {
+      this.player.fall();
+    }
+    if (this.cursor.right.isDown) {
+      this.player.direction = 'right';
+      this.setCameraToRight();
+    }
+    if (this.cursor.left.isDown) {
+      this.player.direction = 'left';
+      this.setCameraToLeft();
+    }
+    if (this.numKeys.key1.isDown) {
+      this.player.idle();
+    }
+  }
+
+  isFalling(object) {
+    return object.body.velocity.y > this.startFallingVelocity;
+  }
+
+
+
   createControls() {
-    this.controller = new PlayerController(this);
     this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
     this.pauseKey.on('down', this.onPauseKeyDown, this);
 
@@ -386,7 +379,6 @@ this.obstacles2 = this.physics.add.group({
     this.cursor.right.on('down', this.onArrowRightDown, this);
   }
 
-
   clearChunk(chunkName) {
     const levelLayer = this.getChunkLevel(chunkName)
     const fromX = levelLayer.tilemapLayer.x;
@@ -399,11 +391,6 @@ this.obstacles2 = this.physics.add.group({
     const cameraX = this.cameras.main.scrollX;
     const offset = cameraX - Math.floor(cameraX / width) * width;
     this.map.layer.tilemapLayer.x = -offset;
-  }
-
-
-  isFalling(object) {
-    return object.body.velocity.y > this.startFallingVelocity;
   }
 
   dice() {
@@ -459,22 +446,6 @@ this.obstacles2 = this.physics.add.group({
 
   get playerChunk() {
     return Math.floor(this.player.x / this.map.widthInPixels);
-  }
-
-  getLayerPosition(layer) {
-    return Math.floor(this.map.getLayer(layer).tilemapLayer.x / this.map.widthInPixels);
-  }
-
-  canJump(object) {
-    return object.isOnGround;
-  }
-
-  canPlayerContinueJump(time) {
-    return time < this.player.jumpStartTime + this.player.jumpMaxTime;
-  }
-
-  canRun(object) {
-    return object.isOnGround;
   }
 
   getLevelProperty = name => this.map.properties.find(prop => prop.name === name);
@@ -538,13 +509,6 @@ this.obstacles2 = this.physics.add.group({
     return true;
   }
 
-  // onPlayerLanded() {
-  //   if (this.jump) {
-  //     this.player.idle();
-  //     this.jump = false;
-  //   }
-  // }
-
   onPlayerCollideGround() {
     if (this.player.isFalling) {
       this.player.landing();
@@ -579,6 +543,8 @@ this.obstacles2 = this.physics.add.group({
     // }
   }
 
+
+
   setCameraToRight() {
     this.setCameraOffset(
       this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
@@ -605,6 +571,8 @@ this.obstacles2 = this.physics.add.group({
       this.cameras.main.setLerp(CAMERA_STABLE_LERP, 0);
     }
   }
+
+
 
   removeDistantObstacles() {
     const distance = 5000;

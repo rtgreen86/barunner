@@ -292,18 +292,20 @@ this.obstacles2 = this.physics.add.group({
     //   this.player.idle();
     // }
 
-    if (this.cursor.space.isDown && this.player.isJumping) {
-      this.player.continueJump(delta);
-    }
-    if (!this.player.isOnGround && !this.cursor.space.isDown) {
-      this.player.fly();
-    }
-    if (this.isFalling(this.player)) {
-      this.player.fall();
-    }
+    // if (this.cursor.space.isDown && this.player.isJumping) {
+    //   this.player.continueJump(delta);
+    // }
+    // if (!this.player.isOnGround && !this.cursor.space.isDown) {
+    //   this.player.fly();
+    // }
+    // if (this.isFalling(this.player)) {
+    //   this.player.fall();
+    // }
 
     this.stabilizeTheCamera();
     // this.removeDistantObstacles();
+
+    console.log(this.player.anims.getName());
   }
 
   createBackgound() {
@@ -440,16 +442,6 @@ this.obstacles2 = this.physics.add.group({
     this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
   }
 
-
-
-
-
-
-
-
-
-
-
   get playerChunk() {
     return Math.floor(this.player.x / this.map.widthInPixels);
   }
@@ -542,7 +534,7 @@ this.obstacles2 = this.physics.add.group({
   // }
 
   onPlayerCollideGround() {
-    this.player.landing();
+
   }
 
   onSpaceDown() {
@@ -552,7 +544,7 @@ this.obstacles2 = this.physics.add.group({
   }
 
   onArrowRightDown() {
-    this.player.direction = Player.DIRECTION_RIGHT;
+    this.player.direction = 'right';
     this.setCameraToRight();
     if (this.canRun(this.player)) {
       this.player.run();
@@ -560,7 +552,7 @@ this.obstacles2 = this.physics.add.group({
   }
 
   onArrowLeftDown() {
-    this.player.direction = Player.DIRECTION_LEFT;
+    this.player.direction = 'left';
     this.setCameraToLeft();
     if (this.canRun(this.player)) {
       this.player.run();

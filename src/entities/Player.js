@@ -1,16 +1,10 @@
 import { Physics } from 'Phaser';
 
-// const IDLE = 'Idle';
-// const JUMP = 'Idle'; // 'ram-jump';
-// const RUN = 'Idle'; // 'ram-run';
-const DIE = 'Idle'; //  'ram-die';
-
 const ANIMATION_IDLE = 'Ram Idle';
-const ANIMATION_JUMP = 'Ram Jump Up';
+const ANIMATION_JUMP_UP = 'Ram Jump Up';
 const ANIMATION_FLY = 'Ram Fly';
 const ANIMATION_FALL = 'Ram Fall';
 const ANIMATION_LANDING = 'Ram Landing';
-
 const ANIMATION_DASH = 'Ram Dash';
 const ANIMATION_DIZZY = 'Ram Dizzy';
 const ANIMATION_HURT = 'Ram Hurt';
@@ -19,11 +13,13 @@ const ANIMATION_RUN = 'Ram Run';
 const ANIMATION_ATTACK = 'Ram Attack';
 const ANIMATION_FAINT = 'Ram Faint';
 
-const LANDING_TIME = 80;
+const DIRECTION_RIGHT = 'right';
+const DIRECTION_LEFT = 'left';
 
 export default class Player extends Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, frame, controller) {
+  constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
+
     this.scene = scene;
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
@@ -31,82 +27,44 @@ export default class Player extends Physics.Arcade.Sprite {
     this.runVelocity = 1200;
     this.jumpVelocity = -500;
     this.jumpMaxTime = 300;
-
-    this.isOnGround = false;
     this.jumpTime = 0;
     this.isRunning = false;
-
-
-    // this.startFallingVelocity = 10;
-
-    this.time = 0;
-
-    this.isDead = false;
-
-    this.animation = ANIMATION_IDLE;
-    this.animationTime = 0;
-    this.animationStartTime = null;
-
-    this.controller = controller;
-    this.jumpKeyPressed = false;
-    this.jumpKeyPressedTime = null;
-    this.gameStartedTime = null;
-
-    this.isJumpSoundPlayed = false;
-
-    this.isAlive = true;
-    this.isRunning = false;
-    this.direction = Player.DIRECTION_RIGHT;
-    this.jumpStartTime = 0;
+    this.direction = DIRECTION_RIGHT;
 
     this.setSize(128, 64);
     this.setMaxVelocity(1200, 600)
-    this.createAnimation();
+    this.initAnimation();
+    this.setData('isAlive', true);
+
+    this.play(ANIMATION_FALL);
   }
 
-  static DIRECTION_RIGHT = 'right';
-  static DIRECTION_LEFT = 'left';
-
-  get isFalling() {
-    return this.anims.getName() === ANIMATION_FALL;
-  }
-
-  get isJumping() {
-    return this.anims.getName() === ANIMATION_JUMP;
-  }
-
-  get direction() {
-    return this.flipX ? Player.DIRECTION_LEFT : Player.DIRECTION_RIGHT;
-  }
-
-  set direction(value) {
-    this.flipX = value === Player.DIRECTION_LEFT;
-  }
-
-  createAnimation() {
+  initAnimation() {
     this.scene.anims.createFromAseprite('ram-spritesheet');
     this.scene.anims.get(ANIMATION_DASH).repeat = -1;
     this.scene.anims.get(ANIMATION_IDLE).repeat = -1;
     this.scene.anims.get(ANIMATION_DIZZY).repeat = -1;
     this.scene.anims.get(ANIMATION_HURT).repeat = -1;
     this.scene.anims.get(ANIMATION_TAKEOFF_RUN).repeat = -1;
-    this.scene.anims.get(ANIMATION_JUMP).repeat = 0;
+    this.scene.anims.get(ANIMATION_JUMP_UP).repeat = 0;
     this.scene.anims.get(ANIMATION_FALL).repeat = 0;
     this.scene.anims.get(ANIMATION_RUN).repeat = -1;
   }
 
-  setAnimation(animation) {
-    if (this.animation === animation) {
-      return;
-    }
-    this.animation = animation;
-    this.animationTime = 0;
-    this.animationStartTime = this.time;
-    this.play(this.animation, true);
+  get isFalling() {
+    return this.anims.getName() === ANIMATION_FALL;
   }
 
-  dash() {
-    this.setAnimation(ANIMATION_DASH);
+  get isJumping() {
+    return this.anims.getName() === ANIMATION_JUMP_UP;
+  }
+
+  get direction() {
+    return this.flipX ? DIRECTION_LEFT : DIRECTION_RIGHT;
+  }
+
+  set direction(value) {
+    this.flipX = value === DIRECTION_LEFT;
   }
 
   idle() {
@@ -114,23 +72,42 @@ export default class Player extends Physics.Arcade.Sprite {
     this.play(ANIMATION_IDLE);
   }
 
-  dizzy() {
-    this.setAnimation(ANIMATION_DIZZY);
-  }
-
-  hurt() {
-    this.setAnimation(ANIMATION_HURT);
-  }
-
   takeoffRun() {
-    this.setAnimation(ANIMATION_TAKEOFF_RUN);
+    this.play(ANIMATION_TAKEOFF_RUN);
     this.setVelocityX(-100);
   }
 
+  run() {
+    this.isRunning = true;
+    this.play(ANIMATION_RUN);
+    this.setVelocityX(
+      this.direction === DIRECTION_LEFT
+        ? -this.runVelocity
+        : this.runVelocity
+    );
+  }
+
+
+
+
+
+  dash() {
+    this.play(ANIMATION_DASH);
+  }
+
+
+  dizzy() {
+    this.play(ANIMATION_DIZZY);
+  }
+
+  hurt() {
+    this.play(ANIMATION_HURT);
+  }
+
+
   jump() {
     this.jumpTime = 0;
-    this.isOnGround = false;
-    this.play(ANIMATION_JUMP);
+    this.play(ANIMATION_JUMP_UP);
     this.setVelocityY(this.jumpVelocity);
   }
 
@@ -152,7 +129,6 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   landing() {
-    this.isOnGround = true;
     if (!this.isFalling) {
       return;
     }
@@ -167,104 +143,26 @@ export default class Player extends Physics.Arcade.Sprite {
     }
   }
 
-  run() {
-    this.isRunning = true;
-    this.play(ANIMATION_RUN);
-    this.setVelocityX(
-      this.direction === Player.DIRECTION_LEFT
-        ? -this.runVelocity
-        : this.runVelocity
-    );
-  }
 
   attack() {
-    this.setAnimation(ANIMATION_ATTACK);
+    this.play(ANIMATION_ATTACK);
   }
 
   faint() {
-    this.setAnimation(ANIMATION_FAINT);
+    this.play(ANIMATION_FAINT);
   }
 
-
-
   die() {
-    this.isDead = true;
     this.isJumpSoundPlayed = false;
     this.setVelocity(0, 0);
-    this.setAnimation(DIE);
+    this.play('Idle');
   }
 
   isMoving() {
     return this.body.velocity.x !== 0;
   }
 
-  // isFalling() {
-  //   return this.body.velocity.y > this.startFallingVelocity;
-  // }
-
-  onJumpPressed() {
-    // // continue jump
-    // if (this.animation === JUMP && this.jumpKeyPressedTime === this.animationStartTime) {
-    //   this.jump();
-    //   return;
-    // }
-
-    // // start jump
-    // // ram on the ground, run and button just pressed
-    // if (
-    //   this.animation === RUN &&
-    //   (this.jumpKeyPressedTime === null || this.time - this.jumpKeyPressedTime < 200) &&
-    //   this.jumpKeyPressedTime !== this.gameStartedTime
-    // ) {
-    //   this.jump();
-    //   this.jumpKeyPressedTime = this.time;
-    // }
-
-    // if (this.jumpKeyPressedTime === null) {
-    //   this.jumpKeyPressedTime = this.time;
-    // }
-
-    // // start game
-    // if (!this.isMoving()) {
-    //   this.run();
-    //   this.gameStartedTime = this.time;
-    // }
-  }
-
-  onJumpReleased() {
-    this.jumpKeyPressedTime = null;
-  }
-
-  update(time, delta) {
-    // if (this.isDead) {
-    //   return;
-    // }
-
-    // this.animationTime += delta;
-    // this.time = time;
-
-    // // process user input
-    // if (this.controller.isJumpDown) {
-    //   this.onJumpPressed();
-    // }
-    // if (this.jumpKeyPressedTime !== null && !this.controller.isJumpDown) {
-    //   this.onJumpReleased();
-    // }
-
-    // falling and landing
-    // if (this.isFalling()) {
-    //   this.fall();
-    // }
-    // if (this.animation === FALL && !this.isFalling()) {
-    //   this.landing();
-    // }
-    // if (this.animation === LANDING && this.animationTime > LANDING_TIME) {
-    //   this.idle();
-    // }
-  }
-
   respawn() {
-    this.isDead = false;
     this.idle();
   }
 }

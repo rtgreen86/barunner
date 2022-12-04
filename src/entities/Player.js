@@ -109,8 +109,9 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   idle() {
+    this.isRunning = false;
     this.setVelocityX(0);
-    this.play(ANIMATION_IDLE);
+    return this.play(ANIMATION_IDLE);
   }
 
   run() {
@@ -131,6 +132,11 @@ export default class Player extends Physics.Arcade.Sprite {
   dash() {
     this.play(ANIMATION_DASH);
   }
+
+
+
+
+
 
 
   dizzy() {

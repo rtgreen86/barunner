@@ -226,6 +226,9 @@ this.obstacles2 = this.physics.add.group({
       this.player.direction = 'left';
       this.setCameraToLeft();
     }
+    if (this.numKeys.key1.isDown) {
+      this.player.idle();
+    }
 
     // on the ground
 
@@ -498,11 +501,8 @@ this.obstacles2 = this.physics.add.group({
 
   onNumKeyDown(key) {
     switch (key.keyCode) {
-      case Phaser.Input.Keyboard.KeyCodes.ONE:
-        this.player.dash();
-        break;
       case Phaser.Input.Keyboard.KeyCodes.TWO:
-        this.player.idle();
+        this.player.dash();
         break;
       case Phaser.Input.Keyboard.KeyCodes.THREE:
         this.player.dizzy();

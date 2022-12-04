@@ -31,6 +31,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.isRunning = false;
     this.direction = DIRECTION_RIGHT;
 
+
     this.initAnimation();
 
     this.setSize(128, 64);
@@ -57,11 +58,6 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
 
-
-
-  get isFalling() {
-    return this.anims.getName() === ANIMATION_FALL;
-  }
 
 
   get direction() {
@@ -93,6 +89,9 @@ export default class Player extends Physics.Arcade.Sprite {
     this.play(ANIMATION_FLY);
   }
 
+  fall() {
+    this.play(ANIMATION_FALL);
+  }
 
 
 
@@ -134,9 +133,6 @@ export default class Player extends Physics.Arcade.Sprite {
 
 
 
-  fall() {
-    this.play(ANIMATION_FALL);
-  }
 
   landing() {
     if (!this.isFalling) {

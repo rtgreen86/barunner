@@ -214,6 +214,9 @@ this.obstacles2 = this.physics.add.group({
     if (this.player.isJumping && !this.cursor.space.isDown) {
       this.player.fly();
     }
+    if (this.isFalling(this.player)) {
+      this.player.fall();
+    }
 
     // on the ground
 

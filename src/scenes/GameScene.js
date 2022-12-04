@@ -4,8 +4,6 @@ import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 import PlayerController from '../entities/PlayerController';
 
-// import BackgroundLayer from '../entities/BackgroundLayer';
-
 import { checkType } from '../utils';
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -28,14 +26,6 @@ export default class GameScene extends Phaser.Scene {
     super('GameScene');
   }
 
-  getLevelProperty = name => this.map.properties.find(prop => prop.name === name);
-
-  getLevelPropertyTyped = (name, type = 'string') => checkType(this.getLevelProperty(name), name, type);
-
-  getChunkLevel = chunkName => this.map.getLayer(`${chunkName}/level`);
-
-  getActiveObstaclesInRange = (fromX, toX) => this.obstacles2.getMatching('active', true).filter(obst => obst.x >= fromX && obst.x <= toX);
-
   init() {
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 500;
@@ -43,17 +33,12 @@ export default class GameScene extends Phaser.Scene {
     this.playerAlive = true;
     this.timeOfDeath = null;
     this.startFallingVelocity = 10;
-
-    this.levelName = 'map-level-1';
-    this.levelTileset = 'level-1-tileset';
-    this.levelObjects = 'objects';
-    this.groundLayerName = 'ground';
   }
 
   create() {
     this.createBackgound();
-    this.createControls();
     this.createMap();
+    this.createControls();
     this.createPlayer();
     this.createObstacles();
     this.createCollaider();
@@ -106,39 +91,7 @@ export default class GameScene extends Phaser.Scene {
       // .setOrigin(0.5, 0.75);
   }
 
-  createMap() {
-    this.map = this.add.tilemap(this.levelName);
-    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
-    this.createGroundLayer(this.groundLayerName, 0, 0);
-  }
 
-  createGroundLayer(layerName, x = 0, y = 0) {
-    const layer = this.createDoubleLayer(layerName, x, y);
-    layer.setScrollFactor(0, 1);
-  }
-
-  createDoubleLayer(layerName, x = 0, y = 0) {
-    const sourceLayer = this.map.getLayer(layerName);
-    const width = sourceLayer.width;
-    const height = sourceLayer.height;
-    const destLayer = this.map.createBlankLayer(
-      `double-${layerName}`, this.map.tilesets,
-      x, y, width * 2, height,
-      sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
-    );
-    this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
-    this.copyTilesFrom(layerName, 0, 0, width, height, width, 0);
-    return destLayer;
-  }
-
-  copyTilesFrom(sourceLayer, x = 0, y = 0, width = 1, height = 1, destX = 0, destY = 0) {
-    for (let i = 0; i < width; i++) {
-      for (let j = 0; j < height; j++) {
-        const sourceTile = this.map.getTileAt(x + i, y + j, true, sourceLayer);
-        this.map.getTileAt(destX + i, destY + j, true).copy(sourceTile);
-      }
-    }
-  }
 
   createPlayer() {
     const [x, y] = this.getPlayerStartPosition();
@@ -377,6 +330,40 @@ this.obstacles2 = this.physics.add.group({
     ];
   }
 
+  createMap() {
+    this.map = this.add.tilemap('map-level-1');
+    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
+    this.createGroundLayer('ground', 0, 0);
+  }
+
+  createGroundLayer(layerName, x = 0, y = 0) {
+    const layer = this.createDoubleLayer(layerName, x, y);
+    layer.setScrollFactor(0, 1);
+  }
+
+  createDoubleLayer(layerName, x = 0, y = 0) {
+    const sourceLayer = this.map.getLayer(layerName);
+    const width = sourceLayer.width;
+    const height = sourceLayer.height;
+    const destLayer = this.map.createBlankLayer(
+      `double-${layerName}`, this.map.tilesets,
+      x, y, width * 2, height,
+      sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
+    );
+    this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
+    this.copyTilesFrom(layerName, 0, 0, width, height, width, 0);
+    return destLayer;
+  }
+
+  copyTilesFrom(sourceLayer, x = 0, y = 0, width = 1, height = 1, destX = 0, destY = 0) {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
+        const sourceTile = this.map.getTileAt(x + i, y + j, true, sourceLayer);
+        this.map.getTileAt(destX + i, destY + j, true).copy(sourceTile);
+      }
+    }
+  }
+
   updateBackground() {
     for (const backgroundLayer of this.backgroundLayers) {
       backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
@@ -482,6 +469,14 @@ this.obstacles2 = this.physics.add.group({
   canRun(object) {
     return object.isOnGround;
   }
+
+  getLevelProperty = name => this.map.properties.find(prop => prop.name === name);
+
+  getLevelPropertyTyped = (name, type = 'string') => checkType(this.getLevelProperty(name), name, type);
+
+  getChunkLevel = chunkName => this.map.getLayer(`${chunkName}/level`);
+
+  getActiveObstaclesInRange = (fromX, toX) => this.obstacles2.getMatching('active', true).filter(obst => obst.x >= fromX && obst.x <= toX);
 
   onPauseKeyDown() {
     if (!this.paused) {

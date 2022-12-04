@@ -23,6 +23,11 @@ export default class BootScene extends Phaser.Scene {
     this.loadSounds();
   }
 
+  create() {
+    this.scene.run('GameScene');
+    this.scene.run('DebugScene');
+  }
+
   loadBackgrounds() {
     this.load.image('background-layer-1', FILE_BACKGROUND_LAYER_1_PNG);
     this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
@@ -41,10 +46,5 @@ export default class BootScene extends Phaser.Scene {
 
   loadSounds() {
     this.load.audio('jump', [FILE_JUMP_WAV]);
-  }
-
-  create() {
-    this.scene.run('GameScene');
-    this.scene.run('DebugScene');
   }
 }

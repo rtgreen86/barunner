@@ -57,7 +57,10 @@ export default class Player extends Physics.Arcade.Sprite {
     return this.anims.getName() === ANIMATION_JUMP_UP;
   }
 
-
+  get isIdle() {
+    const animation = this.anims.getName();
+    return animation === ANIMATION_IDLE || animation === ANIMATION_LANDING;
+  }
 
 
   get direction() {
@@ -93,12 +96,29 @@ export default class Player extends Physics.Arcade.Sprite {
     this.play(ANIMATION_FALL);
   }
 
+  landing() {
+    if (!this.isIdle) {
+      this.idle();
+    }
 
+    // if (this.isRunning) {
+    //   this.run();
+    //   this.play(ANIMATION_LANDING);
+    //   this.playAfterRepeat(ANIMATION_RUN);
+    // } else {
+    //   this.idle();
+    //   this.play(ANIMATION_LANDING);
+    //   this.play(ANIMATION_IDLE);
+    // }
+  }
 
   idle() {
     this.setVelocityX(0);
     this.play(ANIMATION_IDLE);
   }
+
+
+
 
   takeoffRun() {
     this.play(ANIMATION_TAKEOFF_RUN);
@@ -134,20 +154,6 @@ export default class Player extends Physics.Arcade.Sprite {
 
 
 
-  landing() {
-    if (!this.isFalling) {
-      return;
-    }
-    if (this.isRunning) {
-      this.run();
-      this.play(ANIMATION_LANDING);
-      this.playAfterRepeat(ANIMATION_RUN);
-    } else {
-      this.idle();
-      this.play(ANIMATION_LANDING);
-      this.play(ANIMATION_IDLE);
-    }
-  }
 
 
   attack() {

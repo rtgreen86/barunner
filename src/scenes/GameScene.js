@@ -140,7 +140,8 @@ this.obstacles2 = this.physics.add.group({
     this.obstacles2.shuffle();
 
 
-    this.getObstacle(8 * 128 + 500, 11 * 128)
+    // Start Obstacle
+    // this.getObstacle(8 * 128 + 500, 11 * 128)
 
   }
 
@@ -537,6 +538,7 @@ this.obstacles2 = this.physics.add.group({
   // }
 
   onPlayerCollideGround() {
+    this.player.landing();
     if (this.cursor.space.isDown) {
       this.player.jumpStart();
     }

@@ -546,11 +546,14 @@ this.obstacles2 = this.physics.add.group({
   // }
 
   onPlayerCollideGround() {
-    if (!this.player.isIdle) {
+    if (this.player.isFalling) {
       this.player.landing();
     }
     if (this.cursor.space.isDown) {
       this.player.jumpStart();
+    }
+    if (this.cursor.right.isDown || this.cursor.left.isDown) {
+      this.player.run();
     }
   }
 

@@ -57,12 +57,16 @@ export default class Player extends Physics.Arcade.Sprite {
     return this.anims.getName() === ANIMATION_JUMP_UP;
   }
 
-  get isIdle() {
-    return this.anims.getName() === ANIMATION_IDLE;
+  get isFalling() {
+    return this.anims.getName() === ANIMATION_FALL;
   }
 
   get isLanding() {
     return this.anims.getName() === ANIMATION_LANDING;
+  }
+
+  get isIdle() {
+    return this.anims.getName() === ANIMATION_IDLE;
   }
 
   get direction() {
@@ -96,19 +100,12 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   landing() {
-    this.play(ANIMATION_LANDING);
+    if (this.isRunning) {
+      this.run();
+      this.play(ANIMATION_LANDING);
+      return this.playAfterRepeat(ANIMATION_RUN);
+    }
     return this.idle();
-
-
-    // if (this.isRunning) {
-    //   this.run();
-    //   this.play(ANIMATION_LANDING);
-    //   this.playAfterRepeat(ANIMATION_RUN);
-    // } else {
-    //   this.idle();
-    //   this.play(ANIMATION_LANDING);
-    //   this.play(ANIMATION_IDLE);
-    // }
   }
 
   idle() {
@@ -116,17 +113,9 @@ export default class Player extends Physics.Arcade.Sprite {
     this.play(ANIMATION_IDLE);
   }
 
-
-
-
-  takeoffRun() {
-    this.play(ANIMATION_TAKEOFF_RUN);
-    this.setVelocityX(-100);
-  }
-
   run() {
     this.isRunning = true;
-    this.play(ANIMATION_RUN);
+    this.play(ANIMATION_RUN, true);
     this.setVelocityX(
       this.direction === DIRECTION_LEFT
         ? -this.runVelocity
@@ -134,6 +123,10 @@ export default class Player extends Physics.Arcade.Sprite {
     );
   }
 
+  takeoffRun() {
+    this.play(ANIMATION_TAKEOFF_RUN);
+    this.setVelocityX(-100);
+  }
 
   dash() {
     this.play(ANIMATION_DASH);

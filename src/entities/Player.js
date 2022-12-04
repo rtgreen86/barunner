@@ -65,9 +65,6 @@ export default class Player extends Physics.Arcade.Sprite {
     return this.anims.getName() === ANIMATION_LANDING;
   }
 
-
-
-
   get direction() {
     return this.flipX ? DIRECTION_LEFT : DIRECTION_RIGHT;
   }
@@ -75,8 +72,6 @@ export default class Player extends Physics.Arcade.Sprite {
   set direction(value) {
     this.flipX = value === DIRECTION_LEFT;
   }
-
-
 
   jumpStart() {
     this.jumpTime = 0;

@@ -207,7 +207,7 @@ this.obstacles2 = this.physics.add.group({
 
 
 
-    // jump
+    // Player control
 
     if (this.player.isJumping && this.cursor.space.isDown) {
       this.player.jumpContinue(delta);
@@ -217,6 +217,14 @@ this.obstacles2 = this.physics.add.group({
     }
     if (this.isFalling(this.player)) {
       this.player.fall();
+    }
+    if (this.cursor.right.isDown) {
+      this.player.direction = 'right';
+      this.setCameraToRight();
+    }
+    if (this.cursor.left.isDown) {
+      this.player.direction = 'left';
+      this.setCameraToLeft();
     }
 
     // on the ground
@@ -553,19 +561,19 @@ this.obstacles2 = this.physics.add.group({
   }
 
   onArrowRightDown() {
-    this.player.direction = 'right';
-    this.setCameraToRight();
-    if (this.canRun(this.player)) {
-      this.player.run();
-    }
+    // this.player.direction = 'right';
+    // this.setCameraToRight();
+    // if (this.canRun(this.player)) {
+    //   this.player.run();
+    // }
   }
 
   onArrowLeftDown() {
-    this.player.direction = 'left';
-    this.setCameraToLeft();
-    if (this.canRun(this.player)) {
-      this.player.run();
-    }
+    // this.player.direction = 'left';
+    // this.setCameraToLeft();
+    // if (this.canRun(this.player)) {
+    //   this.player.run();
+    // }
   }
 
   setCameraToRight() {

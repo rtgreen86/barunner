@@ -209,10 +209,10 @@ this.obstacles2 = this.physics.add.group({
 
     // Player control
 
-    if (this.player.isJumping && this.cursor.space.isDown) {
+    if (this.player.isJumping && (this.cursor.space.isDown || this.input.pointer1.isDown)) {
       this.player.jumpContinue(delta);
     }
-    if (this.player.isJumping && !this.cursor.space.isDown) {
+    if (this.player.isJumping && !(this.cursor.space.isDown || this.input.pointer1.isDown)) {
       this.player.fly();
     }
     if (this.isFalling(this.player)) {
@@ -549,7 +549,7 @@ this.obstacles2 = this.physics.add.group({
     if (this.player.isFalling) {
       this.player.landing();
     }
-    if (this.cursor.space.isDown) {
+    if (this.cursor.space.isDown || this.input.pointer1.isDown) {
       this.player.jumpStart();
     }
     if (this.cursor.right.isDown || this.cursor.left.isDown) {

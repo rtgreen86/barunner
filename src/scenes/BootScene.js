@@ -25,7 +25,9 @@ export default class BootScene extends Phaser.Scene {
 
   create() {
     this.scene.run('GameScene');
-    this.scene.run('DebugScene');
+    if (this.game.config.physics.arcade.debug) {
+      this.scene.run('DebugScene');
+    }
   }
 
   loadBackgrounds() {

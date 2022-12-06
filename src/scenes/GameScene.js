@@ -43,8 +43,6 @@ export default class GameScene extends Phaser.Scene {
     this.createCamera();
 
     this.jumpSound = this.sound.add('jump');
-
-    this.scene.run('DebugScene');
   }
 
 

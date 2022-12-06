@@ -117,42 +117,32 @@ export default class Player extends Physics.Arcade.Sprite {
   run() {
     this.isRunning = true;
     this.play(ANIMATION_RUN, true);
-    this.setVelocityX(
+    return this.setVelocityX(
       this.direction === DIRECTION_LEFT
         ? -this.runVelocity
         : this.runVelocity
     );
   }
 
+  hurt() {
+    this.isRunning = false;
+    return this.play(ANIMATION_HURT);
+  }
+
+  dash() {
+    this.isRunning = false;
+    return this.play(ANIMATION_DASH);
+  }
+
+
   takeoffRun() {
     this.play(ANIMATION_TAKEOFF_RUN);
     this.setVelocityX(-100);
   }
 
-  dash() {
-    this.play(ANIMATION_DASH);
-  }
-
-
-
-
-
-
-
   dizzy() {
     this.play(ANIMATION_DIZZY);
   }
-
-  hurt() {
-    this.play(ANIMATION_HURT);
-  }
-
-
-
-
-
-
-
 
   attack() {
     this.play(ANIMATION_ATTACK);

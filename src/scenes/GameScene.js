@@ -148,12 +148,7 @@ export default class GameScene extends Phaser.Scene {
       this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
 
-    const cb = () => {
-      this.player.setVelocityY(-1000);
-      this.player.hurt();
-    };
-
-    this.physics.add.collider(this.player, this.obstacles2, cb, null, this);
+    this.physics.add.collider(this.player, this.obstacles2, this.onPlayerCollideObstacle, null, this);
   }
 
   createCamera() {
@@ -490,15 +485,7 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  onFacedObstacle(player, obstacle) {
-    const { x: px, y: py } = player.getBottomRight();
-    const { x: ox, y: oy } = obstacle.getTopLeft();
-    const side = py - oy >= px - ox;
-    if (side) {
-      player.die();
-    }
-    return true;
-  }
+
 
   onPlayerCollideGround() {
     if (this.player.isFalling) {
@@ -510,6 +497,17 @@ export default class GameScene extends Phaser.Scene {
     if (this.cursor.right.isDown || this.cursor.left.isDown) {
       this.player.run();
     }
+  }
+
+  onPlayerCollideObstacle(player, obstacle) {
+    const { x: px, y: py } = player.getBottomRight();
+    const { x: ox, y: oy } = obstacle.getTopLeft();
+    const sideCollide = py - oy >= px - ox;
+    if (sideCollide) {
+      this.player.setVelocityY(-1000);
+      this.player.hurt();
+    }
+    return true;
   }
 
   onSpaceDown() {

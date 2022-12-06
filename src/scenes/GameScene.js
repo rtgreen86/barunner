@@ -55,6 +55,7 @@ export default class GameScene extends Phaser.Scene {
       .get(x, y)
       .setActive(true)
       .setSize(64, 64)
+      .setOrigin(0.5, 0.5)
       // .setOrigin(0.5, 0.75);
   }
 
@@ -241,8 +242,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.stabilizeTheCamera();
     // this.removeDistantObstacles();
-
-    console.log(this.player.anims.getName());
   }
 
   createBackgound() {
@@ -362,12 +361,6 @@ export default class GameScene extends Phaser.Scene {
       key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
       key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
     };
-
-    const createObstacle = () => {
-      this.getObstacle(this.player.x + 500, 1380)
-    }
-
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O, true, false).on('down', createObstacle)
 
     // use Phaser.Input.Keyboard. KeyboardPlugin
     // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html

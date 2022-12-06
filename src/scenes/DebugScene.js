@@ -8,9 +8,8 @@ export default class DebugScene extends Phaser.Scene {
   }
 
   create() {
-    this.text = this.add.text(0, 0, 'Debug Information');
-    this.text.setFontSize('24px');
-    this.text.setColor('black');
+    this.text = this.createText(0, 0, 'Debug Information');
+    this.keyO = this.createKey(Phaser.Input.Keyboard.KeyCodes.O, this.onCreateObstaclePressed);
   }
 
   update(time) {
@@ -26,6 +25,16 @@ export default class DebugScene extends Phaser.Scene {
       speed,
       delta
     });
+  }
+
+  createText(x, y, message) {
+    return this.add.text(x, y, message)
+      .setFontSize('24px')
+      .setColor('black');
+  }
+
+  createKey(key, handler) {
+    return this.input.keyboard.addKey(key, true, false).on('down', handler, this);
   }
 
   updateDebugInfo({ time, speed, delta }) {
@@ -82,6 +91,14 @@ export default class DebugScene extends Phaser.Scene {
       Math.round(deltaX / time),
       Math.round(deltaY / time)
     ];
+  }
+
+  onCreateObstaclePressed() {
+    const gameScene = this.scene.get('GameScene');
+    const player = gameScene.player;
+    const x = player.x + 500;
+    const y = player.y;
+    gameScene.getObstacle(x, y);
   }
 }
 

@@ -31,6 +31,9 @@ export default class GameScene extends Phaser.Scene {
     this.paused = false;
     this.timeOfDeath = null;
     this.startFallingVelocity = 10;
+
+    this.generatedFrom = 0;
+    this.generatedTo = 0;
   }
 
   create() {
@@ -235,6 +238,33 @@ export default class GameScene extends Phaser.Scene {
 
     this.stabilizeTheCamera();
     // this.removeDistantObstacles();
+
+
+
+    // spawn obstacles
+
+    const playerPosition = this.player.x;
+    const generatedWindow = 2000;
+
+    if (playerPosition + generatedWindow > this.generatedTo) {
+      this.getObstacle(this.generatedTo + generatedWindow / 2, this.player.y);
+      this.generatedTo += generatedWindow;
+      console.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y);
+      console.log('this.player, this.generated', playerPosition, this.generatedTo);
+    }
+
+    // const yPosition = -16 - 75 - 1; // half of height and screen position
+    // const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
+    // const frame = [19, 19, 19, 19, 19, 18, 18, 18, 18, 29][this.dice()];
+    // this.spawnedObject += distance;
+    // let obstacle = this.obstacles.getFirstDead(false);
+    // if (!obstacle) {
+    //   obstacle = (new Obstacle(this, this.spawnedObject, yPosition, 'spritesheet-64', frame))
+    //     .setSize(50, 32)
+    //     .setDepth(1000);
+    //   this.obstacles.add(obstacle);
+    // }
+    // obstacle.spawn(this.spawnedObject, yPosition);
   }
 
   createBackgound() {
@@ -568,4 +598,15 @@ export default class GameScene extends Phaser.Scene {
     const distantObstacles = this.obstacles2.getMatching('active', true).filter(obst => obst.x < this.player.x - distance || obst.x > this.player.x + distance || obst.y < this.player.y - distance || obst.y > this.player.y + distance);
     distantObstacles.forEach(obst => this.obstacles2.kill(obst));
   }
+
+
+  // create: function ()
+  //   {
+  //       this.frames = [ 'amiga-cursor', 'aqua_ball', 'asuna_by_vali233', 'atari130xe', 'atari400' ];
+  //   },
+
+  //   getImage: function ()
+  //   {
+  //       return Phaser.Math.RND.pick(this.frames);
+  //   }
 }

@@ -5,11 +5,15 @@ export default class DebugScene extends Phaser.Scene {
     super(name);
     this.positions = [];
     this.speedRecords = [];
+    this.message = [];
   }
 
   create() {
     this.text = this.createText(0, 0, 'Debug Information');
     this.keyO = this.createKey(Phaser.Input.Keyboard.KeyCodes.O, this.onCreateObstaclePressed);
+
+    const gameScene = this.scene.get('GameScene');
+    gameScene.events.on('debugMessage', this.handleDebugMessage, this);
   }
 
   update(time) {
@@ -50,6 +54,8 @@ export default class DebugScene extends Phaser.Scene {
       `Camera X: ${gameScene.cameras.main.scrollX}`,
       `Ground X, W: ${ground.x}, ${ground.width}`,
       'Layers:',
+      'Messages:',
+      ...this.message
       // ...gameScene.level.layers.map(layerData => `${layerData.name} ${layerData.tilemapLayer.x} ${gameScene.getLayerPosition(layerData.name)}`)
     ].join('\n'));
   }
@@ -99,6 +105,11 @@ export default class DebugScene extends Phaser.Scene {
     const x = player.x + 500;
     const y = player.y;
     gameScene.getObstacle(x, y);
+  }
+
+  handleDebugMessage(message) {
+    this.message.push(message);
+    while(this.message.length > 3) this.message.shift();
   }
 }
 

@@ -265,6 +265,8 @@ export default class GameScene extends Phaser.Scene {
     //   this.obstacles.add(obstacle);
     // }
     // obstacle.spawn(this.spawnedObject, yPosition);
+
+    this.events.emit('debugMessage', time);
   }
 
   createBackgound() {

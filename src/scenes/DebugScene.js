@@ -1,5 +1,11 @@
 import Phaser from 'Phaser';
 
+const getMax = values => values.reduce((max, value) => Math.max(max, value));
+
+const getMin = values => values.reduce((min, value) => Math.min(min, value));
+
+
+
 export default class DebugScene extends Phaser.Scene {
   constructor(name = 'DebugScene') {
     super(name);
@@ -11,16 +17,19 @@ export default class DebugScene extends Phaser.Scene {
   create() {
     this.text = this.createText(0, 0, 'Debug Information');
     this.keyO = this.createKey(Phaser.Input.Keyboard.KeyCodes.O, this.onCreateObstaclePressed);
-
-    const gameScene = this.scene.get('GameScene');
-    gameScene.events.on('debugMessage', this.handleDebugMessage, this);
+    this.gameScene = this.scene.get('GameScene');
+    this.gameScene.events.on('debugMessage', this.handleDebugMessage, this);
   }
 
   update(time) {
-    const gameScene = this.scene.get('GameScene');
-    this.savePlayerPosition(time, gameScene.player);
+    this.data.set('ticks', Math.floor(time));
+    this.data.set('player', this.getPlayerPosition());
+
+    this.savePlayerPosition(time);
     this.cleanupOldPositions(time);
+
     const speed = this.getSpeed();
+
     const [speedX, speedY] = speed;
     this.savePlayerSpeed(time, speedX, speedY);
     const delta = this.getDelta();
@@ -29,7 +38,26 @@ export default class DebugScene extends Phaser.Scene {
       speed,
       delta
     });
+
+    const text = Object.entries(this.data.values)
+      .reduce((builder, [key, value]) => {
+        builder.push(`${key}: ${value}`);
+        return builder;
+      }, [])
+      .join('\n');
+
+    this.text.setText(text + '\n\n' + this.text.text);
   }
+
+  getPlayerPosition() {
+    const x = Math.floor(this.gameScene.player.x);
+    const y = Math.floor(this.gameScene.player.y);
+    const chunk = this.gameScene.playerChunk;
+    return `(${x}, ${y}), chunk: ${chunk}`;
+  }
+
+
+
 
   createText(x, y, message) {
     return this.add.text(x, y, message)
@@ -45,9 +73,6 @@ export default class DebugScene extends Phaser.Scene {
     const gameScene = this.scene.get('GameScene');
     const ground = gameScene.map.layer.tilemapLayer;
     this.text.setText([
-      `Ticks: ${Math.round(time)}`,
-      `Player: (${gameScene.player.x}, ${gameScene.player.y}), room ${gameScene.playerChunk}`,
-      `On the ground: ${gameScene.player.isOnGround}, jump time: ${gameScene.player.jumpTime}, is jumping: ${gameScene.player.isJumping}`,
       `Speed (h,v): ${speed.join()} pps`,
       `Delta: ${delta.join(', ')}`,
       `Obstacles: ${gameScene.obstacles2.countActive()}, ${gameScene.obstacles2.countActive(false)} ${gameScene.obstacles2.getLength()}`,
@@ -60,8 +85,12 @@ export default class DebugScene extends Phaser.Scene {
     ].join('\n'));
   }
 
-  savePlayerPosition(time, player) {
-    this.positions.push({time, x: player.x, y: player.y});
+  savePlayerPosition(time) {
+    this.positions.push({
+      time,
+      x: this.gameScene.player.x,
+      y: this.gameScene.player.y
+    });
   }
 
   savePlayerSpeed(time, speedX, speedY) {
@@ -120,3 +149,4 @@ const getMinMaxRecord = (prop, mapper) => prop.map(mapper).reduce(
   ],
   [Infinity, 0]
 );
+

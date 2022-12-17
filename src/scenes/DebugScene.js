@@ -4,8 +4,6 @@ const getMax = values => values.reduce((max, value) => Math.max(max, value));
 
 const getMin = values => values.reduce((min, value) => Math.min(min, value));
 
-
-
 export default class DebugScene extends Phaser.Scene {
   constructor(name = 'DebugScene') {
     super(name);
@@ -19,14 +17,28 @@ export default class DebugScene extends Phaser.Scene {
     this.keyO = this.createKey(Phaser.Input.Keyboard.KeyCodes.O, this.onCreateObstaclePressed);
     this.gameScene = this.scene.get('GameScene');
     this.gameScene.events.on('debugMessage', this.handleDebugMessage, this);
+    this.events.on('changedata', this.handleDataUpdated, this);
   }
 
-  update(time) {
-    this.data.set('ticks', Math.floor(time));
-    this.data.set('player', this.getPlayerPosition());
+  update(time, delta2) {
+    this.data.set('time', Math.floor(time));
+    this.data.set('_playerX', Math.floor(this.gameScene.player.x));
+    this.data.set('_playerY', Math.floor(this.gameScene.player.y));
+    this.data.set('active chunk', this.gameScene.playerChunk);
+    this.data.set('player position', `(${this.data.values._playerX}, ${this.data.values._playerY})`);
+    this.data.set('speedX', Math.abs(Math.floor((this.data.values._playerX - this.data.values._prevPlayerX) * (1000 / delta2))));
+    this.data.set('speedY', Math.abs(Math.floor((this.data.values._playerY - this.data.values._prevPlayerY) * (1000 / delta2))));
+    this.data.inc('_time', delta2);
 
-    this.savePlayerPosition(time);
-    this.cleanupOldPositions(time);
+    this.data.set('_playerPosition', {
+      x: Math.floor(this.gameScene.player.x),
+      y: Math.floor(this.gameScene.player.y)
+    });
+
+
+
+    // this.savePlayerPosition(time);
+    // this.cleanupOldPositions(time);
 
     const speed = this.getSpeed();
 
@@ -39,7 +51,7 @@ export default class DebugScene extends Phaser.Scene {
       delta
     });
 
-    const text = Object.entries(this.data.values)
+    const text = Object.entries(this.data.query(/^[a-zA-Z]/))
       .reduce((builder, [key, value]) => {
         builder.push(`${key}: ${value}`);
         return builder;
@@ -55,9 +67,6 @@ export default class DebugScene extends Phaser.Scene {
     const chunk = this.gameScene.playerChunk;
     return `(${x}, ${y}), chunk: ${chunk}`;
   }
-
-
-
 
   createText(x, y, message) {
     return this.add.text(x, y, message)
@@ -139,6 +148,37 @@ export default class DebugScene extends Phaser.Scene {
   handleDebugMessage(message) {
     this.message.push(message);
     while(this.message.length > 3) this.message.shift();
+  }
+
+  handleDataUpdated(scene, key, value, prevValue) {
+    switch(key) {
+      case 'time':
+        this.data.set('_prevTime', prevValue);
+        break;
+      case '_playerX':
+        this.data.set('_prevPlayerX', prevValue);
+        break;
+      case '_playerY':
+        this.data.set('_prevPlayerY', prevValue);
+        break;
+      case '_time':
+        if (value > 300) {
+          this.data.set('speedX2', Math.abs(Math.floor((this.data.values._playerX - this.data.values._lastX) / value * 1000)));
+          this.data.set('speedY2', Math.abs(Math.floor((this.data.values._playerY - this.data.values._lastY) / value * 1000)));
+          this.data.set('_lastX', this.data.values._playerX);
+          this.data.set('_lastY', this.data.values._playerY);
+          this.data.set('_time', 0);
+        }
+        break;
+      case '_playerPosition':
+        this.positions.push({
+          time: scene.data.values.time,
+          x: value.x,
+          y: value.y
+        });
+        this.positions = this.positions.filter(record => record.time + 5000 >= scene.data.values.time);
+        break;
+    }
   }
 }
 

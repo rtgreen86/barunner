@@ -21,9 +21,8 @@ export default class DebugScene extends Phaser.Scene {
   update(time, delta2) {
     this.data.set('time', Math.floor(time));
 
-    const playerX = Math.floor(this._watchScene.player.x);
-    const playerY = Math.floor(this._watchScene.player.y);
-    this.data.set('player position', `(${playerX}, ${playerY})`);
+    const [playerX, playerY] = this.getPlayerPosition();
+    this.data.set('player position', this.getPlayerPositionText());
 
     if (!this.data.values.speed) {
       this.data.set('speed', '');
@@ -60,17 +59,32 @@ export default class DebugScene extends Phaser.Scene {
     const ground = this._watchScene.map.layer.tilemapLayer;
     this.data.set('ground', `x ${ground.x}; y ${ground.y}; width ${ground.width}`);
 
-    this._messages.splice(0, this._messages.length - 10);
-    this.data.set('messages', `\n${this._messages.join('\n')}`);
+    this.data.set('messages', this.getMessagesText());
 
-    const text = Object.entries(this.data.query(/^[a-zA-Z]/))
+    this._text.setText(this.getDebugText());
+  }
+
+  getPlayerPosition() {
+    return [Math.floor(this._watchScene.player.x), Math.floor(this._watchScene.player.y)];
+  }
+
+  getPlayerPositionText() {
+    const [playerX, playerY] = this.getPlayerPosition();
+    return `(${playerX}, ${playerY})`;
+  }
+
+  getMessagesText() {
+    this._messages.splice(0, this._messages.length - 10);
+    return `\n${this._messages.join('\n')}`;
+  }
+
+  getDebugText() {
+    return Object.entries(this.data.query(/^[a-zA-Z]/))
       .reduce((builder, [key, value]) => {
         builder.push(`${key}: ${value}`);
         return builder;
       }, [])
       .join('\n');
-
-    this._text.setText(text);
   }
 
   handleObstaclePressed() {

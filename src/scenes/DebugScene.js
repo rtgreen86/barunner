@@ -7,9 +7,14 @@ const getMin = values => values.reduce((min, value) => Math.min(min, value));
 export default class DebugScene extends Phaser.Scene {
   constructor(name = 'DebugScene') {
     super(name);
+    this.messages = [];
+
     this.positions = [];
     this.speedRecords = [];
     this.message = [];
+
+
+
   }
 
   create() {
@@ -22,12 +27,59 @@ export default class DebugScene extends Phaser.Scene {
 
   update(time, delta2) {
     this.data.set('time', Math.floor(time));
+
+    const playerX = Math.floor(this.gameScene.player.x);
+    const playerY = Math.floor(this.gameScene.player.y);
+    this.data.set('player position', `(${playerX}, ${playerY})`);
+
+    if (!this.data.values.speed) {
+      this.data.set('speed', '');
+    }
+
+    this.data.inc('_speedTestTime', delta2);
+    if (this.data.values._speedTestTime > 300) {
+      const seconds = 1000 / this.data.values._speedTestTime;
+      const prevX = this.data.values._prevX || playerX;
+      const speedX = Math.abs(Math.floor((playerX - prevX) * seconds));
+      const prevSpeedX = this.data.values._prevSpeedX || speedX;
+      const deltaX = speedX - prevSpeedX;
+      const prevY = this.data.values._prevY || playerY;
+      const speedY = Math.abs(Math.floor((playerY - prevY) * seconds));
+      const prevSpeedY = this.data.values._prevSpeedY || speedY;
+      const deltaY = speedY - prevSpeedY;
+      this.data.set('speed', `h ${speedX} (delta ${deltaX.toPrecision(3)}); v ${speedY} (delta ${deltaY.toPrecision(3)})`);
+      this.data.set('_prevX', playerX);
+      this.data.set('_prevSpeedX', speedX);
+      this.data.set('_prevY', playerY);
+      this.data.set('_prevSpeedY', speedY);
+      this.data.set('_speedTestTime', 0);
+    }
+
+    const activeObstacles = this.gameScene.obstacles2.countActive();
+    const inactiveObstacles = this.gameScene.obstacles2.countActive(false);
+    const totalObstacles = this.gameScene.obstacles2.getLength();
+    this.data.set('obstacles', `active ${activeObstacles}; inactive ${inactiveObstacles}; total ${totalObstacles}`);
+
+    const cameraX = Math.floor(this.gameScene.cameras.main.scrollX);
+    const cameraY = Math.floor(this.gameScene.cameras.main.scrollY);
+    this.data.set('camera position', `x ${cameraX}; y ${cameraY}`);
+
+    const ground = this.gameScene.map.layer.tilemapLayer;
+    this.data.set('ground', `x ${ground.x}; y ${ground.y}; width ${ground.width}`);
+
+    this.messages.splice(0, this.messages.length - 10);
+    this.data.set('messages', `\n${this.messages.join('\n')}`);
+
+
+
+
+
     this.data.set('_playerX', Math.floor(this.gameScene.player.x));
     this.data.set('_playerY', Math.floor(this.gameScene.player.y));
-    this.data.set('active chunk', this.gameScene.playerChunk);
-    this.data.set('player position', `(${this.data.values._playerX}, ${this.data.values._playerY})`);
-    this.data.set('speedX', Math.abs(Math.floor((this.data.values._playerX - this.data.values._prevPlayerX) * (1000 / delta2))));
-    this.data.set('speedY', Math.abs(Math.floor((this.data.values._playerY - this.data.values._prevPlayerY) * (1000 / delta2))));
+
+
+
+
     this.data.inc('_time', delta2);
 
     this.data.set('_playerPosition', {
@@ -146,8 +198,7 @@ export default class DebugScene extends Phaser.Scene {
   }
 
   handleDebugMessage(message) {
-    this.message.push(message);
-    while(this.message.length > 3) this.message.shift();
+    this.messages.push(message);
   }
 
   handleDataUpdated(scene, key, value, prevValue) {

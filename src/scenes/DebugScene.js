@@ -3,21 +3,26 @@ import Phaser from 'Phaser';
 export default class DebugScene extends Phaser.Scene {
   constructor(name = 'DebugScene') {
     super(name);
-    this.messages = [];
+    this._messages = [];
+  }
+
+  init(data) {
+    this._watchScene = this.scene.get(data.watch);
+    this._watchScene.events.on('debugMessage', this.handleDebugMessage, this);
   }
 
   create() {
-    this.text = this.createText(0, 0, 'Debug Information');
-    this.keyO = this.createKey(Phaser.Input.Keyboard.KeyCodes.O, this.onCreateObstaclePressed);
-    this.gameScene = this.scene.get('GameScene');
-    this.gameScene.events.on('debugMessage', this.handleDebugMessage, this);
+    this._text = this.add.text(0, 0)
+      .setFontSize('24px').setColor('black');
+    this._keyObstacle = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O, true, false)
+      .on('down', this.handleObstaclePressed, this);
   }
 
   update(time, delta2) {
     this.data.set('time', Math.floor(time));
 
-    const playerX = Math.floor(this.gameScene.player.x);
-    const playerY = Math.floor(this.gameScene.player.y);
+    const playerX = Math.floor(this._watchScene.player.x);
+    const playerY = Math.floor(this._watchScene.player.y);
     this.data.set('player position', `(${playerX}, ${playerY})`);
 
     if (!this.data.values.speed) {
@@ -43,20 +48,20 @@ export default class DebugScene extends Phaser.Scene {
       this.data.set('_speedTestTime', 0);
     }
 
-    const activeObstacles = this.gameScene.obstacles2.countActive();
-    const inactiveObstacles = this.gameScene.obstacles2.countActive(false);
-    const totalObstacles = this.gameScene.obstacles2.getLength();
+    const activeObstacles = this._watchScene.obstacles2.countActive();
+    const inactiveObstacles = this._watchScene.obstacles2.countActive(false);
+    const totalObstacles = this._watchScene.obstacles2.getLength();
     this.data.set('obstacles', `active ${activeObstacles}; inactive ${inactiveObstacles}; total ${totalObstacles}`);
 
-    const cameraX = Math.floor(this.gameScene.cameras.main.scrollX);
-    const cameraY = Math.floor(this.gameScene.cameras.main.scrollY);
+    const cameraX = Math.floor(this._watchScene.cameras.main.scrollX);
+    const cameraY = Math.floor(this._watchScene.cameras.main.scrollY);
     this.data.set('camera position', `x ${cameraX}; y ${cameraY}`);
 
-    const ground = this.gameScene.map.layer.tilemapLayer;
+    const ground = this._watchScene.map.layer.tilemapLayer;
     this.data.set('ground', `x ${ground.x}; y ${ground.y}; width ${ground.width}`);
 
-    this.messages.splice(0, this.messages.length - 10);
-    this.data.set('messages', `\n${this.messages.join('\n')}`);
+    this._messages.splice(0, this._messages.length - 10);
+    this.data.set('messages', `\n${this._messages.join('\n')}`);
 
     const text = Object.entries(this.data.query(/^[a-zA-Z]/))
       .reduce((builder, [key, value]) => {
@@ -65,28 +70,17 @@ export default class DebugScene extends Phaser.Scene {
       }, [])
       .join('\n');
 
-    this.text.setText(text);
+    this._text.setText(text);
   }
 
-  createText(x, y, message) {
-    return this.add.text(x, y, message)
-      .setFontSize('24px')
-      .setColor('black');
-  }
-
-  createKey(key, handler) {
-    return this.input.keyboard.addKey(key, true, false).on('down', handler, this);
-  }
-
-  onCreateObstaclePressed() {
-    const gameScene = this.scene.get('GameScene');
-    const player = gameScene.player;
+  handleObstaclePressed() {
+    const player = this._watchScene.player;
     const x = player.x + 500;
     const y = player.y;
-    gameScene.getObstacle(x, y);
+    this._watchScene.getObstacle(x, y);
   }
 
   handleDebugMessage(message) {
-    this.messages.push(message);
+    this._messages.push(message);
   }
 }

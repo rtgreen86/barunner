@@ -37,7 +37,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.createBackgound();
+    // this.createBackgound();
     this.createMap();
     this.createPlayer();
     this.createControls();
@@ -167,11 +167,24 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    this.updateBackground();
+    // this.updateBackground();
     this.updateGround();
     this.updatePlayer(time, delta);
 
+    this.rt.clear();
+    this.rt.camera.setScroll(
+      this.rt.camera.scrollX + 1,
+      this.rt.camera.scrollY);
 
+    this.rt.draw(this.background);
+
+
+    // this.rt.camera.rotation -= 0.01;
+    // this.rt.tilePositionX += 1;
+
+    // this.rt.clear();
+
+    // this.rt.draw(this.background);
 
     this.updateDeadline();
     this.respawnObjects();
@@ -302,6 +315,18 @@ export default class GameScene extends Phaser.Scene {
   createMap() {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
+    this.background = this.map.createLayer('background', this.map.tilesets, 0, 0).setVisible(false);
+    this.rt = this.add.renderTexture(0, 0, 2000, 2000);
+    this.rt.draw(this.background);
+    this.rt.saveTexture('bg111');
+    // this.rt.setVisible(false);
+    // this.backgroundTilesprite  = this.add.tileSprite(0, 0, 2000, 2000, 'bg111')
+    //     .setScrollFactor(0)
+    //     .setOrigin(0, 1)
+    //     .setData('textureScrollFactor', 0.1),
+
+
+
     this.createGroundLayer('ground', 0, 0);
   }
 

@@ -6,7 +6,7 @@ import Player from '../entities/Player';
 
 import { checkType } from '../utils';
 
-const CAMERA_ZOOM = 0.2;
+const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -40,7 +40,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // this.createBackgound();
+    this.createBackgound();
     this.createMap();
     this.createPlayer();
     this.createControls();
@@ -170,7 +170,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    // this.updateBackground();
+    this.updateBackground();
 
     this.rt.update();
 
@@ -312,10 +312,10 @@ export default class GameScene extends Phaser.Scene {
         .setOrigin(0, 1)
         .setData('textureScrollFactor', 0.2),
 
-      this.add.tileSprite(x, y, width, height, 'background-layer-3')
-        .setScrollFactor(0)
-        .setOrigin(0, 1)
-        .setData('textureScrollFactor', 0.3)
+      // this.add.tileSprite(x, y, width, height, 'background-layer-3')
+      //   .setScrollFactor(0)
+      //   .setOrigin(0, 1)
+      //   .setData('textureScrollFactor', 0.3)
     ];
   }
 

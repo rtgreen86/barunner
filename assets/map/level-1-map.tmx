@@ -64,7 +64,7 @@
    </properties>
   </tile>
  </tileset>
- <layer id="10" name="ground" width="16" height="16" visible="0">
+ <layer id="10" name="ground" width="16" height="16">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -84,7 +84,7 @@
 12,13,14,15,16,12,13,14,15,16,12,13,14,15,16,12
 </data>
  </layer>
- <layer id="12" name="background" width="16" height="16" visible="0">
+ <layer id="12" name="background" width="16" height="16" parallaxx="0.3">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

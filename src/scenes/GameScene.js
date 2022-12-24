@@ -318,9 +318,16 @@ export default class GameScene extends Phaser.Scene {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
     this.background = this.map.createLayer('background', this.map.tilesets, 0, 0).setVisible(false);
-    this.rt = this.add.renderTexture(0, 0, 2000, 2000);
+
+
+
+    // background variant 2
+    const size = 16 * 128;
+    this.rt = this.add.renderTexture(0, 0, size * 2, size);
     this.rt.draw(this.background);
-    this.rt.saveTexture('bg111');
+    this.rt.draw(this.background, size, 0);
+
+    // this.rt.saveTexture('bg111');
     // this.rt.setVisible(false);
     // this.backgroundTilesprite  = this.add.tileSprite(0, 0, 2000, 2000, 'bg111')
     //     .setScrollFactor(0)

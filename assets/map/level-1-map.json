@@ -24,7 +24,7 @@
          "name":"ground",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":16,
          "x":0,
          "y":0
@@ -50,8 +50,9 @@
          "id":12,
          "name":"background",
          "opacity":1,
+         "parallaxx":0.3,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":16,
          "x":0,
          "y":0

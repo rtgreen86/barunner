@@ -7,6 +7,11 @@ import DebugScene from './scenes/DebugScene';
 import './main.css';
 
 window.game = new Phaser.Game({
+  title: 'Barunner',
+  version: '1.1.3-alpha',
+  autoRound: true,
+  autoFocus: true,
+  autoCenter: true,
   type: Phaser.WEBGL,
   scene: [BootScene, GameScene, DebugScene],
   physics: {
@@ -28,5 +33,6 @@ window.game = new Phaser.Game({
       width: 1280,
       height: 720
     }
-  }
+  },
+
 });

@@ -5,7 +5,7 @@ import Player from '../entities/Player';
 
 import { checkType } from '../utils';
 
-const CAMERA_ZOOM = 0.2;
+const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -281,6 +281,16 @@ export default class GameScene extends Phaser.Scene {
     // }
     // obstacle.spawn(this.spawnedObject, yPosition);
 
+    // Update background
+
+    const width1 = 128 * 16;
+    const cameraX1 = this.cameras.main.scrollX * 0.3;
+    const offset1 = cameraX1 - Math.floor(cameraX1 / width1) * width1;
+    this.rt.x = -offset1;
+
+
+
+
     this.events.emit('debugMessage', time);
   }
 
@@ -326,6 +336,7 @@ export default class GameScene extends Phaser.Scene {
     this.rt = this.add.renderTexture(0, 0, size * 2, size);
     this.rt.draw(this.background);
     this.rt.draw(this.background, size, 0);
+    this.rt.setScrollFactor(0, 1);
 
     // this.rt.saveTexture('bg111');
     // this.rt.setVisible(false);

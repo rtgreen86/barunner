@@ -5,6 +5,8 @@ import Player from '../entities/Player';
 
 import { checkType } from '../utils';
 
+const CAMERA_ZOOM = 0.2;
+
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
 const CAMERA_MOVE_LERP = 0.4;
@@ -156,7 +158,7 @@ export default class GameScene extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = 1;
+    this.cameras.main.zoom = CAMERA_ZOOM;
     this.cameras.main.startFollow(
       this.player,
       true,

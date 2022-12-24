@@ -1,5 +1,6 @@
 import Phaser from 'Phaser';
 
+import BackgroundLayer from '../entities/BackgroundLayer';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 
@@ -170,6 +171,9 @@ export default class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     // this.updateBackground();
+
+    this.rt.update();
+
     this.updateGround();
     this.updatePlayer(time, delta);
 
@@ -283,10 +287,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Update background
 
-    const width1 = 128 * 16;
-    const cameraX1 = this.cameras.main.scrollX * 0.3;
-    const offset1 = Math.floor(cameraX1 / width1) * width1;
-    this.rt.x = offset1;
+
 
 
 
@@ -327,25 +328,12 @@ export default class GameScene extends Phaser.Scene {
   createMap() {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
-    this.background = this.map.createLayer('background', this.map.tilesets, 0, 0).setVisible(false);
-
-
+    this.background = this.map.createLayer('background', this.map.tilesets, 0, 0);
 
     // background variant 2
-    const size = 16 * 128;
-    this.rt = this.add.renderTexture(0, 0, size * 2, size);
-    this.rt.draw(this.background);
-    this.rt.draw(this.background, size, 0);
+
+    this.rt = this.add.existing(new BackgroundLayer(this, 0, 0, this.background));
     this.rt.setScrollFactor(0.3, 1);
-
-    // this.rt.saveTexture('bg111');
-    // this.rt.setVisible(false);
-    // this.backgroundTilesprite  = this.add.tileSprite(0, 0, 2000, 2000, 'bg111')
-    //     .setScrollFactor(0)
-    //     .setOrigin(0, 1)
-    //     .setData('textureScrollFactor', 0.1),
-
-
 
     this.createGroundLayer('ground', 0, 0);
   }

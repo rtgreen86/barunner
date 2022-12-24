@@ -24,7 +24,7 @@
          "name":"ground",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":16,
          "x":0,
          "y":0
@@ -51,12 +51,25 @@
          "name":"background",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":16,
          "x":0,
          "y":0
+        }, 
+        {
+         "id":13,
+         "image":"..\/images\/background-layer-1.png",
+         "name":"background-layer-1",
+         "offsetx":4,
+         "offsety":0,
+         "opacity":1,
+         "repeatx":true,
+         "type":"imagelayer",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":13,
+ "nextlayerid":14,
  "nextobjectid":16,
  "orientation":"orthogonal",
  "properties":[

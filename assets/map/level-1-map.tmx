@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="128" tileheight="128" infinite="0" nextlayerid="13" nextobjectid="16">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="128" tileheight="128" infinite="0" nextlayerid="14" nextobjectid="16">
  <editorsettings>
   <export target="level-1-map.json" format="json"/>
  </editorsettings>
@@ -64,7 +64,7 @@
    </properties>
   </tile>
  </tileset>
- <layer id="10" name="ground" width="16" height="16">
+ <layer id="10" name="ground" width="16" height="16" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -84,7 +84,7 @@
 12,13,14,15,16,12,13,14,15,16,12,13,14,15,16,12
 </data>
  </layer>
- <layer id="12" name="background" width="16" height="16">
+ <layer id="12" name="background" width="16" height="16" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -104,4 +104,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <imagelayer id="13" name="background-layer-1" offsetx="4" offsety="0" repeatx="1">
+  <image source="../images/background-layer-1.png" width="533" height="350"/>
+ </imagelayer>
 </map>

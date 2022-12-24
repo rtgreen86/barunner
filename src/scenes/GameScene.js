@@ -173,12 +173,12 @@ export default class GameScene extends Phaser.Scene {
     this.updateGround();
     this.updatePlayer(time, delta);
 
-    this.rt.clear();
-    this.rt.camera.setScroll(
-      this.rt.camera.scrollX + 1,
-      this.rt.camera.scrollY);
-
-    this.rt.draw(this.background);
+    // scroll camera for background
+    // this.rt.clear();
+    // this.rt.camera.setScroll(
+    //   this.rt.camera.scrollX + 1,
+    //   this.rt.camera.scrollY);
+    // this.rt.draw(this.background);
 
 
     // this.rt.camera.rotation -= 0.01;

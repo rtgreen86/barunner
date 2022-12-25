@@ -7,3 +7,8 @@ playerY [int] - номер тайла по вертикале появления
 Свойства тайла
 
 collides [bool] - коллайдер с персонажами
+
+
+## Layer properties
+
+scrollFactorX (float) - scroll factor

@@ -11,6 +11,9 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
     this.layer.setVisible(false);
     this.draw(layer);
     this.draw(layer, layer.layer.widthInPixels, 0);
+    for (const prop of layer.layer.properties) {
+      this[prop.name] = prop.value;
+    }
   }
 
   update() {

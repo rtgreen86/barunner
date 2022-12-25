@@ -331,10 +331,7 @@ export default class GameScene extends Phaser.Scene {
     this.background = this.map.createLayer('background', this.map.tilesets, 0, 0);
 
     // background variant 2
-
     this.rt = this.add.existing(new BackgroundLayer(this, 0, 0, this.background));
-    this.rt.setScrollFactor(0.3, 1);
-
     this.createGroundLayer('ground', 0, 0);
   }
 

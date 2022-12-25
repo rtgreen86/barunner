@@ -51,6 +51,12 @@
          "name":"background",
          "opacity":1,
          "parallaxx":0.3,
+         "properties":[
+                {
+                 "name":"scrollFactorX",
+                 "type":"float",
+                 "value":0.3
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":16,

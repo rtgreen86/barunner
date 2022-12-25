@@ -310,10 +310,12 @@ export default class GameScene extends Phaser.Scene {
   createMap() {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
-    this.background = this.map.createLayer('background', this.map.tilesets, 0, 0);
 
-    // background variant 2
-    this.add.existing(new BackgroundLayer(this, 0, 0, this.background));
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
+
     this.createGroundLayer('ground', 0, 0);
   }
 

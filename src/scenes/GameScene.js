@@ -287,12 +287,14 @@ export default class GameScene extends Phaser.Scene {
       this.add.tileSprite(x, y, width, height, 'background-layer-1')
         .setScrollFactor(0)
         .setOrigin(0, 1)
-        .setData('textureScrollFactor', 0.1),
+        .setData('textureScrollFactor', 0.1)
+        .setDepth(-100),
 
       this.add.tileSprite(x, y, width, height, 'background-layer-2')
         .setScrollFactor(0)
         .setOrigin(0, 1)
-        .setData('textureScrollFactor', 0.2),
+        .setData('textureScrollFactor', 0.2)
+        .setDepth(-100),
 
       // this.add.tileSprite(x, y, width, height, 'background-layer-3')
       //   .setScrollFactor(0)
@@ -311,10 +313,10 @@ export default class GameScene extends Phaser.Scene {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
 
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
     this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
 
     this.createGroundLayer('ground', 0, 0);
   }

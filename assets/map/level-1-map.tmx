@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="128" tileheight="128" infinite="0" nextlayerid="17" nextobjectid="16">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="128" tileheight="128" infinite="0" backgroundcolor="#d9f0f5" nextlayerid="18" nextobjectid="16">
  <editorsettings>
   <export target="level-1-map.json" format="json"/>
  </editorsettings>
@@ -64,8 +64,11 @@
    </properties>
   </tile>
  </tileset>
- <imagelayer id="13" name="background-layer-1" offsetx="4" offsety="0" repeatx="1">
+ <imagelayer id="13" name="background-layer-1" offsetx="0" offsety="1120" parallaxx="0.1" repeatx="1">
   <image source="../images/background-layer-1.png" width="533" height="350"/>
+ </imagelayer>
+ <imagelayer id="17" name="background-layer-2" offsetx="0" offsety="1120" parallaxx="0.15" repeatx="1">
+  <image source="../images/background-layer-2.png" width="533" height="350"/>
  </imagelayer>
  <layer id="15" name="background4" width="16" height="16" parallaxx="0.2">
   <properties>

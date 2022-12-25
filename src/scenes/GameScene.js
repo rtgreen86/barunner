@@ -171,26 +171,8 @@ export default class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     this.updateBackground();
-
-    this.rt.update();
-
     this.updateGround();
     this.updatePlayer(time, delta);
-
-    // scroll camera for background
-    // this.rt.clear();
-    // this.rt.camera.setScroll(
-    //   this.rt.camera.scrollX + 1,
-    //   this.rt.camera.scrollY);
-    // this.rt.draw(this.background);
-
-
-    // this.rt.camera.rotation -= 0.01;
-    // this.rt.tilePositionX += 1;
-
-    // this.rt.clear();
-
-    // this.rt.draw(this.background);
 
     this.updateDeadline();
     this.respawnObjects();
@@ -331,7 +313,7 @@ export default class GameScene extends Phaser.Scene {
     this.background = this.map.createLayer('background', this.map.tilesets, 0, 0);
 
     // background variant 2
-    this.rt = this.add.existing(new BackgroundLayer(this, 0, 0, this.background));
+    this.add.existing(new BackgroundLayer(this, 0, 0, this.background));
     this.createGroundLayer('ground', 0, 0);
   }
 

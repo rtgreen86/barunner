@@ -11,6 +11,22 @@
          "offsety":738,
          "opacity":1,
          "parallaxx":0.1,
+         "properties":[
+                {
+                 "name":"depth",
+                 "type":"int",
+                 "value":-60
+                }, 
+                {
+                 "name":"textureKey",
+                 "type":"string",
+                 "value":"background-layer-1"
+                }, 
+                {
+                 "name":"textureScrollFactorX",
+                 "type":"float",
+                 "value":0.1
+                }],
          "repeatx":true,
          "type":"imagelayer",
          "visible":true,
@@ -25,6 +41,22 @@
          "offsety":729,
          "opacity":1,
          "parallaxx":0.15,
+         "properties":[
+                {
+                 "name":"depth",
+                 "type":"int",
+                 "value":-50
+                }, 
+                {
+                 "name":"textureKey",
+                 "type":"string",
+                 "value":"background-layer-2"
+                }, 
+                {
+                 "name":"textureScrollFactorX",
+                 "type":"float",
+                 "value":0.2
+                }],
          "repeatx":true,
          "type":"imagelayer",
          "visible":true,
@@ -188,6 +220,56 @@
          "y":0
         }, 
         {
+         "id":18,
+         "layers":[
+                {
+                 "class":"myClass",
+                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    18, 19, 20, 0, 28, 29, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "height":16,
+                 "id":19,
+                 "name":"Copy of background1",
+                 "opacity":1,
+                 "parallaxx":0.35,
+                 "properties":[
+                        {
+                         "name":"depth",
+                         "type":"int",
+                         "value":-10
+                        }, 
+                        {
+                         "name":"scrollFactorX",
+                         "type":"float",
+                         "value":0.35
+                        }],
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":16,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"Group 1",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -214,7 +296,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":18,
+ "nextlayerid":20,
  "nextobjectid":16,
  "orientation":"orthogonal",
  "properties":[

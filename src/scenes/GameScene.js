@@ -248,8 +248,8 @@ export default class GameScene extends Phaser.Scene {
     const generatedWindow = 2000;
 
     if (playerPosition + generatedWindow > this.generatedTo) {
-      // this.getObstacle(this.generatedTo + generatedWindow / 2, this.player.y);
-      // this.generatedTo += generatedWindow;
+      this.getObstacle(this.generatedTo + generatedWindow / 2, this.map.heightInPixels / 2 - 64 / 2);  // this.player.y);
+      this.generatedTo += generatedWindow;
       console.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y);
       console.log('this.player, this.generated', playerPosition, this.generatedTo);
     }

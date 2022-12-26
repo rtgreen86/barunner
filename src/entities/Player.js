@@ -34,12 +34,15 @@ export default class Player extends Physics.Arcade.Sprite {
 
     this.initAnimation();
 
-    this.setSize(128, 64);
+    this.setSize(Player.width, Player.height);
     this.setMaxVelocity(1200, 600)
     this.setData('isAlive', true);
     this.setBounceX(0.7);
     this.play(ANIMATION_IDLE);
   }
+
+  static width = 128;
+  static height = 64;
 
   initAnimation() {
     this.scene.anims.createFromAseprite(this.texture.key);

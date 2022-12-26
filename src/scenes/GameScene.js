@@ -248,8 +248,8 @@ export default class GameScene extends Phaser.Scene {
     const generatedWindow = 2000;
 
     if (playerPosition + generatedWindow > this.generatedTo) {
-      this.getObstacle(this.generatedTo + generatedWindow / 2, this.player.y);
-      this.generatedTo += generatedWindow;
+      // this.getObstacle(this.generatedTo + generatedWindow / 2, this.player.y);
+      // this.generatedTo += generatedWindow;
       console.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y);
       console.log('this.player, this.generated', playerPosition, this.generatedTo);
     }
@@ -284,17 +284,17 @@ export default class GameScene extends Phaser.Scene {
     const y = this.game.config.height - 63;
 
     this.backgroundLayers = [
-      this.add.tileSprite(x, y, width, height, 'background-layer-1')
-        .setScrollFactor(0)
-        .setOrigin(0, 1)
-        .setData('textureScrollFactor', 0.1)
-        .setDepth(-100),
+      // this.add.tileSprite(x, y, width, height, 'background-layer-1')
+      //   .setScrollFactor(0)
+      //   .setOrigin(0, 1)
+      //   .setData('textureScrollFactor', 0.1)
+      //   .setDepth(-100),
 
-      this.add.tileSprite(x, y, width, height, 'background-layer-2')
-        .setScrollFactor(0)
-        .setOrigin(0, 1)
-        .setData('textureScrollFactor', 0.2)
-        .setDepth(-100),
+      // this.add.tileSprite(x, y, width, height, 'background-layer-2')
+      //   .setScrollFactor(0)
+      //   .setOrigin(0, 1)
+      //   .setData('textureScrollFactor', 0.2)
+      //   .setDepth(-100),
 
       // this.add.tileSprite(x, y, width, height, 'background-layer-3')
       //   .setScrollFactor(0)
@@ -313,6 +313,36 @@ export default class GameScene extends Phaser.Scene {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
 
+    const bg1 = this.map.images[0];
+    const width = this.game.config.width;
+    const height = this.game.config.height;
+
+    const bg1_1 = this.add.tileSprite(bg1.x, bg1.y, width, height, bg1.name).setOrigin(0, 0)
+    .setScrollFactor(0, 1).setData('textureScrollFactor', 0.1).setDepth(-100);
+
+    this.backgroundLayers.push(bg1_1);
+
+
+
+    const bg2 = this.map.images[1];
+
+    const bg2_1 = this.add.tileSprite(bg2.x, bg2.y, width, height, bg2.name).setOrigin(0, 0)
+    .setScrollFactor(0, 1).setData('textureScrollFactor', 0.2).setDepth(-100);
+
+    this.backgroundLayers.push(bg2_1);
+
+
+    // this.add.image(bg1.x, bg1.y, bg1.name).setOrigin(0, 0)
+
+    // this.backgroundLayers = [
+      // this.add.tileSprite(x, y, width, height, 'background-layer-1')
+      //   .setScrollFactor(0)
+      //   .setOrigin(0, 1)
+      //   .setData('textureScrollFactor', 0.1)
+      //   .setDepth(-100),
+
+
+
     this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
     this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
     this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
@@ -323,6 +353,7 @@ export default class GameScene extends Phaser.Scene {
 
   createGroundLayer(layerName, x = 0, y = 0) {
     const layer = this.createDoubleLayer(layerName, x, y);
+    layer.setOrigin(0.5, 0.5);
     layer.setScrollFactor(0, 1);
   }
 
@@ -353,7 +384,7 @@ export default class GameScene extends Phaser.Scene {
     const playerX = this.map.properties.find(prop => prop.name === 'playerX');
     const x = playerX.value * this.map.tileWidth;
     const playerY = this.map.properties.find(prop => prop.name === 'playerY');
-    const y = playerY.value * this.map.tileHeight - PLAYER_SIZE / 3;
+    const y = playerY.value * this.map.tileHeight - Player.height / 2; // playerY.value * this.map.tileHeight - PLAYER_SIZE / 3;
     this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
     this.player.setDepth(2000);
   }

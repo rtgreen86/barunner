@@ -313,40 +313,25 @@ export default class GameScene extends Phaser.Scene {
     this.map = this.add.tilemap('map-level-1');
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
 
+    // Draft loading images from tilemap
     const bg1 = this.map.images[0];
     const width = this.game.config.width;
     const height = this.game.config.height;
-
     const bg1_1 = this.add.tileSprite(bg1.x, bg1.y, width, height, bg1.name).setOrigin(0, 0)
-    .setScrollFactor(0, 1).setData('textureScrollFactor', 0.1).setDepth(-100);
-
+      .setScrollFactor(0, 1).setData('textureScrollFactor', 0.1).setDepth(-100);
     this.backgroundLayers.push(bg1_1);
-
-
-
     const bg2 = this.map.images[1];
-
     const bg2_1 = this.add.tileSprite(bg2.x, bg2.y, width, height, bg2.name).setOrigin(0, 0)
-    .setScrollFactor(0, 1).setData('textureScrollFactor', 0.2).setDepth(-100);
-
+      .setScrollFactor(0, 1).setData('textureScrollFactor', 0.2).setDepth(-100);
     this.backgroundLayers.push(bg2_1);
 
-
-    // this.add.image(bg1.x, bg1.y, bg1.name).setOrigin(0, 0)
-
-    // this.backgroundLayers = [
-      // this.add.tileSprite(x, y, width, height, 'background-layer-1')
-      //   .setScrollFactor(0)
-      //   .setOrigin(0, 1)
-      //   .setData('textureScrollFactor', 0.1)
-      //   .setDepth(-100),
-
-
-
+    // draft loading background layers
     this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
     this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
     this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
     this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
+
+    // loading ground layer
 
     this.createGroundLayer('ground', 0, 0);
   }
@@ -361,11 +346,39 @@ export default class GameScene extends Phaser.Scene {
     const sourceLayer = this.map.getLayer(layerName);
     const width = sourceLayer.width;
     const height = sourceLayer.height;
+
+    // try change layer data size - fail to create layer
+    // sourceLayer.width = 32;
+
+    // try to create custom layer class - should use exist layer, layer is invisible
+    // const destLayer = new Phaser.Tilemaps.TilemapLayer(this, this.map, 4, this.map.tilesets, x ,y);
+    // destLayer.setVisible(true);
+
+    // create normal layer - cannot be resized
+    // const destLayer = this.map.createLayer(layerName, this.map.tilesets, x, y);
+
+    // settings for create custom classes
+    // destLayer.name = `double-${layerName}`;
+    // destLayer.setSize(4096, 2048);
+    // destLayer.width = width * 2;
+    // destLayer.height = height;
+
+    // try after resize layer data - not work
+    // destLayer.fill(-1, 16, 0, 16, 16);
+
+    // try after resize, not work
+    // destLayer.setSize(destLayer.width * 2, destLayer.height);
+
+    // try to copy
+    // this.map.copy(0, 0, 16, 16, 16, 0);
+
+    // create new layer with new layer data and standard classes
     const destLayer = this.map.createBlankLayer(
       `double-${layerName}`, this.map.tilesets,
       x, y, width * 2, height,
       sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
     );
+
     this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
     this.copyTilesFrom(layerName, 0, 0, width, height, width, 0);
     return destLayer;

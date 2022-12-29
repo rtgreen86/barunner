@@ -355,7 +355,7 @@ export default class GameScene extends Phaser.Scene {
     // destLayer.setVisible(true);
 
     // create normal layer - cannot be resized
-    // const destLayer = this.map.createLayer(layerName, this.map.tilesets, x, y);
+    const destLayer = this.map.createLayer(layerName, this.map.tilesets, x, y);
 
     // settings for create custom classes
     // destLayer.name = `double-${layerName}`;
@@ -387,14 +387,14 @@ export default class GameScene extends Phaser.Scene {
     // );
 
     // create extended layer with single size
-    const destLayer = this.map.createBlankLayer(
-      `dynamic-${layerName}`, this.map.tilesets,
-      x, y, width + 10, height,
-      sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
-    );
+    // const destLayer = this.map.createBlankLayer(
+    //   `dynamic-${layerName}`, this.map.tilesets,
+    //   x, y, width + 10, height,
+    //   sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
+    // );
 
-    this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
-    this.copyTilesFrom(layerName, 0, 0, 10, height, width, 0);
+    // this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
+    // this.copyTilesFrom(layerName, 0, 0, 10, height, width, 0);
     return destLayer;
   }
 
@@ -480,7 +480,7 @@ export default class GameScene extends Phaser.Scene {
 
   updateGround() {
     // update version 1
-    const width = 128 * 16; // this.map.layer.tilemapLayer.width / 2;
+    const width = this.map.layer.tilemapLayer.width - 1280; // this.map.layer.tilemapLayer.width / 2;
     const cameraX = this.cameras.main.scrollX;
     const offset = cameraX - Math.floor(cameraX / width) * width;
     this.map.layer.tilemapLayer.x = -offset;

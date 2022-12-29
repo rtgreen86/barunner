@@ -12,16 +12,14 @@ const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
 const CAMERA_MOVE_LERP = 0.4;
 
-const PLAYER_SIZE = 128;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
-const SPAWN_DISTANCE = 10000;
-const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
+// const SPAWN_DISTANCE = 10000;
 
 const DEADLINE_OFFSET = -100;
 
-const PLAYER_RESPAWN_TIMEOUT = 1000;
+// const PLAYER_RESPAWN_TIMEOUT = 1000;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -283,7 +281,7 @@ export default class GameScene extends Phaser.Scene {
     const playerX = this.map.properties.find(prop => prop.name === 'playerX');
     const x = playerX.value * this.map.tileWidth;
     const playerY = this.map.properties.find(prop => prop.name === 'playerY');
-    const y = playerY.value * this.map.tileHeight - Player.height / 2; // playerY.value * this.map.tileHeight - PLAYER_SIZE / 3;
+    const y = playerY.value * this.map.tileHeight - Player.height / 2;
     this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
     this.player.setDepth(2000);
   }

@@ -16,12 +16,12 @@ const PLAYER_SIZE = 128;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
-// const SPAWN_DISTANCE = 10000;
-// const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
+const SPAWN_DISTANCE = 10000;
+const GROUND_SPAWN_DISTANCE = SPAWN_DISTANCE * 1.5;
 
 const DEADLINE_OFFSET = -100;
 
-// const PLAYER_RESPAWN_TIMEOUT = 1000;
+const PLAYER_RESPAWN_TIMEOUT = 1000;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -29,25 +29,29 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init() {
+    // need for create and delete obstacles
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 500;
-    this.paused = false;
-    this.timeOfDeath = null;
-    this.startFallingVelocity = 10;
-
     this.generatedFrom = 0;
     this.generatedTo = 0;
+
+    // old scene state
+    this.paused = false;
+
+    // old player status
+    this.timeOfDeath = null;
+
+    // need for isFalling
+    this.startFallingVelocity = 10;
   }
 
   create() {
-    this.createBackgound();
     this.createMap();
     this.createPlayer();
     this.createControls();
     this.createObstacles();
     this.createCollaider();
     this.createCamera();
-
     this.jumpSound = this.sound.add('jump');
   }
 
@@ -277,32 +281,6 @@ export default class GameScene extends Phaser.Scene {
     this.events.emit('debugMessage', time);
   }
 
-  createBackgound() {
-    const width = this.game.config.width;
-    const height = 350;
-    const x = 0;
-    const y = this.game.config.height - 63;
-
-    this.backgroundLayers = [
-      // this.add.tileSprite(x, y, width, height, 'background-layer-1')
-      //   .setScrollFactor(0)
-      //   .setOrigin(0, 1)
-      //   .setData('textureScrollFactor', 0.1)
-      //   .setDepth(-100),
-
-      // this.add.tileSprite(x, y, width, height, 'background-layer-2')
-      //   .setScrollFactor(0)
-      //   .setOrigin(0, 1)
-      //   .setData('textureScrollFactor', 0.2)
-      //   .setDepth(-100),
-
-      // this.add.tileSprite(x, y, width, height, 'background-layer-3')
-      //   .setScrollFactor(0)
-      //   .setOrigin(0, 1)
-      //   .setData('textureScrollFactor', 0.3)
-    ];
-  }
-
   updateBackground() {
     for (const backgroundLayer of this.backgroundLayers) {
       backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
@@ -314,6 +292,7 @@ export default class GameScene extends Phaser.Scene {
     this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
 
     // Draft loading images from tilemap
+    this.backgroundLayers = [];
     const bg1 = this.map.images[0];
     const width = this.game.config.width;
     const height = this.game.config.height;

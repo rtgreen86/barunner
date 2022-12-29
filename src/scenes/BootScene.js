@@ -33,6 +33,8 @@ export default class BootScene extends Phaser.Scene {
   }
 
   loadBackgrounds() {
+    // used by tilemap
+    // TODO: delete not used
     this.load.image('background-layer-1', FILE_BACKGROUND_LAYER_1_PNG);
     this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
     this.load.image('background-layer-3', FILE_BACKGROUND_LAYER_3_PNG);

@@ -248,7 +248,7 @@ export default class GameScene extends Phaser.Scene {
     const generatedWindow = 2000;
 
     if (playerPosition + generatedWindow > this.generatedTo) {
-      this.getObstacle(this.generatedTo + generatedWindow / 2, this.map.heightInPixels / 2 - 64 / 2);  // this.player.y);
+      // this.getObstacle(this.generatedTo + generatedWindow / 2, this.map.heightInPixels / 2 - 64 / 2);  // this.player.y);
       this.generatedTo += generatedWindow;
       console.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y);
       console.log('this.player, this.generated', playerPosition, this.generatedTo);
@@ -480,7 +480,7 @@ export default class GameScene extends Phaser.Scene {
 
   updateGround() {
     // update version 1
-    const width = this.map.layer.tilemapLayer.width / 2;
+    const width = 128 * 16; // this.map.layer.tilemapLayer.width / 2;
     const cameraX = this.cameras.main.scrollX;
     const offset = cameraX - Math.floor(cameraX / width) * width;
     this.map.layer.tilemapLayer.x = -offset;

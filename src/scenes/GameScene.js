@@ -33,7 +33,7 @@ export default class GameScene extends Phaser.Scene {
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 500;
     this.generatedFrom = 0;
-    this.generatedTo = 0;
+    this.generatedTo = 1000;
 
     // old scene state
     this.paused = false;
@@ -53,124 +53,6 @@ export default class GameScene extends Phaser.Scene {
     this.createCollaider();
     this.createCamera();
     this.jumpSound = this.sound.add('jump');
-  }
-
-
-
-  getObstacle(x, y) {
-    return this.obstacles2
-      .shuffle()
-      .get(x, y)
-      .setActive(true)
-      .setSize(64, 64)
-      .setOrigin(0.5, 0.5)
-      // .setOrigin(0.5, 0.75);
-  }
-
-  createObstacles() {
-    this.obstacles = this.physics.add.group();
-
-    // this.obstacles2 = this.physics.add.group({
-    //   gravityX: 0,
-    //   gravityY: 0,
-    //   maxVelocityX: 0,
-    //   maxVelocityY: 0,
-    //   velocityX: 0,
-    //   velocityY: 0,
-    //   immovable: true
-    // });
-
-    // const obs = this.level.objects[0].objects[0];
-    // this.getObstacle(obs.x, obs.y);
-
-
-    // const areas = this.map.filterObjects('room1/objects', obj => obj.name === 'obstacle');
-    // areas.forEach(area => {
-    //   this.getObstacle(area.x, area.y + area.height);
-    // });
-
-    // this.obstacles2 = this.physics.add.group({
-    //   // classType: function,
-    //   key: 'objects-spritesheet',
-    //   frame: [2, 3],
-    //   // quantity: number,
-    //   visible: true,
-    //   active: false,
-    //   // repeat: number,
-    //   // randomKey: true,
-    //   randomFrame: true,
-    //   // frameQuantity: number,
-    //   // max: number,
-    //   setOrigin: {
-    //     x: 0.5,
-    //     y: 0.75
-    //   }
-    // });
-
-    this.obstacles2 = this.physics.add.group({
-      gravityX: 0,
-      gravityY: 0,
-      maxVelocityX: 0,
-      maxVelocityY: 0,
-      velocityX: 0,
-      velocityY: 0,
-      immovable: true,
-      defaultKey: 'objects-spritesheet',
-      defaultFrame: 2,
-    });
-
-    this.obstacles2.createMultiple(
-      {
-          key: 'objects-spritesheet',
-          frame: [2, 3],
-          quantity: 4,
-          visible: true,
-          active: false,
-          // repeat: number,
-          // randomKey: true,
-          randomFrame: true,
-          // frameQuantity: number,
-          // max: number,
-          setOrigin: {
-            x: 0.5,
-            y: 0.75
-          }
-        }
-    )
-
-    this.obstacles2.shuffle();
-
-    // Start Obstacle
-    // this.getObstacle(8 * 128 + 500, 11 * 128)
-  }
-
-  createCollaider() {
-    // Do not collide with obstacles
-    // this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
-    // this.physics.add.collider(this.ground, this.player);
-    // this.physics.add.collider(this.ground, this.obstacles);
-
-    // collide with level
-
-    this.map.layers.forEach(layer => {
-      this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
-      this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
-      this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
-    });
-
-    this.physics.add.collider(this.player, this.obstacles2, this.onPlayerCollideObstacle, null, this);
-  }
-
-  createCamera() {
-    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = CAMERA_ZOOM;
-    this.cameras.main.startFollow(
-      this.player,
-      true,
-      1, 0,
-      this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
-      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
-    );
   }
 
   update(time, delta) {
@@ -194,9 +76,6 @@ export default class GameScene extends Phaser.Scene {
     // ) {
     //   this.respawnScene();
     // }
-
-    // Do not update background
-    // this.updateBackground();
 
     // on the ground
 
@@ -244,8 +123,6 @@ export default class GameScene extends Phaser.Scene {
     this.stabilizeTheCamera();
     // this.removeDistantObstacles();
 
-
-
     // spawn obstacles
 
     const playerPosition = this.player.x;
@@ -271,20 +148,101 @@ export default class GameScene extends Phaser.Scene {
     // }
     // obstacle.spawn(this.spawnedObject, yPosition);
 
-    // Update background
-
-
-
-
-
-
     this.events.emit('debugMessage', time);
   }
 
-  updateBackground() {
-    for (const backgroundLayer of this.backgroundLayers) {
-      backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
-    }
+  createObstacles() {
+    this.obstacles = this.physics.add.group();
+
+    // this.obstacles2 = this.physics.add.group({
+    //   gravityX: 0,
+    //   gravityY: 0,
+    //   maxVelocityX: 0,
+    //   maxVelocityY: 0,
+    //   velocityX: 0,
+    //   velocityY: 0,
+    //   immovable: true
+    // });
+
+    // const obs = this.level.objects[0].objects[0];
+
+    // this.obstacles2 = this.physics.add.group({
+    //   // classType: function,
+    //   key: 'objects-spritesheet',
+    //   frame: [2, 3],
+    //   // quantity: number,
+    //   visible: true,
+    //   active: false,
+    //   // repeat: number,
+    //   // randomKey: true,
+    //   randomFrame: true,
+    //   // frameQuantity: number,
+    //   // max: number,
+    //   setOrigin: {
+    //     x: 0.5,
+    //     y: 0.75
+    //   }
+    // });
+
+    this.obstacles2 = this.physics.add.group({
+      gravityX: 0,
+      gravityY: 0,
+      maxVelocityX: 0,
+      maxVelocityY: 0,
+      velocityX: 0,
+      velocityY: 0,
+      immovable: true,
+      defaultKey: 'objects-spritesheet',
+      defaultFrame: 2,
+    });
+
+    this.obstacles2.createMultiple({
+      key: 'objects-spritesheet',
+      frame: [2, 3],
+      quantity: 4,
+      visible: true,
+      active: false,
+      // repeat: number,
+      // randomKey: true,
+      randomFrame: true,
+      // frameQuantity: number,
+      // max: number,
+      setOrigin: {
+        x: 0.5,
+        y: 0.75
+      }
+    });
+
+    this.obstacles2.shuffle();
+  }
+
+  createCollaider() {
+    // Do not collide with obstacles
+    // this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
+    // this.physics.add.collider(this.ground, this.player);
+    // this.physics.add.collider(this.ground, this.obstacles);
+
+    // collide with level
+
+    this.map.layers.forEach(layer => {
+      this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
+      this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
+      this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
+    });
+
+    this.physics.add.collider(this.player, this.obstacles2, this.onPlayerCollideObstacle, null, this);
+  }
+
+  createCamera() {
+    this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
+    this.cameras.main.zoom = CAMERA_ZOOM;
+    this.cameras.main.startFollow(
+      this.player,
+      true,
+      1, 0,
+      this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
+      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
+    );
   }
 
   createMap() {
@@ -316,74 +274,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createGroundLayer(layerName, x = 0, y = 0) {
-    const layer = this.createDoubleLayer(layerName, x, y);
+    const layer = this.map.createLayer(layerName, this.map.tilesets, x, y);
     layer.setOrigin(0.5, 0.5);
     layer.setScrollFactor(0, 1);
-  }
-
-  createDoubleLayer(layerName, x = 0, y = 0) {
-    const sourceLayer = this.map.getLayer(layerName);
-    const width = sourceLayer.width;
-    const height = sourceLayer.height;
-
-    // try change layer data size - fail to create layer
-    // sourceLayer.width = 32;
-
-    // try to create custom layer class - should use exist layer, layer is invisible
-    // const destLayer = new Phaser.Tilemaps.TilemapLayer(this, this.map, 4, this.map.tilesets, x ,y);
-    // destLayer.setVisible(true);
-
-    // create normal layer - cannot be resized
-    const destLayer = this.map.createLayer(layerName, this.map.tilesets, x, y);
-
-    // settings for create custom classes
-    // destLayer.name = `double-${layerName}`;
-    // destLayer.setSize(4096, 2048);
-    // destLayer.width = width * 2;
-    // destLayer.height = height;
-
-    // try after resize layer data - not work
-    // destLayer.fill(-1, 16, 0, 16, 16);
-
-    // try after resize, not work
-    // destLayer.setSize(destLayer.width * 2, destLayer.height);
-
-    // try to copy
-    // this.map.copy(0, 0, 16, 16, 16, 0);
-
-    // create new layer with new layer data and standard classes
-    // const destLayer = this.map.createBlankLayer(
-    //   `double-${layerName}`, this.map.tilesets,
-    //   x, y, width * 2, height,
-    //   sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
-    // );
-
-    // create layer with single size
-    // const destLayer = this.map.createBlankLayer(
-    //   `dynamic-${layerName}`, this.map.tilesets,
-    //   x, y, width, height,
-    //   sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
-    // );
-
-    // create extended layer with single size
-    // const destLayer = this.map.createBlankLayer(
-    //   `dynamic-${layerName}`, this.map.tilesets,
-    //   x, y, width + 10, height,
-    //   sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
-    // );
-
-    // this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
-    // this.copyTilesFrom(layerName, 0, 0, 10, height, width, 0);
-    return destLayer;
-  }
-
-  copyTilesFrom(sourceLayer, x = 0, y = 0, width = 1, height = 1, destX = 0, destY = 0) {
-    for (let i = 0; i < width; i++) {
-      for (let j = 0; j < height; j++) {
-        const sourceTile = this.map.getTileAt(x + i, y + j, true, sourceLayer);
-        this.map.getTileAt(destX + i, destY + j, true).copy(sourceTile);
-      }
-    }
   }
 
   createPlayer() {
@@ -393,6 +286,41 @@ export default class GameScene extends Phaser.Scene {
     const y = playerY.value * this.map.tileHeight - Player.height / 2; // playerY.value * this.map.tileHeight - PLAYER_SIZE / 3;
     this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
     this.player.setDepth(2000);
+  }
+
+  createControls() {
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
+    this.pauseKey.on('down', this.onPauseKeyDown, this);
+
+    this.numKeys = {
+      key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
+      key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),
+      key3: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE, true, false).on('down', this.onNumKeyDown, this),
+      key4: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR, true, false).on('down', this.onNumKeyDown, this),
+      key5: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE, true, false).on('down', this.onNumKeyDown, this),
+      key6: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX, true, false).on('down', this.onNumKeyDown, this),
+      key7: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEVEN, true, false).on('down', this.onNumKeyDown, this),
+      key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
+      key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
+    };
+
+    // use Phaser.Input.Keyboard. KeyboardPlugin
+    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
+    // An object containing the properties: up, down, left, right, space and shift.
+    this.cursor = this.input.keyboard.createCursorKeys();
+  }
+
+  updateBackground() {
+    for (const backgroundLayer of this.backgroundLayers) {
+      backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
+    }
+  }
+
+  updateGround() {
+    const width = this.map.layer.tilemapLayer.width - this.game.config.width;
+    const cameraX = this.cameras.main.scrollX;
+    const offset = cameraX - Math.floor(cameraX / width) * width;
+    this.map.layer.tilemapLayer.x = -offset;
   }
 
   updatePlayer(time, delta) {
@@ -418,36 +346,26 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  isFalling(object) {
-    return object.body.velocity.y > this.startFallingVelocity;
+  getObstacle(x, y) {
+    return this.obstacles2
+      .shuffle()
+      .get(x, y)
+      .setActive(true)
+      .setSize(64, 64)
+      .setOrigin(0.5, 0.5);
   }
 
+  copyTilesFrom(sourceLayer, x = 0, y = 0, width = 1, height = 1, destX = 0, destY = 0) {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
+        const sourceTile = this.map.getTileAt(x + i, y + j, true, sourceLayer);
+        this.map.getTileAt(destX + i, destY + j, true).copy(sourceTile);
+      }
+    }
+  }
 
-
-  createControls() {
-    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
-    this.pauseKey.on('down', this.onPauseKeyDown, this);
-
-    this.numKeys = {
-      key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
-      key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),
-      key3: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE, true, false).on('down', this.onNumKeyDown, this),
-      key4: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR, true, false).on('down', this.onNumKeyDown, this),
-      key5: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE, true, false).on('down', this.onNumKeyDown, this),
-      key6: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX, true, false).on('down', this.onNumKeyDown, this),
-      key7: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEVEN, true, false).on('down', this.onNumKeyDown, this),
-      key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
-      key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
-    };
-
-    // use Phaser.Input.Keyboard. KeyboardPlugin
-    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
-    // An object containing the properties: up, down, left, right, space and shift.
-    this.cursor = this.input.keyboard.createCursorKeys();
-
-    this.cursor.space.on('down', this.onSpaceDown, this);
-    this.cursor.left.on('down', this.onArrowLeftDown, this);
-    this.cursor.right.on('down', this.onArrowRightDown, this);
+  isFalling(object) {
+    return object.body.velocity.y > this.startFallingVelocity;
   }
 
   clearChunk(chunkName) {
@@ -455,37 +373,6 @@ export default class GameScene extends Phaser.Scene {
     const fromX = levelLayer.tilemapLayer.x;
     const toX = fromX + levelLayer.tilemapLayer.width;
     this.getActiveObstaclesInRange(fromX, toX).forEach(obstacle => this.obstacles2.kill(obstacle));
-  }
-
-  updateGround() {
-    // update version 1
-    const width = this.map.layer.tilemapLayer.width - 1280; // this.map.layer.tilemapLayer.width / 2;
-    const cameraX = this.cameras.main.scrollX;
-    const offset = cameraX - Math.floor(cameraX / width) * width;
-    this.map.layer.tilemapLayer.x = -offset;
-
-    // update version 2
-
-    // this.offset = this.offset || this.cameras.main.scrollX;
-    // this.target = this.target || 0;
-
-    // const cameraX = this.cameras.main.scrollX;
-    // const diff = cameraX - this.offset;
-    // const diffTiles = Math.floor(diff / 128);
-
-    // if (diffTiles > 0) {
-    //   this.offset += diffTiles * 128;
-    //   this.map.copy(diffTiles, 0, 16 - diffTiles, 16, 0, 0);
-    // }
-
-    // for (let i = 0; i < diffTiles; i++) {
-    //   this.copyTilesFrom('ground', this.target, 0, 1, 16, 16 - diffTiles, 0);
-    //   this.target ++;
-    //   if (this.target === 16) this.target = 0;
-    // }
-
-    // const diff2 = diffTiles * 128 - diff;
-    // this.map.layer.tilemapLayer.x = diff2;
   }
 
   dice() {
@@ -594,8 +481,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-
-
   onPlayerCollideGround() {
     if (this.player.isFalling) {
       this.player.landing();
@@ -618,30 +503,6 @@ export default class GameScene extends Phaser.Scene {
     }
     return true;
   }
-
-  onSpaceDown() {
-    // if (this.cursor.space.isDown && this.canJump(this.player)) {
-    //   this.player.jumpStart();
-    // }
-  }
-
-  onArrowRightDown() {
-    // this.player.direction = 'right';
-    // this.setCameraToRight();
-    // if (this.canRun(this.player)) {
-    //   this.player.run();
-    // }
-  }
-
-  onArrowLeftDown() {
-    // this.player.direction = 'left';
-    // this.setCameraToLeft();
-    // if (this.canRun(this.player)) {
-    //   this.player.run();
-    // }
-  }
-
-
 
   setCameraToRight() {
     this.setCameraOffset(
@@ -670,22 +531,9 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-
-
   removeDistantObstacles() {
     const distance = 5000;
     const distantObstacles = this.obstacles2.getMatching('active', true).filter(obst => obst.x < this.player.x - distance || obst.x > this.player.x + distance || obst.y < this.player.y - distance || obst.y > this.player.y + distance);
     distantObstacles.forEach(obst => this.obstacles2.kill(obst));
   }
-
-
-  // create: function ()
-  //   {
-  //       this.frames = [ 'amiga-cursor', 'aqua_ball', 'asuna_by_vali233', 'atari130xe', 'atari400' ];
-  //   },
-
-  //   getImage: function ()
-  //   {
-  //       return Phaser.Math.RND.pick(this.frames);
-  //   }
 }

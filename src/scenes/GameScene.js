@@ -373,14 +373,21 @@ export default class GameScene extends Phaser.Scene {
     // this.map.copy(0, 0, 16, 16, 16, 0);
 
     // create new layer with new layer data and standard classes
+    // const destLayer = this.map.createBlankLayer(
+    //   `double-${layerName}`, this.map.tilesets,
+    //   x, y, width * 2, height,
+    //   sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
+    // );
+
+    // create layer with single size
     const destLayer = this.map.createBlankLayer(
-      `double-${layerName}`, this.map.tilesets,
-      x, y, width * 2, height,
+      `dynamic-${layerName}`, this.map.tilesets,
+      x, y, width, height,
       sourceLayer.baseTileWidth, sourceLayer.baseTileHeight
     );
 
     this.copyTilesFrom(layerName, 0, 0, width, height, 0, 0);
-    this.copyTilesFrom(layerName, 0, 0, width, height, width, 0);
+    // this.copyTilesFrom(layerName, 0, 0, width, height, width, 0);
     return destLayer;
   }
 
@@ -465,10 +472,34 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateGround() {
-    const width = this.map.layer.tilemapLayer.width / 2;
+    // update version 1
+    // const width = this.map.layer.tilemapLayer.width / 2;
+    // const cameraX = this.cameras.main.scrollX;
+    // const offset = cameraX - Math.floor(cameraX / width) * width;
+    // this.map.layer.tilemapLayer.x = -offset;
+
+    // update version 2
+
+    this.offset = this.offset || this.cameras.main.scrollX;
+    this.target = this.target || 0;
+
     const cameraX = this.cameras.main.scrollX;
-    const offset = cameraX - Math.floor(cameraX / width) * width;
-    this.map.layer.tilemapLayer.x = -offset;
+    const diff = cameraX - this.offset;
+    const diffTiles = Math.floor(diff / 128);
+
+    if (diffTiles > 0) {
+      this.offset += diffTiles * 128;
+      this.map.copy(diffTiles, 0, 16 - diffTiles, 16, 0, 0);
+    }
+
+    for (let i = 0; i < diffTiles; i++) {
+      this.copyTilesFrom('ground', this.target, 0, 1, 16, 16 - diffTiles, 0);
+      this.target ++;
+      if (this.target === 16) this.target = 0;
+    }
+
+    const diff2 = diffTiles * 128 - diff;
+    this.map.layer.tilemapLayer.x = diff2;
   }
 
   dice() {

@@ -1,5 +1,6 @@
 import Phaser from 'Phaser';
 
+import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
@@ -53,100 +54,27 @@ export default class GameScene extends Phaser.Scene {
     this.jumpSound = this.sound.add('jump');
   }
 
-  update(time, delta) {
-    this.updateBackground();
-    this.updateGround();
-    this.updatePlayer(time, delta);
+  createMap() {
+    this.map = this.add.tilemap('map-level-1');
+    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
 
-    this.updateDeadline();
-    this.respawnObjects();
+    // Draft loading images from tilemap
+    const width = this.game.config.width;
+    const height = this.game.config.height;
+    this.backgroundImage = this.add.group(
+      this.map.images.map(image => this.add.existing(new BackgroundTileSprite(this, image, width, height))),
+      {runChildUpdate: true}
+    );
 
-    // if (this.player.isDead && !this.timeOfDeath) {
-    //   this.timeOfDeath = time;
-    //   this.playerAlive = false;
-    // }
+    // draft loading background layers
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
+    this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
 
-    // Respawn
-    // if (
-    //   !this.playerAlive &&
-    //   this.controller.isJumpDown &&
-    //   time - this.timeOfDeath >= PLAYER_RESPAWN_TIMEOUT
-    // ) {
-    //   this.respawnScene();
-    // }
+    // loading ground layer
 
-    // on the ground
-
-    // if (this.cursor.right.isDown && this.canPlayerRun()) {
-    //   this.player.run('forward');
-    //   this.player.isRunning = true;
-    // }
-    // if (this.cursor.left.isDown && this.canPlayerRun()) {
-    //   this.player.run('backward');
-    //   this.player.isRunning = true;
-    // }
-    // if (this.cursor.down.isDown && this.canRun()) {
-    //   this.player.takeoffRun();
-    //   this.player.isRunning = true;
-    // }
-    // if (this.player.isOnGround && !this.player.isRunning) {
-    //   this.player.idle();
-    // }
-
-    // this.player.update(time, delta);
-
-    // const playerOnGround = this.isisOnGround(this.player);
-
-    // if (!playerOnGround) {
-    //   this.player.fall();
-    // }
-    // if (playerOnGround && this.player.isFalling) {
-    //   this.player.landing();
-    // }
-
-    // if (playerOnGround) {
-    //   this.player.idle();
-    // }
-
-    // if (this.cursor.space.isDown && this.player.isJumping) {
-    //   this.player.continueJump(delta);
-    // }
-    // if (!this.player.isOnGround && !this.cursor.space.isDown) {
-    //   this.player.fly();
-    // }
-    // if (this.isFalling(this.player)) {
-    //   this.player.fall();
-    // }
-
-    this.stabilizeTheCamera();
-    // this.removeDistantObstacles();
-
-    // spawn obstacles
-
-    const playerPosition = this.player.x;
-    const generatedWindow = 2000;
-
-    if (playerPosition + generatedWindow > this.generatedTo) {
-      this.getObstacle(this.generatedTo + generatedWindow / 2, this.map.heightInPixels / 2 - 64 / 2);  // this.player.y);
-      this.generatedTo += generatedWindow;
-      console.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y);
-      console.log('this.player, this.generated', playerPosition, this.generatedTo);
-    }
-
-    // const yPosition = -16 - 75 - 1; // half of height and screen position
-    // const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
-    // const frame = [19, 19, 19, 19, 19, 18, 18, 18, 18, 29][this.dice()];
-    // this.spawnedObject += distance;
-    // let obstacle = this.obstacles.getFirstDead(false);
-    // if (!obstacle) {
-    //   obstacle = (new Obstacle(this, this.spawnedObject, yPosition, 'spritesheet-64', frame))
-    //     .setSize(50, 32)
-    //     .setDepth(1000);
-    //   this.obstacles.add(obstacle);
-    // }
-    // obstacle.spawn(this.spawnedObject, yPosition);
-
-    this.events.emit('debugMessage', time);
+    this.createGroundLayer('ground', 0, 0);
   }
 
   createObstacles() {
@@ -243,34 +171,6 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
-  createMap() {
-    this.map = this.add.tilemap('map-level-1');
-    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
-
-    // Draft loading images from tilemap
-    this.backgroundLayers = [];
-    const bg1 = this.map.images[0];
-    const width = this.game.config.width;
-    const height = this.game.config.height;
-    const bg1_1 = this.add.tileSprite(bg1.x, bg1.y, width, height, bg1.name).setOrigin(0, 0)
-      .setScrollFactor(0, 1).setData('textureScrollFactor', 0.1).setDepth(-100);
-    this.backgroundLayers.push(bg1_1);
-    const bg2 = this.map.images[1];
-    const bg2_1 = this.add.tileSprite(bg2.x, bg2.y, width, height, bg2.name).setOrigin(0, 0)
-      .setScrollFactor(0, 1).setData('textureScrollFactor', 0.2).setDepth(-100);
-    this.backgroundLayers.push(bg2_1);
-
-    // draft loading background layers
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
-
-    // loading ground layer
-
-    this.createGroundLayer('ground', 0, 0);
-  }
-
   createGroundLayer(layerName, x = 0, y = 0) {
     const layer = this.map.createLayer(layerName, this.map.tilesets, x, y);
     layer.setOrigin(0.5, 0.5);
@@ -308,10 +208,99 @@ export default class GameScene extends Phaser.Scene {
     this.cursor = this.input.keyboard.createCursorKeys();
   }
 
-  updateBackground() {
-    for (const backgroundLayer of this.backgroundLayers) {
-      backgroundLayer.tilePositionX = this.cameras.main.scrollX * backgroundLayer.data.values.textureScrollFactor;
+  update(time, delta) {
+    this.updateGround();
+    this.updatePlayer(time, delta);
+
+    this.updateDeadline();
+    this.respawnObjects();
+
+    // if (this.player.isDead && !this.timeOfDeath) {
+    //   this.timeOfDeath = time;
+    //   this.playerAlive = false;
+    // }
+
+    // Respawn
+    // if (
+    //   !this.playerAlive &&
+    //   this.controller.isJumpDown &&
+    //   time - this.timeOfDeath >= PLAYER_RESPAWN_TIMEOUT
+    // ) {
+    //   this.respawnScene();
+    // }
+
+    // on the ground
+
+    // if (this.cursor.right.isDown && this.canPlayerRun()) {
+    //   this.player.run('forward');
+    //   this.player.isRunning = true;
+    // }
+    // if (this.cursor.left.isDown && this.canPlayerRun()) {
+    //   this.player.run('backward');
+    //   this.player.isRunning = true;
+    // }
+    // if (this.cursor.down.isDown && this.canRun()) {
+    //   this.player.takeoffRun();
+    //   this.player.isRunning = true;
+    // }
+    // if (this.player.isOnGround && !this.player.isRunning) {
+    //   this.player.idle();
+    // }
+
+    // this.player.update(time, delta);
+
+    // const playerOnGround = this.isisOnGround(this.player);
+
+    // if (!playerOnGround) {
+    //   this.player.fall();
+    // }
+    // if (playerOnGround && this.player.isFalling) {
+    //   this.player.landing();
+    // }
+
+    // if (playerOnGround) {
+    //   this.player.idle();
+    // }
+
+    // if (this.cursor.space.isDown && this.player.isJumping) {
+    //   this.player.continueJump(delta);
+    // }
+    // if (!this.player.isOnGround && !this.cursor.space.isDown) {
+    //   this.player.fly();
+    // }
+    // if (this.isFalling(this.player)) {
+    //   this.player.fall();
+    // }
+
+    this.stabilizeTheCamera();
+    // this.removeDistantObstacles();
+
+    // spawn obstacles
+
+    const playerPosition = this.player.x;
+    const generatedWindow = 2000;
+
+    if (playerPosition + generatedWindow > this.generatedTo) {
+      this.getObstacle(this.generatedTo + generatedWindow / 2, this.map.heightInPixels / 2 - 64 / 2);  // this.player.y);
+      this.generatedTo += generatedWindow;
+      console.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y);
+      console.log('this.player, this.generated', playerPosition, this.generatedTo);
     }
+
+    // const yPosition = -16 - 75 - 1; // half of height and screen position
+    // const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
+    // const frame = [19, 19, 19, 19, 19, 18, 18, 18, 18, 29][this.dice()];
+    // this.spawnedObject += distance;
+    // let obstacle = this.obstacles.getFirstDead(false);
+    // if (!obstacle) {
+    //   obstacle = (new Obstacle(this, this.spawnedObject, yPosition, 'spritesheet-64', frame))
+    //     .setSize(50, 32)
+    //     .setDepth(1000);
+    //   this.obstacles.add(obstacle);
+    // }
+    // obstacle.spawn(this.spawnedObject, yPosition);
+
+    this.events.emit('debugMessage', time);
   }
 
   updateGround() {

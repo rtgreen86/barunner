@@ -6,7 +6,7 @@ import Player from '../entities/Player';
 
 import { checkType } from '../utils';
 
-const CAMERA_ZOOM = 1;
+const CAMERA_ZOOM = 0.5;
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;

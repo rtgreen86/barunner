@@ -1,14 +1,15 @@
-Свойства карты
+# Tilemap
 
-playerX [int] - номер тайла по горизонтали появления персонажа.
-playerY [int] - номер тайла по вертикале появления персонажа.
+## Map Properties
 
+**playerX**, **playerY** - (int) - player position tile coordinates.
 
-Свойства тайла
+## Tile Properties
 
-collides [bool] - коллайдер с персонажами
-
+**collides** - (bool) - is tile collide with sprites.
 
 ## Layer properties
 
-scrollFactorX (float) - scroll factor
+**scrollFactorX** - (float) - layer scroll factor.
+
+

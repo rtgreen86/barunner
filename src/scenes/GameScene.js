@@ -7,7 +7,7 @@ import Player from '../entities/Player';
 
 import { checkType } from '../utils';
 
-const CAMERA_ZOOM = 0.5;
+const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -72,10 +72,14 @@ export default class GameScene extends Phaser.Scene {
     this.backgroundImage = this.createMapBackground(this.map.images);
 
     // draft loading background layers
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0))
-    this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
+    this.backgroundLayers = this.add.group([
+      this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0)),
+      this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0)),
+      this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0)),
+      this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
+    ],
+    {runChildUpdate: true});
+
 
     // loading ground layer
 

@@ -12,7 +12,7 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
     this.draw(tilemapLayer);
     this.draw(tilemapLayer, tilemapLayer.width, 0);
 
-    this.scene.events.on('update', this.handleUpdate, this);
+    // this.scene.events.on('update', this.handleUpdate, this);
   }
 
   static create(scene, map, layerName, x, y) {
@@ -23,7 +23,7 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
     );
   }
 
-  handleUpdate() {
+  update() {
     const width = this.tilemapLayer.layer.widthInPixels;
     const cameraX = this.scene.cameras.main.scrollX * this.scrollFactorX;
     this.x = Math.floor(cameraX / width) * width;

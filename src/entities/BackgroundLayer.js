@@ -11,8 +11,6 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
 
     this.draw(tilemapLayer);
     this.draw(tilemapLayer, tilemapLayer.width, 0);
-
-    // this.scene.events.on('update', this.handleUpdate, this);
   }
 
   static create(scene, map, layerName, x, y) {

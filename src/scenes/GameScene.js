@@ -61,10 +61,15 @@ export default class GameScene extends Phaser.Scene {
     // Draft loading images from tilemap
     const width = this.game.config.width;
     const height = this.game.config.height;
-    this.backgroundImage = this.add.group(
-      this.map.images.map(image => this.add.existing(new BackgroundTileSprite(this, image, width, height))),
-      {runChildUpdate: true}
-    );
+
+
+
+    // this.backgroundImage = this.add.group(
+    //   this.map.images.map(image => this.add.existing(new BackgroundTileSprite(this, image, width, height))),
+    //   {runChildUpdate: true}
+    // );
+
+    this.backgroundImage = this.createMapBackground(this.map.images);
 
     // draft loading background layers
     this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0))
@@ -75,6 +80,21 @@ export default class GameScene extends Phaser.Scene {
     // loading ground layer
 
     this.createGroundLayer('ground', 0, 0);
+  }
+
+  createMapBackground(images) {
+    const width = this.game.config.width;
+    const height = this.game.config.height;
+
+    return this.add.group(
+
+      images
+        .map(image => new BackgroundTileSprite(this, image, width, height))
+        .map(layer => this.add.existing(layer)),
+
+      {runChildUpdate: true}
+
+    );
   }
 
   createObstacles() {

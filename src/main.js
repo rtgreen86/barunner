@@ -34,5 +34,4 @@ window.game = new Phaser.Game({
       height: 720
     }
   },
-
 });

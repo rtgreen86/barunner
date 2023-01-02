@@ -30,6 +30,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init() {
+    this.debugScene = this.scene.get('DebugScene');
+    this.debugScene.log('GameScene.init()');
+
     // need for create and delete obstacles
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 500;
@@ -47,6 +50,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.debugScene.log('GameScene.create()');
+
     this.map = this.createMap();
     this.createBackgroundTileSprite(this.map.images);
     this.createBackgrounLayers(this.map.layers);
@@ -303,8 +308,8 @@ export default class GameScene extends Phaser.Scene {
     if (playerPosition + generatedWindow > this.generatedTo) {
       this.getObstacle(this.generatedTo + generatedWindow / 2, this.map.heightInPixels / 2 - 64 / 2);  // this.player.y);
       this.generatedTo += generatedWindow;
-      console.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y);
-      console.log('this.player, this.generated', playerPosition, this.generatedTo);
+      this.debugScene.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y)
+      this.debugScene.log('this.player, this.generated', playerPosition, this.generatedTo);
     }
 
     // const yPosition = -16 - 75 - 1; // half of height and screen position
@@ -320,7 +325,7 @@ export default class GameScene extends Phaser.Scene {
     // }
     // obstacle.spawn(this.spawnedObject, yPosition);
 
-    this.events.emit('debugMessage', time);
+    // this.events.emit('debugMessage', time);
   }
 
   updateGround() {

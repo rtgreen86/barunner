@@ -13,6 +13,11 @@
          "parallaxx":0.1,
          "properties":[
                 {
+                 "name":"class",
+                 "type":"string",
+                 "value":"BackgroundTileSprite"
+                }, 
+                {
                  "name":"depth",
                  "type":"int",
                  "value":-60
@@ -42,6 +47,11 @@
          "opacity":1,
          "parallaxx":0.15,
          "properties":[
+                {
+                 "name":"class",
+                 "type":"string",
+                 "value":"BackgroundTileSprite"
+                }, 
                 {
                  "name":"depth",
                  "type":"int",
@@ -87,6 +97,11 @@
          "parallaxx":0.2,
          "properties":[
                 {
+                 "name":"class",
+                 "type":"string",
+                 "value":"BackgroundLayer"
+                }, 
+                {
                  "name":"depth",
                  "type":"int",
                  "value":-40
@@ -125,6 +140,11 @@
          "opacity":1,
          "parallaxx":0.25,
          "properties":[
+                {
+                 "name":"class",
+                 "type":"string",
+                 "value":"BackgroundLayer"
+                }, 
                 {
                  "name":"depth",
                  "type":"int",
@@ -165,6 +185,11 @@
          "parallaxx":0.3,
          "properties":[
                 {
+                 "name":"class",
+                 "type":"string",
+                 "value":"BackgroundLayer"
+                }, 
+                {
                  "name":"depth",
                  "type":"int",
                  "value":-20
@@ -203,6 +228,11 @@
          "opacity":1,
          "parallaxx":0.35,
          "properties":[
+                {
+                 "name":"class",
+                 "type":"string",
+                 "value":"BackgroundLayer"
+                }, 
                 {
                  "name":"depth",
                  "type":"int",

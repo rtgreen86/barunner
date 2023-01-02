@@ -67,6 +67,7 @@
  <imagelayer id="13" name="background-layer-1" offsetx="0" offsety="738" parallaxx="0.1" repeatx="1">
   <image source="../images/background-layer-1.png" width="533" height="350"/>
   <properties>
+   <property name="class" value="BackgroundTileSprite"/>
    <property name="depth" type="int" value="-60"/>
    <property name="textureKey" value="background-layer-1"/>
    <property name="textureScrollFactorX" type="float" value="0.1"/>
@@ -75,6 +76,7 @@
  <imagelayer id="17" name="background-layer-2" offsetx="0" offsety="729" parallaxx="0.15" repeatx="1">
   <image source="../images/background-layer-2.png" width="533" height="350"/>
   <properties>
+   <property name="class" value="BackgroundTileSprite"/>
    <property name="depth" type="int" value="-50"/>
    <property name="textureKey" value="background-layer-2"/>
    <property name="textureScrollFactorX" type="float" value="0.2"/>
@@ -82,6 +84,7 @@
  </imagelayer>
  <layer id="15" name="background4" width="32" height="16" parallaxx="0.2">
   <properties>
+   <property name="class" value="BackgroundLayer"/>
    <property name="depth" type="int" value="-40"/>
    <property name="scrollFactorX" type="float" value="0.2"/>
   </properties>
@@ -106,6 +109,7 @@
  </layer>
  <layer id="14" name="background3" width="32" height="16" parallaxx="0.25">
   <properties>
+   <property name="class" value="BackgroundLayer"/>
    <property name="depth" type="int" value="-30"/>
    <property name="scrollFactorX" type="float" value="0.25"/>
   </properties>
@@ -130,6 +134,7 @@
  </layer>
  <layer id="12" name="background2" width="32" height="16" parallaxx="0.3">
   <properties>
+   <property name="class" value="BackgroundLayer"/>
    <property name="depth" type="int" value="-20"/>
    <property name="scrollFactorX" type="float" value="0.3"/>
   </properties>
@@ -154,6 +159,7 @@
  </layer>
  <layer id="16" name="background1" width="32" height="16" parallaxx="0.35">
   <properties>
+   <property name="class" value="BackgroundLayer"/>
    <property name="depth" type="int" value="-10"/>
    <property name="scrollFactorX" type="float" value="0.35"/>
   </properties>

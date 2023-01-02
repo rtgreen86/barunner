@@ -5,6 +5,8 @@ import BackgroundLayer from '../entities/BackgroundLayer';
 import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 
+import { getPropertyValueByName } from '../PropertiesSelector';
+
 import { checkType } from '../utils';
 
 const CAMERA_ZOOM = 1;
@@ -45,7 +47,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.createMap();
+    this.map = this.createMap();
+    this.createBackgroundTileSprite(this.map.images);
+    this.createBackgrounLayers(this.map.layers);
+    this.createGroundLayer('ground', 0, 0);
     this.createPlayer();
     this.createControls();
     this.createObstacles();
@@ -55,44 +60,19 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createMap() {
-    this.map = this.add.tilemap('map-level-1');
-    this.map.tilesets.forEach(tileset => this.map.addTilesetImage(tileset.name, tileset.name));
-
-    // Draft loading images from tilemap
-    const width = this.game.config.width;
-    const height = this.game.config.height;
-
-
-
-    // this.backgroundImage = this.add.group(
-    //   this.map.images.map(image => this.add.existing(new BackgroundTileSprite(this, image, width, height))),
-    //   {runChildUpdate: true}
-    // );
-
-    this.backgroundImage = this.createMapBackground(this.map.images);
-
-    // draft loading background layers
-    this.backgroundLayers = this.add.group([
-      this.add.existing(BackgroundLayer.create(this, this.map, 'background1', 0, 0)),
-      this.add.existing(BackgroundLayer.create(this, this.map, 'background2', 0, 0)),
-      this.add.existing(BackgroundLayer.create(this, this.map, 'background3', 0, 0)),
-      this.add.existing(BackgroundLayer.create(this, this.map, 'background4', 0, 0))
-    ],
-    {runChildUpdate: true});
-
-
-    // loading ground layer
-
-    this.createGroundLayer('ground', 0, 0);
+    const map = this.add.tilemap('map-level-1');
+    map.tilesets.forEach(tileset => map.addTilesetImage(tileset.name, tileset.name));
+    return map;
   }
 
-  createMapBackground(images) {
+  createBackgroundTileSprite(images) {
     const width = this.game.config.width;
     const height = this.game.config.height;
 
     return this.add.group(
 
       images
+        .filter(image => getPropertyValueByName(image.properties, 'class') === 'BackgroundTileSprite')
         .map(image => new BackgroundTileSprite(this, image, width, height))
         .map(layer => this.add.existing(layer)),
 
@@ -100,6 +80,27 @@ export default class GameScene extends Phaser.Scene {
 
     );
   }
+
+  createBackgrounLayers(layersData) {
+    return this.add.group(
+
+      layersData
+        .filter(layerData => getPropertyValueByName(layerData.properties, 'class') === 'BackgroundLayer')
+        .map(layerData => BackgroundLayer.create(this, this.map, layerData.name, 0, 0))
+        .map(layer => this.add.existing(layer)),
+
+      {runChildUpdate: true}
+
+    );
+  }
+
+  createGroundLayer(layerName, x = 0, y = 0) {
+    const layer = this.map.createLayer(layerName, this.map.tilesets, x, y);
+    layer.setOrigin(0.5, 0.5);
+    layer.setScrollFactor(0, 1);
+    return layer;
+  }
+
 
   createObstacles() {
     this.obstacles = this.physics.add.group();
@@ -195,11 +196,6 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
-  createGroundLayer(layerName, x = 0, y = 0) {
-    const layer = this.map.createLayer(layerName, this.map.tilesets, x, y);
-    layer.setOrigin(0.5, 0.5);
-    layer.setScrollFactor(0, 1);
-  }
 
   createPlayer() {
     const playerX = this.map.properties.find(prop => prop.name === 'playerX');

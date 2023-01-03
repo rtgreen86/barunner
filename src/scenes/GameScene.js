@@ -9,7 +9,7 @@ import { getPropertyValueByName } from '../PropertiesSelector';
 
 import { checkType } from '../utils';
 
-const CAMERA_ZOOM = 1;
+const CAMERA_ZOOM = 0.3;
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -324,9 +324,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateObjects() {
-    if (this.player.direction === 'right' && this.generatedRight + 2000 < this.cameras.main.scrollX + SPAWN_DISTANCE) {
-      this.generatedRight += 2000;
-      const x = this.generatedRight;
+    const zero = this.player.x;
+
+
+    if (this.player.direction === 'right' && this.generatedRight + 2000 < zero + SPAWN_DISTANCE) {
+      const x = this.generatedRight + 2000;
       const y = (this.map.heightInPixels / 2) - 64 / 2;
       this.obstacles2.shuffle();
       const obstacle = this.obstacles2.getFirstDead(true, x, y)
@@ -338,13 +340,31 @@ export default class GameScene extends Phaser.Scene {
       this.debugScene.log(`generate object right at ${this.generatedRight}, total: ${this.obstacles2.getLength()}, active ${this.obstacles2.countActive()}`);
     }
 
+    if (this.player.direction === 'left' && this.generatedLeft - 2000 > zero - SPAWN_DISTANCE) {
+      const x = this.generatedLeft - 2000;
+      const y = (this.map.heightInPixels / 2) - 64 / 2;
+      this.obstacles2.shuffle();
+      const obstacle = this.obstacles2.getFirstDead(true, x, y)
+        .setSize(64, 64)
+        .setOrigin(0.5, 0.5)
+        .setActive(true)
+        .setVisible(true);
+      this.physics.world.enable(obstacle);
+      this.debugScene.log(`generate object left at ${this.generatedRight}, total: ${this.obstacles2.getLength()}, active ${this.obstacles2.countActive()}`);
+    }
+
     this.obstacles2.getMatching('active', true).forEach(obstacle => {
-      if (obstacle.x < this.cameras.main.scrollX - SPAWN_DISTANCE || obstacle.x > this.cameras.main.scrollX + SPAWN_DISTANCE) {
+      if (obstacle.x < zero - SPAWN_DISTANCE || obstacle.x > zero + SPAWN_DISTANCE) {
         this.obstacles2.killAndHide(obstacle);
         this.physics.world.disable(obstacle)
         this.debugScene.log('kill obstacle');
       }
     });
+
+    this.generatedLeft = this.obstacles2.getMatching('active', true).reduce((min, obstacle) => Math.min(min, obstacle.x), zero);
+    this.generatedRight = this.obstacles2.getMatching('active', true).reduce((max, obstacle) => Math.max(max, obstacle.x), zero);
+
+    this.debugScene.log(`${this.generatedLeft}, ${this.generatedRight}`)
   }
 
   updateGround() {

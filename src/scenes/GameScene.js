@@ -18,7 +18,7 @@ const CAMERA_MOVE_LERP = 0.4;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
-// const SPAWN_DISTANCE = 10000;
+const SPAWN_DISTANCE = 2000;
 
 const DEADLINE_OFFSET = -100;
 
@@ -37,7 +37,6 @@ export default class GameScene extends Phaser.Scene {
     this.deadline = DEADLINE_OFFSET;
     this.spawnedObject = 500;
     this.generatedFrom = 0;
-    this.generatedTo = 1000;
 
     // old scene state
     this.paused = false;
@@ -62,6 +61,9 @@ export default class GameScene extends Phaser.Scene {
     this.createCollaider();
     this.createCamera();
     this.jumpSound = this.sound.add('jump');
+
+    this.generatedRight = this.cameras.main.scrollX;
+    this.generatedLeft = this.cameras.main.scrollX;
   }
 
   createMap() {
@@ -156,7 +158,7 @@ export default class GameScene extends Phaser.Scene {
       key: 'objects-spritesheet',
       frame: [2, 3],
       quantity: 4,
-      visible: true,
+      visible: false,
       active: false,
       // repeat: number,
       // randomKey: true,
@@ -236,6 +238,8 @@ export default class GameScene extends Phaser.Scene {
   update(time, delta) {
     this.updateGround();
     this.updatePlayer(time, delta);
+    this.updateObjects();
+
 
     this.updateDeadline();
     this.respawnObjects();
@@ -302,15 +306,6 @@ export default class GameScene extends Phaser.Scene {
 
     // spawn obstacles
 
-    const playerPosition = this.player.x;
-    const generatedWindow = 2000;
-
-    if (playerPosition + generatedWindow > this.generatedTo) {
-      this.getObstacle(this.generatedTo + generatedWindow / 2, this.map.heightInPixels / 2 - 64 / 2);  // this.player.y);
-      this.generatedTo += generatedWindow;
-      this.debugScene.log('Generated', this.generatedTo + generatedWindow / 2, this.player.y)
-      this.debugScene.log('this.player, this.generated', playerPosition, this.generatedTo);
-    }
 
     // const yPosition = -16 - 75 - 1; // half of height and screen position
     // const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
@@ -326,6 +321,30 @@ export default class GameScene extends Phaser.Scene {
     // obstacle.spawn(this.spawnedObject, yPosition);
 
     // this.events.emit('debugMessage', time);
+  }
+
+  updateObjects() {
+    if (this.player.direction === 'right' && this.generatedRight + 2000 < this.cameras.main.scrollX + SPAWN_DISTANCE) {
+      this.generatedRight += 2000;
+      const x = this.generatedRight;
+      const y = (this.map.heightInPixels / 2) - 64 / 2;
+      this.obstacles2.shuffle();
+      const obstacle = this.obstacles2.getFirstDead(true, x, y)
+        .setSize(64, 64)
+        .setOrigin(0.5, 0.5)
+        .setActive(true)
+        .setVisible(true);
+      this.physics.world.enable(obstacle);
+      this.debugScene.log(`generate object right at ${this.generatedRight}, total: ${this.obstacles2.getLength()}, active ${this.obstacles2.countActive()}`);
+    }
+
+    this.obstacles2.getMatching('active', true).forEach(obstacle => {
+      if (obstacle.x < this.cameras.main.scrollX - SPAWN_DISTANCE || obstacle.x > this.cameras.main.scrollX + SPAWN_DISTANCE) {
+        this.obstacles2.killAndHide(obstacle);
+        this.physics.world.disable(obstacle)
+        this.debugScene.log('kill obstacle');
+      }
+    });
   }
 
   updateGround() {

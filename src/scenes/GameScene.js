@@ -9,7 +9,7 @@ import { getPropertyValueByName } from '../PropertiesSelector';
 
 import { checkType } from '../utils';
 
-const CAMERA_ZOOM = 0.3;
+const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -18,7 +18,7 @@ const CAMERA_MOVE_LERP = 0.4;
 const PLAYER_CAMERA_POSITION_X = -0.25;
 const PLAYER_CAMERA_POSITION_Y = 0.25;
 
-const SPAWN_DISTANCE = 2000;
+const SPAWN_DISTANCE = 4000;
 
 const DEADLINE_OFFSET = -100;
 
@@ -324,11 +324,16 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateObjects() {
+
+    const distances = [1000, 1500, 1500, 2000, 2000];
+    const dist = Phaser.Math.RND.pick(distances);
+    const max = Math.max(...distances);
+
     const zero = this.player.x;
 
 
-    if (this.player.direction === 'right' && this.generatedRight + 2000 < zero + SPAWN_DISTANCE) {
-      const x = this.generatedRight + 2000;
+    if (this.player.direction === 'right' && this.generatedRight + max < zero + SPAWN_DISTANCE) {
+      const x = this.generatedRight + dist;
       const y = (this.map.heightInPixels / 2) - 64 / 2;
       this.obstacles2.shuffle();
       const obstacle = this.obstacles2.getFirstDead(true, x, y)
@@ -337,11 +342,11 @@ export default class GameScene extends Phaser.Scene {
         .setActive(true)
         .setVisible(true);
       this.physics.world.enable(obstacle);
-      this.debugScene.log(`generate object right at ${this.generatedRight}, total: ${this.obstacles2.getLength()}, active ${this.obstacles2.countActive()}`);
+      this.debugScene.log(`generate object right at ${this.generatedRight}, dist ${dist}`);
     }
 
-    if (this.player.direction === 'left' && this.generatedLeft - 2000 > zero - SPAWN_DISTANCE) {
-      const x = this.generatedLeft - 2000;
+    if (this.player.direction === 'left' && this.generatedLeft - max > zero - SPAWN_DISTANCE) {
+      const x = this.generatedLeft - dist;
       const y = (this.map.heightInPixels / 2) - 64 / 2;
       this.obstacles2.shuffle();
       const obstacle = this.obstacles2.getFirstDead(true, x, y)
@@ -364,7 +369,6 @@ export default class GameScene extends Phaser.Scene {
     this.generatedLeft = this.obstacles2.getMatching('active', true).reduce((min, obstacle) => Math.min(min, obstacle.x), zero);
     this.generatedRight = this.obstacles2.getMatching('active', true).reduce((max, obstacle) => Math.max(max, obstacle.x), zero);
 
-    this.debugScene.log(`${this.generatedLeft}, ${this.generatedRight}`)
   }
 
   updateGround() {

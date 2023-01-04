@@ -47,11 +47,6 @@ export default class DebugScene extends Phaser.Scene {
       this.data.set('_speedTestTime', 0);
     }
 
-    const activeObstacles = this.watchScene.obstacles2.countActive();
-    const inactiveObstacles = this.watchScene.obstacles2.countActive(false);
-    const totalObstacles = this.watchScene.obstacles2.getLength();
-    this.data.set('obstacles', `active ${activeObstacles}; inactive ${inactiveObstacles}; total ${totalObstacles}`);
-
     const cameraX = Math.floor(this.watchScene.cameras.main.scrollX);
     const cameraY = Math.floor(this.watchScene.cameras.main.scrollY);
     this.data.set('camera position', `x ${cameraX}; y ${cameraY}`);

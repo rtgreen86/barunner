@@ -89,7 +89,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createObstacles() {
-    this.obstacles2 = this.physics.add.group({
+    this.obstacles = this.physics.add.group({
       gravityX: 0,
       gravityY: 0,
       maxVelocityX: 0,
@@ -101,7 +101,7 @@ export default class GameScene extends Phaser.Scene {
       defaultFrame: 2,
     });
 
-    this.obstacles2.createMultiple({
+    this.obstacles.createMultiple({
       key: 'objects-spritesheet',
       frame: [2, 3],
       quantity: 4,
@@ -118,11 +118,11 @@ export default class GameScene extends Phaser.Scene {
   createCollaider() {
     this.map.layers.forEach(layer => {
       this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
-      this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
+      this.physics.add.collider(this.obstacles, layer.tilemapLayer);
       this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
 
-    this.physics.add.collider(this.player, this.obstacles2, this.onPlayerCollideObstacle, null, this);
+    this.physics.add.collider(this.player, this.obstacles, this.onPlayerCollideObstacle, null, this);
   }
 
   createCamera() {
@@ -182,8 +182,8 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.direction === 'right' && this.generatedRight + max < zero + SPAWN_DISTANCE) {
       const x = this.generatedRight + dist;
       const y = (this.map.heightInPixels / 2) - 64 / 2;
-      this.obstacles2.shuffle();
-      const obstacle = this.obstacles2.getFirstDead(true, x, y)
+      this.obstacles.shuffle();
+      const obstacle = this.obstacles.getFirstDead(true, x, y)
         .setSize(64, 64)
         .setOrigin(0.5, 0.5)
         .setActive(true)
@@ -195,26 +195,26 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.direction === 'left' && this.generatedLeft - max > zero - SPAWN_DISTANCE) {
       const x = this.generatedLeft - dist;
       const y = (this.map.heightInPixels / 2) - 64 / 2;
-      this.obstacles2.shuffle();
-      const obstacle = this.obstacles2.getFirstDead(true, x, y)
+      this.obstacles.shuffle();
+      const obstacle = this.obstacles.getFirstDead(true, x, y)
         .setSize(64, 64)
         .setOrigin(0.5, 0.5)
         .setActive(true)
         .setVisible(true);
       this.physics.world.enable(obstacle);
-      this.debugScene.log(`generate object left at ${this.generatedRight}, total: ${this.obstacles2.getLength()}, active ${this.obstacles2.countActive()}`);
+      this.debugScene.log(`generate object left at ${this.generatedRight}, total: ${this.obstacles.getLength()}, active ${this.obstacles.countActive()}`);
     }
 
-    this.obstacles2.getMatching('active', true).forEach(obstacle => {
+    this.obstacles.getMatching('active', true).forEach(obstacle => {
       if (obstacle.x < zero - SPAWN_DISTANCE || obstacle.x > zero + SPAWN_DISTANCE) {
-        this.obstacles2.killAndHide(obstacle);
+        this.obstacles.killAndHide(obstacle);
         this.physics.world.disable(obstacle)
         this.debugScene.log('kill obstacle');
       }
     });
 
-    this.generatedLeft = this.obstacles2.getMatching('active', true).reduce((min, obstacle) => Math.min(min, obstacle.x), zero);
-    this.generatedRight = this.obstacles2.getMatching('active', true).reduce((max, obstacle) => Math.max(max, obstacle.x), zero);
+    this.generatedLeft = this.obstacles.getMatching('active', true).reduce((min, obstacle) => Math.min(min, obstacle.x), zero);
+    this.generatedRight = this.obstacles.getMatching('active', true).reduce((max, obstacle) => Math.max(max, obstacle.x), zero);
   }
 
   updateGround() {

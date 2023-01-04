@@ -2,7 +2,6 @@ import Phaser from 'Phaser';
 
 import FILE_BACKGROUND_LAYER_1_PNG from '../../assets/images/background-layer-1.png'
 import FILE_BACKGROUND_LAYER_2_PNG from '../../assets/images/background-layer-2.png'
-import FILE_BACKGROUND_LAYER_3_PNG from '../../assets/images/background-layer-3.png'
 import FILE_LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
 import FILE_LEVEL_1_TILESET_PNG from '../../assets/images/level-1-tileset.png';
 import FILE_OBJECTS_JSON from '../../assets/images/objects.json';
@@ -17,10 +16,13 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.loadBackgrounds();
-    this.loadMaps();
-    this.loadSprites();
-    this.loadSounds();
+    this.load.image('background-layer-1', FILE_BACKGROUND_LAYER_1_PNG);
+    this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
+    this.load.image('level-1-tileset', FILE_LEVEL_1_TILESET_PNG);
+    this.load.aseprite('ram-spritesheet', FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
+    this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
+    this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
+    this.load.audio('jump', [FILE_JUMP_WAV]);
   }
 
   create() {
@@ -30,27 +32,5 @@ export default class BootScene extends Phaser.Scene {
       });
     }
     this.scene.run('GameScene');
-  }
-
-  loadBackgrounds() {
-    // used by tilemap
-    // TODO: delete not used
-    this.load.image('background-layer-1', FILE_BACKGROUND_LAYER_1_PNG);
-    this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
-    this.load.image('background-layer-3', FILE_BACKGROUND_LAYER_3_PNG);
-  }
-
-  loadMaps() {
-    this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
-    this.load.image('level-1-tileset', FILE_LEVEL_1_TILESET_PNG);
-  }
-
-  loadSprites() {
-    this.load.aseprite('ram-spritesheet', FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
-    this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
-  }
-
-  loadSounds() {
-    this.load.audio('jump', [FILE_JUMP_WAV]);
   }
 }

@@ -4,9 +4,6 @@ import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
 import Player from '../entities/Player';
 
-// TODO: move to scene
-import { getPropertyValueByName } from '../PropertiesSelector';
-
 const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -19,6 +16,10 @@ const PLAYER_CAMERA_POSITION_Y = 0.25;
 const SPAWN_DISTANCE = 4000;
 
 const START_FALLING_VELOCITY = 10;
+
+export const getPropertyByName = (props, propertyName, defaultValue) => props.find(prop => prop.name === propertyName) || defaultValue;
+
+export const getPropertyValueByName = (props, propertyName, defaultValue) => getPropertyByName(props, propertyName, { value: defaultValue}).value;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {

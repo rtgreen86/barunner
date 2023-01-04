@@ -80,15 +80,14 @@ export default class Player extends Physics.Arcade.Sprite {
     this.flipX = value === DIRECTION_LEFT;
   }
 
-  jumpStart() {
-    this.jumpTime = 0;
-    this.setVelocityY(this.jumpVelocity);
-    return this.play(ANIMATION_JUMP_UP);
-  }
-
-  jumpContinue(delta) {
-    this.jumpTime += delta;
-    if (this.jumpTime <= this.jumpMaxTime) {
+  jump(duration) {
+    const animName = this.anims.getName();
+    if (animName === ANIMATION_IDLE || animName === ANIMATION_RUN) {
+      this.play(ANIMATION_JUMP_UP);
+      this.jumpTime = duration;
+      this.setVelocityY(this.jumpVelocity);
+    }
+    if (animName === ANIMATION_JUMP_UP && duration - this.jumpTime <= this.jumpMaxTime) {
       this.setVelocityY(this.jumpVelocity);
     }
     return this;

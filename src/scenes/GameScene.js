@@ -224,9 +224,12 @@ export default class GameScene extends Phaser.Scene {
     this.map.layer.tilemapLayer.x = -offset;
   }
 
-  updatePlayer(time, delta) {
-    if (this.player.isJumping && (this.cursor.space.isDown || this.input.pointer1.isDown)) {
-      this.player.jumpContinue(delta);
+  updatePlayer() {
+    if (this.player.isJumping && this.cursor.space.isDown) {
+      this.player.jump(this.cursor.space.getDuration());
+    }
+    if (this.player.isJumping && this.input.pointer1.isDown) {
+      this.player.jump(this.input.pointer1.getDuration());
     }
     if (this.player.isJumping && !(this.cursor.space.isDown || this.input.pointer1.isDown)) {
       this.player.fly();
@@ -284,8 +287,11 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.isFalling) {
       this.player.landing();
     }
-    if (this.cursor.space.isDown || this.input.pointer1.isDown) {
-      this.player.jumpStart();
+    if (this.cursor.space.isDown) {
+      this.player.jump(this.cursor.space.getDuration());
+    }
+    if (this.input.pointer1.isDown) {
+      this.player.jump(this.input.pointer1.getDuration());
     }
     if (this.cursor.right.isDown || this.cursor.left.isDown) {
       this.player.run();

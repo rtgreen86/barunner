@@ -2,12 +2,10 @@ import Phaser from 'Phaser';
 
 import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
-import Obstacle from '../entities/Obstacle';
 import Player from '../entities/Player';
 
+// TODO: move to scene
 import { getPropertyValueByName } from '../PropertiesSelector';
-
-import { checkType } from '../utils';
 
 const CAMERA_ZOOM = 1;
 
@@ -20,9 +18,7 @@ const PLAYER_CAMERA_POSITION_Y = 0.25;
 
 const SPAWN_DISTANCE = 4000;
 
-const DEADLINE_OFFSET = -100;
-
-// const PLAYER_RESPAWN_TIMEOUT = 1000;
+const START_FALLING_VELOCITY = 10;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -31,26 +27,9 @@ export default class GameScene extends Phaser.Scene {
 
   init() {
     this.debugScene = this.scene.get('DebugScene');
-    this.debugScene.log('GameScene.init()');
-
-    // need for create and delete obstacles
-    this.deadline = DEADLINE_OFFSET;
-    this.spawnedObject = 500;
-    this.generatedFrom = 0;
-
-    // old scene state
-    this.paused = false;
-
-    // old player status
-    this.timeOfDeath = null;
-
-    // need for isFalling
-    this.startFallingVelocity = 10;
   }
 
   create() {
-    this.debugScene.log('GameScene.create()');
-
     this.map = this.createMap();
     this.createBackgroundTileSprite(this.map.images);
     this.createBackgrounLayers(this.map.layers);
@@ -108,40 +87,7 @@ export default class GameScene extends Phaser.Scene {
     return layer;
   }
 
-
   createObstacles() {
-    this.obstacles = this.physics.add.group();
-
-    // this.obstacles2 = this.physics.add.group({
-    //   gravityX: 0,
-    //   gravityY: 0,
-    //   maxVelocityX: 0,
-    //   maxVelocityY: 0,
-    //   velocityX: 0,
-    //   velocityY: 0,
-    //   immovable: true
-    // });
-
-    // const obs = this.level.objects[0].objects[0];
-
-    // this.obstacles2 = this.physics.add.group({
-    //   // classType: function,
-    //   key: 'objects-spritesheet',
-    //   frame: [2, 3],
-    //   // quantity: number,
-    //   visible: true,
-    //   active: false,
-    //   // repeat: number,
-    //   // randomKey: true,
-    //   randomFrame: true,
-    //   // frameQuantity: number,
-    //   // max: number,
-    //   setOrigin: {
-    //     x: 0.5,
-    //     y: 0.75
-    //   }
-    // });
-
     this.obstacles2 = this.physics.add.group({
       gravityX: 0,
       gravityY: 0,
@@ -160,28 +106,15 @@ export default class GameScene extends Phaser.Scene {
       quantity: 4,
       visible: false,
       active: false,
-      // repeat: number,
-      // randomKey: true,
       randomFrame: true,
-      // frameQuantity: number,
-      // max: number,
       setOrigin: {
         x: 0.5,
         y: 0.75
       }
     });
-
-    this.obstacles2.shuffle();
   }
 
   createCollaider() {
-    // Do not collide with obstacles
-    // this.physics.add.collider(this.player, this.obstacles, null, this.onFacedObstacle, this);
-    // this.physics.add.collider(this.ground, this.player);
-    // this.physics.add.collider(this.ground, this.obstacles);
-
-    // collide with level
-
     this.map.layers.forEach(layer => {
       this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
       this.physics.add.collider(this.obstacles2, layer.tilemapLayer);
@@ -203,7 +136,6 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
-
   createPlayer() {
     const playerX = this.map.properties.find(prop => prop.name === 'playerX');
     const x = playerX.value * this.map.tileWidth;
@@ -214,9 +146,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createControls() {
-    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PAUSE, true, false);
-    this.pauseKey.on('down', this.onPauseKeyDown, this);
-
     this.numKeys = {
       key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
       key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),
@@ -239,98 +168,15 @@ export default class GameScene extends Phaser.Scene {
     this.updateGround();
     this.updatePlayer(time, delta);
     this.updateObjects();
-
-
-    this.updateDeadline();
-    this.respawnObjects();
-
-    // if (this.player.isDead && !this.timeOfDeath) {
-    //   this.timeOfDeath = time;
-    //   this.playerAlive = false;
-    // }
-
-    // Respawn
-    // if (
-    //   !this.playerAlive &&
-    //   this.controller.isJumpDown &&
-    //   time - this.timeOfDeath >= PLAYER_RESPAWN_TIMEOUT
-    // ) {
-    //   this.respawnScene();
-    // }
-
-    // on the ground
-
-    // if (this.cursor.right.isDown && this.canPlayerRun()) {
-    //   this.player.run('forward');
-    //   this.player.isRunning = true;
-    // }
-    // if (this.cursor.left.isDown && this.canPlayerRun()) {
-    //   this.player.run('backward');
-    //   this.player.isRunning = true;
-    // }
-    // if (this.cursor.down.isDown && this.canRun()) {
-    //   this.player.takeoffRun();
-    //   this.player.isRunning = true;
-    // }
-    // if (this.player.isOnGround && !this.player.isRunning) {
-    //   this.player.idle();
-    // }
-
-    // this.player.update(time, delta);
-
-    // const playerOnGround = this.isisOnGround(this.player);
-
-    // if (!playerOnGround) {
-    //   this.player.fall();
-    // }
-    // if (playerOnGround && this.player.isFalling) {
-    //   this.player.landing();
-    // }
-
-    // if (playerOnGround) {
-    //   this.player.idle();
-    // }
-
-    // if (this.cursor.space.isDown && this.player.isJumping) {
-    //   this.player.continueJump(delta);
-    // }
-    // if (!this.player.isOnGround && !this.cursor.space.isDown) {
-    //   this.player.fly();
-    // }
-    // if (this.isFalling(this.player)) {
-    //   this.player.fall();
-    // }
-
     this.stabilizeTheCamera();
-    // this.removeDistantObstacles();
-
-    // spawn obstacles
-
-
-    // const yPosition = -16 - 75 - 1; // half of height and screen position
-    // const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
-    // const frame = [19, 19, 19, 19, 19, 18, 18, 18, 18, 29][this.dice()];
-    // this.spawnedObject += distance;
-    // let obstacle = this.obstacles.getFirstDead(false);
-    // if (!obstacle) {
-    //   obstacle = (new Obstacle(this, this.spawnedObject, yPosition, 'spritesheet-64', frame))
-    //     .setSize(50, 32)
-    //     .setDepth(1000);
-    //   this.obstacles.add(obstacle);
-    // }
-    // obstacle.spawn(this.spawnedObject, yPosition);
-
-    // this.events.emit('debugMessage', time);
   }
 
   updateObjects() {
-
     const distances = [1000, 1500, 1500, 2000, 2000];
     const dist = Phaser.Math.RND.pick(distances);
     const max = Math.max(...distances);
 
     const zero = this.player.x;
-
 
     if (this.player.direction === 'right' && this.generatedRight + max < zero + SPAWN_DISTANCE) {
       const x = this.generatedRight + dist;
@@ -368,7 +214,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.generatedLeft = this.obstacles2.getMatching('active', true).reduce((min, obstacle) => Math.min(min, obstacle.x), zero);
     this.generatedRight = this.obstacles2.getMatching('active', true).reduce((max, obstacle) => Math.max(max, obstacle.x), zero);
-
   }
 
   updateGround() {
@@ -401,110 +246,8 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  getObstacle(x, y) {
-    return this.obstacles2
-      .shuffle()
-      .get(x, y)
-      .setActive(true)
-      .setSize(64, 64)
-      .setOrigin(0.5, 0.5);
-  }
-
-  copyTilesFrom(sourceLayer, x = 0, y = 0, width = 1, height = 1, destX = 0, destY = 0) {
-    for (let i = 0; i < width; i++) {
-      for (let j = 0; j < height; j++) {
-        const sourceTile = this.map.getTileAt(x + i, y + j, true, sourceLayer);
-        this.map.getTileAt(destX + i, destY + j, true).copy(sourceTile);
-      }
-    }
-  }
-
   isFalling(object) {
-    return object.body.velocity.y > this.startFallingVelocity;
-  }
-
-  clearChunk(chunkName) {
-    const levelLayer = this.getChunkLevel(chunkName)
-    const fromX = levelLayer.tilemapLayer.x;
-    const toX = fromX + levelLayer.tilemapLayer.width;
-    this.getActiveObstaclesInRange(fromX, toX).forEach(obstacle => this.obstacles2.kill(obstacle));
-  }
-
-  dice() {
-    return Math.floor(Math.random() * 10);
-  }
-
-  spawnBigObstacle() {
-    const yPosition = -16 - 75 - 1; // half of height and screen position
-    const distance = [350, 350, 350, 400, 400, 400, 500, 500, 600, 700][this.dice()];
-    const frame = [19, 19, 19, 19, 19, 18, 18, 18, 18, 29][this.dice()];
-    this.spawnedObject += distance;
-    let obstacle = this.obstacles.getFirstDead(false);
-    if (!obstacle) {
-      obstacle = (new Obstacle(this, this.spawnedObject, yPosition, 'spritesheet-64', frame))
-        .setSize(50, 32)
-        .setDepth(1000);
-      this.obstacles.add(obstacle);
-    }
-    obstacle.spawn(this.spawnedObject, yPosition);
-  }
-
-  killDeadlineCrossed() {
-    this.obstacles.children.each(obstacle => {
-      if (obstacle.x < this.deadline) {
-        obstacle.setActive(false).setVisible(false).setGravity(0);
-        this.physics.world.disable(obstacle);
-      }
-    });
-  }
-
-  respawnObjects() {
-    this.killDeadlineCrossed();
-    // while (this.spawnedObject < this.deadline + SPAWN_DISTANCE) {
-    //   this.spawnBigObstacle();
-    // }
-  }
-
-  respawnScene() {
-    this.player.respawn();
-    this.spawnedObject = this.player.x;
-    this.obstacles.children.each(obstacle => {
-      obstacle.setActive(false).setVisible(false).setGravity(0);
-      this.physics.world.disable(obstacle);
-    });
-    this.respawnObjects();
-    this.playerAlive = true;
-    this.timeOfDeath = null;
-  }
-
-  updateDeadline() {
-    this.deadline = this.cameras.main.scrollX + DEADLINE_OFFSET;
-  }
-
-  get playerChunk() {
-    return Math.floor(this.player.x / this.map.widthInPixels);
-  }
-
-  getLevelProperty = name => this.map.properties.find(prop => prop.name === name);
-
-  getLevelPropertyTyped = (name, type = 'string') => checkType(this.getLevelProperty(name), name, type);
-
-  getChunkLevel = chunkName => this.map.getLayer(`${chunkName}/level`);
-
-  getActiveObstaclesInRange = (fromX, toX) => this.obstacles2.getMatching('active', true).filter(obst => obst.x >= fromX && obst.x <= toX);
-
-  onPauseKeyDown() {
-    if (!this.paused) {
-      this.paused = true;
-      if (!this.player.isDead) {
-        this.player.idle();
-      }
-    } else {
-      this.paused = false;
-      if (!this.player.isDead) {
-        this.player.run();
-      }
-    }
+    return object.body.velocity.y > START_FALLING_VELOCITY;
   }
 
   onNumKeyDown(key) {
@@ -584,11 +327,5 @@ export default class GameScene extends Phaser.Scene {
     if (Math.abs(this.player.x - focusX) < error) {
       this.cameras.main.setLerp(CAMERA_STABLE_LERP, 0);
     }
-  }
-
-  removeDistantObstacles() {
-    const distance = 5000;
-    const distantObstacles = this.obstacles2.getMatching('active', true).filter(obst => obst.x < this.player.x - distance || obst.x > this.player.x + distance || obst.y < this.player.y - distance || obst.y > this.player.y + distance);
-    distantObstacles.forEach(obst => this.obstacles2.kill(obst));
   }
 }

@@ -3,6 +3,7 @@ import Phaser from 'Phaser';
 import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
 import Player from '../entities/Player';
+import Controller from '../entities/Controller';
 
 const CAMERA_ZOOM = 1;
 
@@ -147,6 +148,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createControls() {
+    this.controller = new Controller(this);
+
     this.numKeys = {
       key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
       key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),
@@ -158,11 +161,6 @@ export default class GameScene extends Phaser.Scene {
       key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
       key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
     };
-
-    // use Phaser.Input.Keyboard. KeyboardPlugin
-    // doc: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html
-    // An object containing the properties: up, down, left, right, space and shift.
-    this.cursor = this.input.keyboard.createCursorKeys();
   }
 
   update(time, delta) {
@@ -225,23 +223,23 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updatePlayer() {
-    if (this.player.isJumping && this.cursor.space.isDown) {
-      this.player.jump(this.cursor.space.getDuration());
+    if (this.player.isJumping && this.controller.cursor.space.isDown) {
+      this.player.jump(this.controller.cursor.space.getDuration());
     }
-    if (this.player.isJumping && this.input.pointer1.isDown) {
-      this.player.jump(this.input.pointer1.getDuration());
+    if (this.player.isJumping && this.controller.pointer.isDown) {
+      this.player.jump(this.controller.pointer.getDuration());
     }
-    if (this.player.isJumping && !(this.cursor.space.isDown || this.input.pointer1.isDown)) {
+    if (this.player.isJumping && !(this.controller.cursor.space.isDown || this.controller.pointer.isDown)) {
       this.player.fly();
     }
     if (this.isFalling(this.player)) {
       this.player.fall();
     }
-    if (this.cursor.right.isDown) {
+    if (this.controller.cursor.right.isDown) {
       this.player.direction = 'right';
       this.setCameraToRight();
     }
-    if (this.cursor.left.isDown) {
+    if (this.controller.cursor.left.isDown) {
       this.player.direction = 'left';
       this.setCameraToLeft();
     }
@@ -287,13 +285,13 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.isFalling) {
       this.player.landing();
     }
-    if (this.cursor.space.isDown) {
-      this.player.jump(this.cursor.space.getDuration());
+    if (this.controller.cursor.space.isDown) {
+      this.player.jump(this.controller.cursor.space.getDuration());
     }
-    if (this.input.pointer1.isDown) {
-      this.player.jump(this.input.pointer1.getDuration());
+    if (this.controller.pointer.isDown) {
+      this.player.jump(this.controller.pointer.getDuration());
     }
-    if (this.cursor.right.isDown || this.cursor.left.isDown) {
+    if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
       this.player.run();
     }
   }

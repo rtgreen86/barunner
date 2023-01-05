@@ -44,7 +44,13 @@ module.exports = [
     mode: 'development',
     devtool: 'inline-source-map',
     devServer: {
+      // for debug local
       host: 'localhost',
+
+      // for debug on phone
+      // allowedHosts: 'all',
+      // host: '192.168.217.141',
+
       port: 'auto',
       static: {
         directory: path.resolve(__dirname, 'dist'),

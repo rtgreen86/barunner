@@ -2,15 +2,16 @@ import Phaser from "Phaser";
 
 export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
   constructor(scene, tilemapLayer, x, y) {
-    super(scene, x, y, tilemapLayer.width * 2, tilemapLayer.height);
+    super(scene, x, y, tilemapLayer.width, tilemapLayer.height);
 
-    this.tilemapLayer = tilemapLayer;
-    for (const prop of this.tilemapLayer.layer.properties) {
+    for (const prop of tilemapLayer.layer.properties) {
       this[prop.name] = prop.value;
     }
 
+    this.tilemapLayer = tilemapLayer;
+    this.width = this.tilemapLayer.layer.widthInPixels - scene.game.config.width
+
     this.draw(tilemapLayer);
-    this.draw(tilemapLayer, tilemapLayer.width, 0);
   }
 
   static create(scene, map, layerName, x, y) {
@@ -22,8 +23,7 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
   }
 
   update() {
-    const width = this.tilemapLayer.layer.widthInPixels;
     const cameraX = this.scene.cameras.main.scrollX * this.scrollFactorX;
-    this.x = Math.floor(cameraX / width) * width;
+    this.x = Math.floor(cameraX / this.width) * this.width;
   }
 }

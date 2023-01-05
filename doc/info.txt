@@ -1,3 +1,17 @@
 Цвет для неба #87CEEB
 
 Размер тайла 128 на 128 пикселей
+
+Как отладить на телефоне
+
+https://developer.chrome.com/docs/devtools/remote-debugging/
+
+Open the Developer Options screen on your Android. See Configure On-Device Developer Options.
+
+Select Enable USB Debugging.
+
+On your development machine, open Chrome.
+
+Go to chrome://inspect#devices.
+
+Make sure that the Discover USB devices checkbox is enabled.

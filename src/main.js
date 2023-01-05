@@ -8,7 +8,7 @@ import './main.css';
 
 window.game = new Phaser.Game({
   title: 'Barunner',
-  version: '1.1.3-alpha',
+  version: '1.1.4',
   autoRound: true,
   autoFocus: true,
   autoCenter: true,
@@ -17,7 +17,7 @@ window.game = new Phaser.Game({
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true,
+      debug: false,
       gravity: { x: 0, y: 2000 }
     }
   },

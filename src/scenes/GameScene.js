@@ -282,9 +282,12 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.isRunning && this.controller.isActionDown) {
       this.player.jump(this.controller.getActionDuration());
     }
-    if (this.controller.isActionDown || this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
+    if (this.controller.isActionDown) {
       this.player.run();
       this.player.jump(this.controller.getActionDuration());
+    }
+    if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
+      this.player.run();
     }
   }
 

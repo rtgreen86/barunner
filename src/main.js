@@ -9,7 +9,7 @@ import './main.css';
 window.game = new Phaser.Game({
   title: 'Barunner',
   version: '1.1.4',
-  type: Phaser.WEBGL,
+  type: Phaser.AUTO,
   scene: [BootScene, GameScene, DebugScene],
   physics: {
     default: 'arcade',

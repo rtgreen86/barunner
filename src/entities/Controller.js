@@ -5,10 +5,11 @@ export default class Controller {
     // An object containing the properties: up, down, left, right, space and shift.
     this.cursor = scene.input.keyboard.createCursorKeys();
     this.pointer = scene.input.pointer1;
+    this.mouse = scene.input.activePointer;
   }
 
   get isActionDown() {
-    return this.cursor.space.isDown || this.pointer.isDown;
+    return this.cursor.space.isDown || this.pointer.isDown || this.mouse.isDown;
   }
 
   getActionDuration() {
@@ -17,6 +18,9 @@ export default class Controller {
     }
     if (this.pointer.isDown) {
       return this.pointer.getDuration();
+    }
+    if (this.mouse.isDown) {
+      return this.mouse.getDuration();
     }
     return 0;
   }

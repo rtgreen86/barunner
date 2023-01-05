@@ -8,7 +8,7 @@ import './main.css';
 
 window.game = new Phaser.Game({
   title: 'Barunner',
-  version: '1.1.4',
+  version: '1.1.5',
   type: Phaser.AUTO,
   scene: [BootScene, GameScene, DebugScene],
   physics: {

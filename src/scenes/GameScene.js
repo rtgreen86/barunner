@@ -143,7 +143,7 @@ export default class GameScene extends Phaser.Scene {
     const x = playerX.value * this.map.tileWidth;
     const playerY = this.map.properties.find(prop => prop.name === 'playerY');
     const y = playerY.value * this.map.tileHeight - Player.height / 2;
-    this.player = new Player(this, x, y, 'ram-spritesheet', 3, this.controller)
+    this.player = new Player(this, x, y, 'ram-spritesheet', 3)
     this.player.setDepth(2000);
   }
 
@@ -223,15 +223,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updatePlayer() {
-    if (this.player.isJumping && this.controller.cursor.space.isDown) {
-      this.player.jump(this.controller.cursor.space.getDuration());
+    if (this.player.isJumping && this.controller.isActionDown) {
+      this.player.jump(this.controller.getActionDuration());
     }
-    if (this.player.isJumping && this.controller.pointer.isDown) {
-      this.player.jump(this.controller.pointer.getDuration());
-    }
-    if (this.player.isJumping && !(this.controller.cursor.space.isDown || this.controller.pointer.isDown)) {
-      this.player.fly();
-    }
+    // if (this.player.isJumping && !(this.controller.cursor.space.isDown || this.controller.pointer.isDown)) {
+    //   this.player.fly();
+    // }
     if (this.isFalling(this.player)) {
       this.player.fall();
     }
@@ -285,11 +282,8 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.isFalling) {
       this.player.landing();
     }
-    if (this.controller.cursor.space.isDown) {
-      this.player.jump(this.controller.cursor.space.getDuration());
-    }
-    if (this.controller.pointer.isDown) {
-      this.player.jump(this.controller.pointer.getDuration());
+    if (this.controller.isActionDown) {
+      this.player.jump(this.controller.getActionDuration());
     }
     if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
       this.player.run();

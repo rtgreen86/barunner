@@ -6,4 +6,18 @@ export default class Controller {
     this.cursor = scene.input.keyboard.createCursorKeys();
     this.pointer = scene.input.pointer1;
   }
+
+  get isActionDown() {
+    return this.cursor.space.isDown || this.pointer.isDown;
+  }
+
+  getActionDuration() {
+    if (this.cursor.space.isDown) {
+      return this.cursor.space.getDuration();
+    }
+    if (this.pointer.isDown) {
+      return this.pointer.getDuration();
+    }
+    return 0;
+  }
 }

@@ -226,9 +226,6 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.isJumping && this.controller.isActionDown) {
       this.player.jump(this.controller.getActionDuration());
     }
-    // if (this.player.isJumping && !(this.controller.cursor.space.isDown || this.controller.pointer.isDown)) {
-    //   this.player.fly();
-    // }
     if (this.isFalling(this.player)) {
       this.player.fall();
     }

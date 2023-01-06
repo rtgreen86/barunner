@@ -4,6 +4,9 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
   constructor(scene, tilemapLayer, x, y) {
     super(scene, x, y, tilemapLayer.width, tilemapLayer.height);
 
+    this.scrollFactorX = 0;
+    this.autoScrollX = 0;
+
     for (const prop of tilemapLayer.layer.properties) {
       this[prop.name] = prop.value;
     }
@@ -22,8 +25,18 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
     );
   }
 
-  update() {
+  update(time) {
     const cameraX = this.scene.cameras.main.scrollX * this.scrollFactorX;
     this.x = Math.floor(cameraX / this.width) * this.width;
+
+    if (this.autoScrollX) {
+      this.x = (this.autoScrollX / 1000) * time;
+      if (this.x < this.width) {
+        this.x = this.x % this.width;
+      }
+      if (this.x > 0) {
+        this.x = (this.x - this.width) % this.width;
+      }
+    }
   }
 }

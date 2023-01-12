@@ -32,5 +32,6 @@ export default class BootScene extends Phaser.Scene {
       });
     }
     this.scene.run('GameScene');
+    this.scene.run('ScoreboardScene', { game: 'GameScene' });
   }
 }

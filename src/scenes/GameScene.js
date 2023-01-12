@@ -45,6 +45,10 @@ export default class GameScene extends Phaser.Scene {
 
     this.generatedRight = this.cameras.main.scrollX;
     this.generatedLeft = this.cameras.main.scrollX;
+
+    this.data.set('speed', 0);
+    this.data.set('distance', 0);
+    this.data.set('score', 0);
   }
 
   createMap() {
@@ -168,6 +172,13 @@ export default class GameScene extends Phaser.Scene {
     this.updatePlayer(time, delta);
     this.updateObjects();
     this.stabilizeTheCamera();
+
+
+    const playerX = this.player.x;
+    const distance = (playerX / 70);
+    this.data.set('distance', Math.floor(distance));
+
+
   }
 
   updateObjects() {

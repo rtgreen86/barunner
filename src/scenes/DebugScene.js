@@ -12,7 +12,7 @@ export default class DebugScene extends Phaser.Scene {
   }
 
   create() {
-    this.text = this.add.text(0, 0)
+    this.text = this.add.text(0, 40)
       .setFontSize('24px').setColor('black');
     this.keyObstacle = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O, true, false)
       .on('down', this.handleObstaclePressed, this);

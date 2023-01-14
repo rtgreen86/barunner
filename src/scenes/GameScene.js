@@ -49,12 +49,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.prevDistance = this.player.x;
 
-    this.data.set('lastTime', 0);
-    this.data.set('lastDistance', this.player.x);
     this.data.set('distance', 0);
-
-    this.data.set('speed', 0);
-    this.data.set('score', 0);
   }
 
   createMap() {
@@ -182,13 +177,7 @@ export default class GameScene extends Phaser.Scene {
 
     const distanceDiff = Math.max(this.player.x - this.prevDistance, 0);
     this.prevDistance = this.player.x;
-
     this.data.inc('distance', distanceDiff / 70);
-
-
-    if (time - this.data.values.lastTime > 1000) {
-      this.data.set('lastTime', time);
-    }
   }
 
   updateObjects() {

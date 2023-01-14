@@ -50,6 +50,7 @@ export default class GameScene extends Phaser.Scene {
     this.prevDistance = this.player.x;
 
     this.data.set('distance', 0);
+    this.data.set('beats', 0);
   }
 
   createMap() {
@@ -311,7 +312,11 @@ export default class GameScene extends Phaser.Scene {
     if (sideCollide) {
       this.player.setVelocityY(-1000);
       this.player.hurt();
+      this.data.inc('beats', 1);
     }
+
+
+
     return true;
   }
 

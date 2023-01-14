@@ -14,6 +14,14 @@ export default class ScoreboardScene extends Phaser.Scene {
       font: '32px Arial', color: '#ffffff',
       shadow: { offsetX: 2, offsetY: 2, fill: '#000000' }
     });
+    this.beatsText = this.add.text(350, 0, '', {
+      font: '32px Arial', color: '#ffffff',
+      shadow: { offsetX: 2, offsetY: 2, fill: '#000000' }
+    });
+
+    this.game.events.on('changedata-beats', (gameObject, value) => {
+      this.beatsText.setText('Beats: ' + value);
+    });
   }
 
   update() {
@@ -25,4 +33,6 @@ export default class ScoreboardScene extends Phaser.Scene {
       this.distanceText.setText('Distance: ' + distanceInKilometers.toFixed(2) + ' km');
     }
   }
+
+
 }

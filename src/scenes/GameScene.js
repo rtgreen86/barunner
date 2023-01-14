@@ -36,7 +36,8 @@ export default class GameScene extends Phaser.Scene {
     this.createBackgroundTileSprite(this.map.images);
     this.createBackgrounLayers(this.map.layers);
     this.createGroundLayer('ground', 0, 0);
-    this.createPlayer();
+    this.player = this.createPlayer();
+    this.playerStartPosition = this.player.x;
     this.createControls();
     this.createObstacles();
     this.createCollaider();
@@ -46,8 +47,13 @@ export default class GameScene extends Phaser.Scene {
     this.generatedRight = this.cameras.main.scrollX;
     this.generatedLeft = this.cameras.main.scrollX;
 
-    this.data.set('speed', 0);
+    this.prevDistance = this.player.x;
+
+    this.data.set('lastTime', 0);
+    this.data.set('lastDistance', this.player.x);
     this.data.set('distance', 0);
+
+    this.data.set('speed', 0);
     this.data.set('score', 0);
   }
 
@@ -147,8 +153,9 @@ export default class GameScene extends Phaser.Scene {
     const x = playerX.value * this.map.tileWidth;
     const playerY = this.map.properties.find(prop => prop.name === 'playerY');
     const y = playerY.value * this.map.tileHeight - Player.height / 2;
-    this.player = new Player(this, x, y, 'ram-spritesheet', 3)
-    this.player.setDepth(2000);
+    const player = new Player(this, x, y, 'ram-spritesheet', 3)
+    player.setDepth(2000);
+    return player;
   }
 
   createControls() {
@@ -173,12 +180,15 @@ export default class GameScene extends Phaser.Scene {
     this.updateObjects();
     this.stabilizeTheCamera();
 
+    const distanceDiff = Math.max(this.player.x - this.prevDistance, 0);
+    this.prevDistance = this.player.x;
 
-    const playerX = this.player.x;
-    const distance = (playerX / 70);
-    this.data.set('distance', Math.floor(distance));
+    this.data.inc('distance', distanceDiff / 70);
 
 
+    if (time - this.data.values.lastTime > 1000) {
+      this.data.set('lastTime', time);
+    }
   }
 
   updateObjects() {

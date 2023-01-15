@@ -1,5 +1,6 @@
 import Phaser from 'Phaser';
 
+import SplashScene from './scenes/SplashScene';
 import BootScene from './scenes/BootScene';
 import GameScene from './scenes/GameScene';
 import DebugScene from './scenes/DebugScene';
@@ -11,7 +12,7 @@ window.game = new Phaser.Game({
   title: 'Barunner',
   version: '1.1.5',
   type: Phaser.AUTO,
-  scene: [BootScene, GameScene, DebugScene, ScoreboardScene],
+  scene: [SplashScene, BootScene, GameScene, DebugScene, ScoreboardScene],
   physics: {
     default: 'arcade',
     arcade: {

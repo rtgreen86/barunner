@@ -12,7 +12,10 @@ import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
-    super('BootScene');
+    super({
+      key: 'BootScene',
+      active: true
+    });
   }
 
   preload() {

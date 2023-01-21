@@ -10,6 +10,8 @@ import FILE_RAM_SPRITESHEET_JSON from '../../assets/images/ram-spritesheet.json'
 import FILE_RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
 
+import FILE_BUTTON_GREEN_IMAGE from '../../assets/images/ui/button_green.png';
+
 export default class BootScene extends Phaser.Scene {
   constructor() {
     super({
@@ -26,6 +28,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
     this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
     this.load.audio('jump', [FILE_JUMP_WAV]);
+    this.load.image('button-green', FILE_BUTTON_GREEN_IMAGE);
   }
 
   create() {

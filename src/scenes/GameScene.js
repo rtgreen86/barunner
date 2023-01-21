@@ -51,8 +51,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.data.set('distance', 0);
     this.data.set('beats', 0);
-
-    this.button = this.add.image(100, 100, 'button-green').setScrollFactor(0, 0);
   }
 
   createMap() {

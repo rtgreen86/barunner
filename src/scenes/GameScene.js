@@ -172,6 +172,7 @@ export default class GameScene extends Phaser.Scene {
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false).on('down', () => {
       this.scene.run('MenuScene', { game: 'GameScene' });
       this.scene.pause('GameScene');
+      this.scene.sleep('ScoreboardScene');
     });
   }
 

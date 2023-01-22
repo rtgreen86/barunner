@@ -11,6 +11,7 @@ export default class MenuScene extends Phaser.Scene {
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false).on('down', () => {
       this.scene.stop('MenuScene');
       this.scene.resume('GameScene');
+      this.scene.wake('ScoreboardScene');
     });
   }
 }

@@ -24,11 +24,14 @@ export default class ScoreboardScene extends Phaser.Scene {
     this.button = this.add.image(300, 100, 'button-green').setScrollFactor(0, 0);
     this.buttonText = this.add.text(300, 100, 'Menu Menu', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
 
-    this.button1 = this.add.existing(new Button(this, 500, 100, 'button-x'));
+    const width = this.game.game.config.width;
+
+    this.button1 = this.add.existing(new Button(this, width - 64, 64, 'button-x'));
 
     this.button1.on('click', () => {
       this.scene.run('MenuScene', { game: 'GameScene' });
       this.scene.pause('GameScene');
+      this.scene.sleep('ScoreboardScene');
     })
 
     this.anims.createFromAseprite('switch');

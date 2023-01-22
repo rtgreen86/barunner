@@ -17,7 +17,7 @@ window.game = new Phaser.Game({
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true,
+      debug: false,
       gravity: { x: 0, y: 2000 }
     }
   },

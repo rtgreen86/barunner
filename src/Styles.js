@@ -6,3 +6,5 @@ export const uiText = {
 export const buttonText = {
   font: '32px Arial', color: '#ffffff',
 };
+
+export const buttonTintColor = 0x999999;

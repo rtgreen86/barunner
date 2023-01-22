@@ -168,6 +168,13 @@ export default class GameScene extends Phaser.Scene {
       key8: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT, true, false).on('down', this.onNumKeyDown, this),
       key9: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE, true, false).on('down', this.onNumKeyDown, this)
     };
+
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false).on('down', () => {
+      if (this.menu) return;
+      // this.menu = true;
+      this.scene.run('MenuScene', { game: 'GameScene' });
+      this.scene.pause('GameScene');
+    });
   }
 
   update(time, delta) {

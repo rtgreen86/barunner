@@ -37,11 +37,9 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    if (this.game.config.physics.arcade.debug) {
-      this.scene.run('DebugScene', {
-        watch: 'GameScene'
-      });
-    }
+    this.scene.run('DebugScene', {
+      watch: 'GameScene'
+    });
     this.scene.run('GameScene');
     this.scene.run('ScoreboardScene', { game: 'GameScene' });
   }

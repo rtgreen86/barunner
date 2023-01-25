@@ -6,6 +6,17 @@ export default class Controller {
     this.cursor = scene.input.keyboard.createCursorKeys();
     this.pointer = scene.input.pointer1;
     this.mouse = scene.input.activePointer;
+
+    scene.input.on('pointerdown', () => {
+      const dbg = scene.scene.get('DebugScene');
+      dbg.log('Pointer Down');
+    })
+
+    const scoreboardScene = scene.scene.get('ScoreboardScene');
+    scoreboardScene.input.on('pointerdown', () => {
+      const dbg = scene.scene.get('DebugScene');
+      dbg.log('Scoreboard pointer down');
+    })
   }
 
   get isActionDown() {

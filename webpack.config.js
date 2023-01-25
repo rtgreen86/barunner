@@ -65,7 +65,7 @@ module.exports = [
     name: 'prod',
     mode: 'production',
     output: {
-      filename: 'main.min.js',
+      filename: 'main.min.1.1.8.js',
       path: path.resolve(__dirname, 'dist'),
     },
   }, config),

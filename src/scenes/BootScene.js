@@ -37,9 +37,11 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.run('DebugScene', {
-      watch: 'GameScene'
-    });
+    // Run debug output
+    // this.scene.run('DebugScene', {
+    //   watch: 'GameScene'
+    // });
+
     this.scene.run('GameScene');
     this.scene.run('ScoreboardScene', { game: 'GameScene' });
   }

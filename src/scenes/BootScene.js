@@ -11,6 +11,7 @@ import FILE_RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
 
 import FILE_BUTTON_GREEN_IMAGE from '../../assets/images/ui/button_green_250.png';
+import FILE_BUTTON_GRAY_IMAGE from '../../assets/images/ui/button_gray_250.png';
 import FILE_BUTTON_X_IMAGE from '../../assets/images/ui/button_x_120.png';
 import FILE_SWITCH_IMAGE from '../../assets/images/ui/switch_100.png';
 import FILE_SWITCH_SPRITE from '../../assets/images/ui/switch_100.json';
@@ -32,6 +33,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
     this.load.audio('jump', [FILE_JUMP_WAV]);
     this.load.image('button-green', FILE_BUTTON_GREEN_IMAGE);
+    this.load.image('button-gray', FILE_BUTTON_GRAY_IMAGE);
     this.load.image('button-x', FILE_BUTTON_X_IMAGE);
     this.load.aseprite('switch', FILE_SWITCH_IMAGE, FILE_SWITCH_SPRITE);
   }

@@ -18,7 +18,7 @@ export default class MenuScene extends Phaser.Scene {
       this.scene.wake('ScoreboardScene');
     });
 
-    this.button = this.add.existing(new Button(this, 640, 200, 'button-green'));
+    this.button = this.add.existing(new Button(this, 640, 200, 'button-gray'));
 
     this.button.on('click', () => {
       this.scene.stop('MenuScene');
@@ -28,7 +28,8 @@ export default class MenuScene extends Phaser.Scene {
 
     this.add.text(640, 200, 'Continue', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
 
-    this.button1 = this.add.existing(new Button(this, 640, 300, 'button-green'));
+    this.button1 = this.add.existing(new Button(this, 640, 300, 'button-gray'));
+    this.button1.setStyle(Styles.redButton);
 
     this.add.text(640, 300, 'Reset', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
   }

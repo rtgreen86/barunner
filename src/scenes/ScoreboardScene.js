@@ -25,6 +25,8 @@ export default class ScoreboardScene extends Phaser.Scene {
 
     this.button1 = this.add.existing(new Button(this, width - 64, 64, 'button-x'));
 
+    this.button1.setStyle(Styles.yellowButton);
+
     this.button1.on('click', () => {
       this.scene.run('MenuScene', { game: 'GameScene' });
       this.scene.pause('GameScene');

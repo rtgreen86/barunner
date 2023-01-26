@@ -27,5 +27,9 @@ export default class MenuScene extends Phaser.Scene {
     });
 
     this.add.text(640, 200, 'Continue', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
+
+    this.button1 = this.add.existing(new Button(this, 640, 300, 'button-green'));
+
+    this.add.text(640, 300, 'Reset', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
   }
 }

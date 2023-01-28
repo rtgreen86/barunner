@@ -1,6 +1,5 @@
 import Phaser from 'Phaser';
 
-import Button from '../entities/Button';
 import Button2 from '../entities/Button2';
 
 import * as Styles from '../Styles';

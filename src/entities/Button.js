@@ -3,24 +3,20 @@ import Phaser from 'Phaser';
 import * as Styles from '../Styles';
 
 export default class Button extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, texture, frame, text = '') {
-    super(scene, x, y, [
-      scene.add.image(0, 0, texture, frame).setName('background'),
-      scene.add.text(0, 0, text, Styles.buttonText).setOrigin(0.5, 0.5).setName('text')
-    ]);
+  constructor(scene, x, y, texture, frame, caption = '') {
+    super(scene, x, y);
 
-    const background = this.getByName('background');
-    const width = background.width;
-    const height = background.height;
-
-    const dbg = this.scene.scene.get('DebugScene');
-    dbg.log(this.width + ' ' + width);
+    const background = scene.add.image(0, 0, texture, frame);
+    const text = scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.5);
 
     this.isDown = false;
     this.style = {};
+    this.background = background;
 
+    this.add([background, text]);
+    this.setSize(background.width, background.height);
     this.setScrollFactor(0, 0);
-    this.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
+    this.setInteractive();
 
     this.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
     this.on(Phaser.Input.Events.POINTER_OUT, this.handlePointerOut);
@@ -28,12 +24,12 @@ export default class Button extends Phaser.GameObjects.Container {
   }
 
   setDefault() {
-    this.getByName('background').setTint(this.style.default);
+    this.background.setTint(this.style.default);
     return this;
   }
 
   setPressed() {
-    this.getByName('background').setTint(this.style.pressed);
+    this.background.setTint(this.style.pressed);
     return this;
   }
 

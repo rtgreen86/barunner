@@ -1,6 +1,7 @@
 import Phaser from 'Phaser';
 
 import Button from '../entities/Button';
+import Button2 from '../entities/Button2';
 
 import * as Styles from '../Styles';
 
@@ -32,5 +33,7 @@ export default class MenuScene extends Phaser.Scene {
     this.button1.setStyle(Styles.redButton);
 
     this.add.text(640, 300, 'Reset', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
+
+    this.add.existing(new Button2(this, 640, 400, 'button-gray', 0, 'Hello World!').setStyle('greenButton'));
   }
 }

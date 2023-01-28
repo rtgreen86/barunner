@@ -2,7 +2,7 @@ import Phaser from 'Phaser';
 
 import * as Styles from '../Styles';
 
-export default class Button2 extends Phaser.GameObjects.Container {
+export default class Button extends Phaser.GameObjects.Container {
   constructor(scene, x, y, texture, frame, text = '') {
     super(scene, x, y, [
       new Phaser.GameObjects.Image(scene, 0, 0, texture, frame).setName('background'),

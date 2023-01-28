@@ -1,6 +1,6 @@
 import Phaser from 'Phaser';
 
-import Button2 from '../entities/Button2';
+import Button from '../entities/Button';
 
 import * as Styles from '../Styles';
 
@@ -18,7 +18,7 @@ export default class MenuScene extends Phaser.Scene {
       this.scene.wake('ScoreboardScene');
     });
 
-    this.add.existing(new Button2(this, 640, 200, 'button-gray', 0, 'Continue'))
+    this.add.existing(new Button(this, 640, 200, 'button-gray', 0, 'Continue'))
       .setStyle('greenButton')
       .on('click', () => {
         this.scene.stop('MenuScene');
@@ -26,7 +26,7 @@ export default class MenuScene extends Phaser.Scene {
         this.scene.wake('ScoreboardScene');
       });
 
-    this.add.existing(new Button2(this, 640, 300, 'button-gray', 0, 'Reset'))
+    this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Reset'))
       .setStyle('redButton');
   }
 }

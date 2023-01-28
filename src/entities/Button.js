@@ -4,16 +4,16 @@ import * as Styles from '../Styles';
 
 export default class Button extends Phaser.GameObjects.Container {
   constructor(scene, x, y, texture, frame, caption = '') {
-    super(scene, x, y);
+    super(scene, x, y, [
+      scene.add.image(0, 0, texture, frame).setName('background'),
+      scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.5)
+    ]);
 
-    const background = scene.add.image(0, 0, texture, frame);
-    const text = scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.5);
+    const background = this.getByName('background');
 
     this.isDown = false;
     this.style = {};
-    this.background = background;
 
-    this.add([background, text]);
     this.setSize(background.width, background.height);
     this.setScrollFactor(0, 0);
     this.setInteractive();
@@ -24,12 +24,12 @@ export default class Button extends Phaser.GameObjects.Container {
   }
 
   setDefault() {
-    this.background.setTint(this.style.default);
+    this.getByName('background').setTint(this.style.default);
     return this;
   }
 
   setPressed() {
-    this.background.setTint(this.style.pressed);
+    this.getByName('background').setTint(this.style.pressed);
     return this;
   }
 

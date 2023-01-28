@@ -22,22 +22,13 @@ export default class ScoreboardScene extends Phaser.Scene {
     });
 
     const width = this.game.game.config.width;
-
-    this.button1 = this.add.existing(new Button(this, width - 64, 64, 'button-x'));
-
-    this.button1.setStyle('yellowButton');
-
-    this.button1.on('click', () => {
-      this.scene.run('MenuScene', { game: 'GameScene' });
-      this.scene.pause('GameScene');
-      this.scene.sleep('ScoreboardScene');
-    })
-
-    // This example of arrow used as cursor for buttons
-    // this.anims.createFromAseprite('switch');
-    // this.anims.get('blink').repeat = -1;
-    // this.switch = this.add.sprite(130, 100, 'switch', 0);
-    // this.switch.play('blink');
+    this.add.existing(new Button(this, width - 64, 64, 'button-x'))
+      .setStyle('yellowButton')
+      .on('click', () => {
+        this.scene.run('MenuScene', { game: 'GameScene' });
+        this.scene.pause('GameScene');
+        this.scene.sleep('ScoreboardScene');
+      });
   }
 
   update() {

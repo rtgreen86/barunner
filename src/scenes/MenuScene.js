@@ -19,21 +19,15 @@ export default class MenuScene extends Phaser.Scene {
       this.scene.wake('ScoreboardScene');
     });
 
-    this.button = this.add.existing(new Button(this, 640, 200, 'button-gray'));
+    this.add.existing(new Button2(this, 640, 200, 'button-gray', 0, 'Continue'))
+      .setStyle('greenButton')
+      .on('click', () => {
+        this.scene.stop('MenuScene');
+        this.scene.resume('GameScene');
+        this.scene.wake('ScoreboardScene');
+      });
 
-    this.button.on('click', () => {
-      this.scene.stop('MenuScene');
-      this.scene.resume('GameScene');
-      this.scene.wake('ScoreboardScene');
-    });
-
-    this.add.text(640, 200, 'Continue', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
-
-    this.button1 = this.add.existing(new Button(this, 640, 300, 'button-gray'));
-    this.button1.setStyle(Styles.redButton);
-
-    this.add.text(640, 300, 'Reset', Styles.buttonText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
-
-    this.add.existing(new Button2(this, 640, 400, 'button-gray', 0, 'Hello World!').setStyle('greenButton'));
+    this.add.existing(new Button2(this, 640, 300, 'button-gray', 0, 'Reset'))
+      .setStyle('redButton');
   }
 }

@@ -1,6 +1,6 @@
 import Phaser from 'Phaser';
 
-import Button from '../entities/Button';
+import Button from '../entities/Button2';
 
 import * as Styles from '../Styles';
 
@@ -25,7 +25,7 @@ export default class ScoreboardScene extends Phaser.Scene {
 
     this.button1 = this.add.existing(new Button(this, width - 64, 64, 'button-x'));
 
-    this.button1.setStyle(Styles.yellowButton);
+    this.button1.setStyle('yellowButton');
 
     this.button1.on('click', () => {
       this.scene.run('MenuScene', { game: 'GameScene' });

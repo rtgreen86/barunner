@@ -28,7 +28,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init() {
-    this.debugScene = this.scene.get('DebugScene');
+    this.debug = this.scene.get('DebugScene');
   }
 
   create() {
@@ -51,15 +51,17 @@ export default class GameScene extends Phaser.Scene {
 
     this.data.set('distance', 0);
     this.data.set('beats', 0);
+  }
 
+  update(time, delta) {
+    this.updateGround();
+    this.updatePlayer(time, delta);
+    this.updateObjects();
+    this.stabilizeTheCamera();
 
-
-    this.events.on('myEvent', () => {
-      this.debugScene.log('myEvent');
-    });
-
-
-    this.events.once('shutdown', this.handleShutdown);
+    const distanceDiff = Math.max(this.player.x - this.prevDistance, 0);
+    this.prevDistance = this.player.x;
+    this.data.inc('distance', distanceDiff / 70);
   }
 
   createMap() {
@@ -133,12 +135,12 @@ export default class GameScene extends Phaser.Scene {
 
   createCollaider() {
     this.map.layers.forEach(layer => {
-      this.physics.add.collider(this.player, layer.tilemapLayer, this.onPlayerCollideGround, null, this);
+      this.physics.add.collider(this.player, layer.tilemapLayer, this.handlePlayerCollideGround, null, this);
       this.physics.add.collider(this.obstacles, layer.tilemapLayer);
       this.map.setCollisionByProperty({ collides: true }, true, true, layer.name);
     });
 
-    this.physics.add.collider(this.player, this.obstacles, this.onPlayerCollideObstacle, null, this);
+    this.physics.add.collider(this.player, this.obstacles, this.handlePlayerCollideObstacle, null, this);
   }
 
   createCamera() {
@@ -185,16 +187,6 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
-  update(time, delta) {
-    this.updateGround();
-    this.updatePlayer(time, delta);
-    this.updateObjects();
-    this.stabilizeTheCamera();
-
-    const distanceDiff = Math.max(this.player.x - this.prevDistance, 0);
-    this.prevDistance = this.player.x;
-    this.data.inc('distance', distanceDiff / 70);
-  }
 
   updateObjects() {
     const distances = [1000, 1500, 1500, 2000, 2000];
@@ -213,7 +205,7 @@ export default class GameScene extends Phaser.Scene {
         .setActive(true)
         .setVisible(true);
       this.physics.world.enable(obstacle);
-      this.debugScene.log(`generate object right at ${this.generatedRight}, dist ${dist}`);
+      this.debug.log(`generate object right at ${this.generatedRight}, dist ${dist}`);
     }
 
     if (this.player.direction === 'left' && this.generatedLeft - max > zero - SPAWN_DISTANCE) {
@@ -226,14 +218,14 @@ export default class GameScene extends Phaser.Scene {
         .setActive(true)
         .setVisible(true);
       this.physics.world.enable(obstacle);
-      this.debugScene.log(`generate object left at ${this.generatedRight}, total: ${this.obstacles.getLength()}, active ${this.obstacles.countActive()}`);
+      this.debug.log(`generate object left at ${this.generatedRight}, total: ${this.obstacles.getLength()}, active ${this.obstacles.countActive()}`);
     }
 
     this.obstacles.getMatching('active', true).forEach(obstacle => {
       if (obstacle.x < zero - SPAWN_DISTANCE || obstacle.x > zero + SPAWN_DISTANCE) {
         this.obstacles.killAndHide(obstacle);
         this.physics.world.disable(obstacle)
-        this.debugScene.log('kill obstacle');
+        this.debug.log('kill obstacle');
       }
     });
 
@@ -304,37 +296,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  onPlayerCollideGround() {
-    if (this.player.isFalling) {
-      this.player.landing();
-    }
-    if (this.player.isRunning && this.controller.isActionDown) {
-      this.player.jump(this.controller.getActionDuration());
-    }
-    if (this.controller.isActionDown) {
-      this.player.run();
-      this.player.jump(this.controller.getActionDuration());
-    }
-    if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
-      this.player.run();
-    }
-  }
-
-  onPlayerCollideObstacle(player, obstacle) {
-    const { x: px, y: py } = player.getBottomRight();
-    const { x: ox, y: oy } = obstacle.getTopLeft();
-    const sideCollide = py - oy >= px - ox;
-    if (sideCollide) {
-      this.player.setVelocityY(-1000);
-      this.player.hurt();
-      this.data.inc('beats', 1);
-    }
-
-
-
-    return true;
-  }
-
   setCameraToRight() {
     this.setCameraOffset(
       this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
@@ -362,10 +323,32 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  handleShutdown(sys) {
-    const dbg = sys.scene.scene.get('DebugScene');
-    dbg.log('game shutdown');
-    const gameScene = sys.scene;
-    gameScene.events.off('myEvent');
+  handlePlayerCollideGround() {
+    if (this.player.isFalling) {
+      this.player.landing();
+    }
+    if (this.player.isRunning && this.controller.isActionDown) {
+      this.player.jump(this.controller.getActionDuration());
+    }
+    if (this.controller.isActionDown) {
+      this.player.run();
+      this.player.jump(this.controller.getActionDuration());
+    }
+    if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
+      this.player.run();
+    }
+  }
+
+  handlePlayerCollideObstacle(player, obstacle) {
+    const { x: px, y: py } = player.getBottomRight();
+    const { x: ox, y: oy } = obstacle.getTopLeft();
+    const sideCollide = py - oy >= px - ox;
+    if (sideCollide) {
+      this.player.setVelocityY(-1000);
+      this.player.hurt();
+      this.data.inc('beats', 1);
+    }
+
+    return true;
   }
 }

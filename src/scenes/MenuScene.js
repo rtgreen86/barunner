@@ -35,12 +35,5 @@ export default class MenuScene extends Phaser.Scene {
         ScoreboardScene.scene.restart();
         this.scene.stop('MenuScene');
       });
-
-    this.events.once('shutdown', this.handleShutdown);
-  }
-
-  handleShutdown(sys) {
-    const dbg = sys.scene.scene.get('DebugScene');
-    dbg.log('menu shutdown');
   }
 }

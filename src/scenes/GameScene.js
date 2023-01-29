@@ -365,5 +365,7 @@ export default class GameScene extends Phaser.Scene {
   handleShutdown(sys) {
     const dbg = sys.scene.scene.get('DebugScene');
     dbg.log('game shutdown');
+    const gameScene = sys.scene;
+    gameScene.events.off('myEvent');
   }
 }

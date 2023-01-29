@@ -51,6 +51,15 @@ export default class GameScene extends Phaser.Scene {
 
     this.data.set('distance', 0);
     this.data.set('beats', 0);
+
+
+
+    this.events.on('myEvent', () => {
+      this.debugScene.log('myEvent');
+    });
+
+
+
   }
 
   createMap() {

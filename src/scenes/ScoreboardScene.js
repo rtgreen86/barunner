@@ -29,6 +29,17 @@ export default class ScoreboardScene extends Phaser.Scene {
         this.scene.pause('GameScene');
         this.scene.sleep('ScoreboardScene');
       });
+
+
+    this.add.existing(new Button(this, width - 258, 64, 'button-x'))
+      .setStyle('redButton')
+      .on('click', () => {
+        const dbg = this.scene.get('DebugScene');
+        dbg.log('click1');
+        const gameScene = this.scene.get('GameScene');
+        gameScene.events.emit('myEvent');
+        dbg.log('click2');
+      });
   }
 
   update() {

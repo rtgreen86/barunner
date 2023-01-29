@@ -24,7 +24,7 @@ export default class MenuScene extends Phaser.Scene {
         this.scene.stop('MenuScene');
         this.scene.resume('GameScene');
         this.scene.wake('ScoreboardScene');
-      });
+      }).emit('keepAlive');
 
     this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Reset'))
       .setStyle('redButton')

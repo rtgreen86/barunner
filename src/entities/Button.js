@@ -21,6 +21,9 @@ export default class Button extends Phaser.GameObjects.Container {
     this.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
     this.on(Phaser.Input.Events.POINTER_OUT, this.handlePointerOut);
     this.on(Phaser.Input.Events.POINTER_UP, this.handlePointerUp);
+    this.on('keepAlive', this.handleKeepAlive);
+
+    this.debug = scene.scene.get('DebugScene');
   }
 
   setDefault() {
@@ -56,4 +59,18 @@ export default class Button extends Phaser.GameObjects.Container {
       this.emit('click');
     }
   }
+
+  shutdown() {
+    super.shutdown();
+    this.debug.log('button shutdown');
+  }
+
+  handleKeepAlive() {
+    this.debug.log('button keep a live');
+    setTimeout(() => {
+      this.debug.log('send');
+      this.emit('keepAlive')
+    }, 500);
+  }
+
 }

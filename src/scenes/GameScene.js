@@ -59,7 +59,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
 
-
+    this.events.once('shutdown', this.handleShutdown);
   }
 
   createMap() {
@@ -360,5 +360,10 @@ export default class GameScene extends Phaser.Scene {
     if (Math.abs(this.player.x - focusX) < error) {
       this.cameras.main.setLerp(CAMERA_STABLE_LERP, 0);
     }
+  }
+
+  handleShutdown(sys) {
+    const dbg = sys.scene.scene.get('DebugScene');
+    dbg.log('game shutdown');
   }
 }

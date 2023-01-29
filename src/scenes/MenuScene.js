@@ -27,6 +27,13 @@ export default class MenuScene extends Phaser.Scene {
       });
 
     this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Reset'))
-      .setStyle('redButton');
+      .setStyle('redButton')
+      .on('click', () => {
+        const gameScene = this.scene.get('GameScene');
+        gameScene.scene.restart();
+        const ScoreboardScene = this.scene.get('ScoreboardScene');
+        ScoreboardScene.scene.restart();
+        this.scene.stop('MenuScene');
+      });
   }
 }

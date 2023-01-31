@@ -32,7 +32,8 @@ export default class MenuScene extends Phaser.Scene {
         this.scene.stop('MenuScene');
         this.scene.resume('GameScene');
         this.scene.wake('ScoreboardScene');
-      });
+      })
+      .setFocus(true);
 
     const btn2 = this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Reset'))
       .setStyle('redButton')
@@ -44,9 +45,6 @@ export default class MenuScene extends Phaser.Scene {
         this.scene.stop('MenuScene');
       });
 
-    btn1.isFocus = true;
-    btn1.updateStatus();
-
     this.buttons.push(btn1);
     this.buttons.push(btn2);
 
@@ -55,7 +53,6 @@ export default class MenuScene extends Phaser.Scene {
       let activeIndex = this.buttons.findIndex(item => item.isFocus);
       if (activeIndex > -1) {
         this.buttons[activeIndex].isFocus = false
-        this.buttons[activeIndex].updateStatus();
       }
 
       activeIndex--;
@@ -65,14 +62,12 @@ export default class MenuScene extends Phaser.Scene {
       }
 
       this.buttons[activeIndex].isFocus = true
-      this.buttons[activeIndex].updateStatus();
     });
 
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, false, false).on(Phaser.Input.Keyboard.Events.DOWN, () => {
       let activeIndex = this.buttons.findIndex(item => item.isFocus);
       if (activeIndex > -1) {
         this.buttons[activeIndex].isFocus = false
-        this.buttons[activeIndex].updateStatus();
       }
 
       activeIndex++;
@@ -82,7 +77,6 @@ export default class MenuScene extends Phaser.Scene {
       }
 
       this.buttons[activeIndex].isFocus = true
-      this.buttons[activeIndex].updateStatus();
     });
 
     this.Enter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, false, false).on(Phaser.Input.Keyboard.Events.DOWN, () => {

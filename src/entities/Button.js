@@ -7,14 +7,13 @@ export default class Button extends Phaser.GameObjects.Container {
     super(scene, x, y, [
       scene.add.image(0, 0, texture, frame).setName('background'),
       scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.5),
-      scene.add.image(-125 - 50, 0, 'one-switch').setName('marker')
+      scene.add.image(-125 - 50, 0, 'one-switch').setName('marker').setVisible(false)
     ]);
 
     const background = this.getByName('background');
 
     this.isDown = false;
     this.style = {};
-    this.isFocus = false;
 
     this.setSize(background.width, background.height);
     this.setScrollFactor(0, 0);
@@ -29,6 +28,14 @@ export default class Button extends Phaser.GameObjects.Container {
     this.debug = scene.scene.get('DebugScene');
   }
 
+  get isFocus() {
+    return this.getByName('marker').visible;
+  }
+
+  set isFocus(value) {
+    this.getByName('marker').setVisible(value);
+  }
+
   setDefault() {
     this.getByName('background').setTint(this.style.default);
     return this;
@@ -36,6 +43,11 @@ export default class Button extends Phaser.GameObjects.Container {
 
   setPressed() {
     this.getByName('background').setTint(this.style.pressed);
+    return this;
+  }
+
+  setFocus(value) {
+    this.isFocus = value;
     return this;
   }
 

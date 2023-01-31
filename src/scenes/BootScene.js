@@ -15,6 +15,7 @@ import FILE_BUTTON_GRAY_IMAGE from '../../assets/images/ui/button_gray_250.png';
 import FILE_BUTTON_X_IMAGE from '../../assets/images/ui/button_x_120.png';
 import FILE_SWITCH_IMAGE from '../../assets/images/ui/switch_100.png';
 import FILE_SWITCH_SPRITE from '../../assets/images/ui/switch_100.json';
+import FILE_ONE_SWITCH from '../../assets/images/ui/one_switch.png';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -36,6 +37,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('button-gray', FILE_BUTTON_GRAY_IMAGE);
     this.load.image('button-x', FILE_BUTTON_X_IMAGE);
     this.load.aseprite('switch', FILE_SWITCH_IMAGE, FILE_SWITCH_SPRITE);
+    this.load.image('one-switch', FILE_ONE_SWITCH);
   }
 
   create() {

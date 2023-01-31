@@ -6,17 +6,20 @@ export default class Button extends Phaser.GameObjects.Container {
   constructor(scene, x, y, texture, frame, caption = '') {
     super(scene, x, y, [
       scene.add.image(0, 0, texture, frame).setName('background'),
-      scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.5)
+      scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.5),
+      scene.add.image(-125 - 50, 0, 'one-switch').setName('marker')
     ]);
 
     const background = this.getByName('background');
 
     this.isDown = false;
     this.style = {};
+    this.isFocus = false;
 
     this.setSize(background.width, background.height);
     this.setScrollFactor(0, 0);
     this.setInteractive();
+    this.updateStatus();
 
     this.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
     this.on(Phaser.Input.Events.POINTER_OUT, this.handlePointerOut);
@@ -40,6 +43,11 @@ export default class Button extends Phaser.GameObjects.Container {
     this.style = Styles[styleName] || {};
     this.setDefault();
     return this;
+  }
+
+  updateStatus() {
+    const marker = this.getByName('marker');
+    marker.setVisible(this.isFocus);
   }
 
   handlePointerDown() {

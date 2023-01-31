@@ -12,8 +12,7 @@ export default class MenuScene extends Phaser.Scene {
   create() {
     const debug = this.scene.get('DebugScene');
 
-
-    this.text = this.add.text(640, 100, 'Pause', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
+    this.add.text(640, 100, 'Пауза', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false).on('down', () => {
       this.scene.stop('MenuScene');
@@ -23,7 +22,7 @@ export default class MenuScene extends Phaser.Scene {
 
     this.buttons = [];
 
-    const btn1 = this.add.existing(new Button(this, 640, 200, 'button-gray', 0, 'Continue'))
+    const btn1 = this.add.existing(new Button(this, 640, 200, 'button-gray', 0, 'Продовжити'))
       .setStyle('greenButton')
       .on('click', () => {
 
@@ -35,7 +34,7 @@ export default class MenuScene extends Phaser.Scene {
       })
       .setFocus(true);
 
-    const btn2 = this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Reset'))
+    const btn2 = this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Спочатку'))
       .setStyle('redButton')
       .on('click', () => {
         const gameScene = this.scene.get('GameScene');

@@ -11,7 +11,7 @@ import './main.css';
 
 window.game = new Phaser.Game({
   title: 'Barunner',
-  version: '1.1.5',
+  version: '1.1.9',
   type: Phaser.AUTO,
   scene: [SplashScene, BootScene, GameScene, DebugScene, ScoreboardScene, MenuScene],
   physics: {

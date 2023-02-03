@@ -7,11 +7,13 @@ import DebugScene from './scenes/DebugScene';
 import ScoreboardScene from './scenes/ScoreboardScene';
 import MenuScene from './scenes/MenuScene';
 
+import packageJson from '../package.json';
+
 import './main.css';
 
 window.game = new Phaser.Game({
   title: 'Barunner',
-  version: '1.1.9',
+  version: packageJson.version,
   type: Phaser.AUTO,
   scene: [SplashScene, BootScene, GameScene, DebugScene, ScoreboardScene, MenuScene],
   physics: {

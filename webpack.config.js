@@ -17,11 +17,6 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.json$/,
-        loader: 'file-loader',
-        type: 'javascript/auto'
-      },
-      {
         test: /\.css$/,
         use: [
           'style-loader',

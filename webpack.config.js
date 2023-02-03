@@ -60,7 +60,7 @@ module.exports = [
     name: 'prod',
     mode: 'production',
     output: {
-      filename: 'main.min.1.1.9.js',
+      filename: '[name].[contenthash].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
   }, config),

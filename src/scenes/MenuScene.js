@@ -20,7 +20,7 @@ export default class MenuScene extends Phaser.Scene {
 
       this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Спочатку'))
         .setStyle('redButton')
-        .on('click', this.resetGame, this)
+        .on('click', this.gotoConfirm, this),
     ];
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, false, false).on('down', this.gotoGame, this);
@@ -35,12 +35,9 @@ export default class MenuScene extends Phaser.Scene {
     this.scene.wake('ScoreboardScene');
   }
 
-  resetGame() {
-    const gameScene = this.scene.get('GameScene');
-    gameScene.scene.restart();
-    const ScoreboardScene = this.scene.get('ScoreboardScene');
-    ScoreboardScene.scene.restart();
+  gotoConfirm() {
     this.scene.stop('MenuScene');
+    this.scene.run('ConfirmScene');
   }
 
   handleArrowKeyPressed(event) {

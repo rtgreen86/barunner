@@ -16,6 +16,8 @@ import FILE_BUTTON_X_IMAGE from '../../assets/images/ui/button_x_120.png';
 import FILE_SWITCH_IMAGE from '../../assets/images/ui/switch_100.png';
 import FILE_SWITCH_SPRITE from '../../assets/images/ui/switch_100.json';
 import FILE_ONE_SWITCH from '../../assets/images/ui/one_switch.png';
+import FILE_MODAL_BG from '../../assets/images/ui/modal-bg-800.png';
+import FILE_MODAL_FRAME from '../../assets/images/ui/modal-frame-800.png';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -38,6 +40,8 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('button-x', FILE_BUTTON_X_IMAGE);
     this.load.aseprite('switch', FILE_SWITCH_IMAGE, FILE_SWITCH_SPRITE);
     this.load.image('one-switch', FILE_ONE_SWITCH);
+    this.load.image('modal-bg', FILE_MODAL_BG);
+    this.load.image('modal-frame', FILE_MODAL_FRAME);
   }
 
   create() {

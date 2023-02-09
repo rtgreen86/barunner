@@ -10,6 +10,11 @@ export default class ConfirmScene extends Phaser.Scene {
   }
 
   create() {
+    this.add.image(640, 360, 'modal-bg');
+    this.add.image(640, 360, 'modal-frame');
+
+
+
     this.add.text(640, 100, 'Confirm Reset?', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
 
     this.buttons = [

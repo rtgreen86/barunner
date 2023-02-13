@@ -16,16 +16,19 @@ export default class ConfirmScene extends Phaser.Scene {
     this.add.text(640, 100, 'Confirm Reset?', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
 
     this.buttons = [
-      this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Yes'))
+      this.add.existing(new Button(this, 480, 500, 'button-gray', 0, 'Yes'))
         .setStyle('redButton')
         .on('click', this.resetGame, this),
 
-      this.add.existing(new Button(this, 640, 200, 'button-gray', 0, 'No'))
+      this.add.existing(new Button(this, 800, 500, 'button-gray', 0, 'No'))
         .setStyle('greenButton')
         .setFocus(true)
         .on('click', this.gotoMenu, this),
     ];
 
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleEnterKeyPressed, this);
   }
 
 
@@ -40,5 +43,32 @@ export default class ConfirmScene extends Phaser.Scene {
     const ScoreboardScene = this.scene.get('ScoreboardScene');
     ScoreboardScene.scene.restart();
     this.scene.stop('ConfirmScene');
+  }
+
+  handleArrowKeyPressed(event) {
+    let index = this.buttons.findIndex(item => item.isFocus);
+    if (index > -1) {
+      this.buttons[index].isFocus = false
+    }
+    if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.LEFT) {
+      index--;
+    }
+    if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.RIGHT) {
+      index++;
+    }
+    if (index < 0) {
+      index = this.buttons.length - 1;
+    }
+    if (index === this.buttons.length) {
+      index = 0;
+    }
+    this.buttons[index].isFocus = true
+  }
+
+  handleEnterKeyPressed() {
+    const activeIndex = this.buttons.findIndex(item => item.isFocus);
+    if (activeIndex > -1) {
+      this.buttons[activeIndex].emit('click');
+    }
   }
 }

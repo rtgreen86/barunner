@@ -30,7 +30,17 @@ export default class Button extends Phaser.GameObjects.Container {
   }
 
   set isFocus(value) {
+    this._focus = value;
+
     this.getByName('marker').setVisible(value);
+
+    if (value) {
+      this.scaleX = 1.3;
+      this.scaleY = 1.3;
+    } else {
+      this.scaleX = 1;
+      this.scaleY = 1;
+    }
   }
 
   setDefault() {

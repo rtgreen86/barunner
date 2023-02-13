@@ -10,6 +10,8 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create() {
+    this.add.image(640, 360, 'modal-dialog');
+
     this.add.text(640, 100, 'Пауза', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
 
     this.buttons = [

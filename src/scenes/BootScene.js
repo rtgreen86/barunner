@@ -18,6 +18,7 @@ import FILE_SWITCH_SPRITE from '../../assets/images/ui/switch_100.json';
 import FILE_ONE_SWITCH from '../../assets/images/ui/one_switch.png';
 import FILE_MODAL_BG from '../../assets/images/ui/modal-bg-800.png';
 import FILE_MODAL_FRAME from '../../assets/images/ui/modal-frame-800.png';
+import FILE_MODAL_DIALOG from '../../assets/images/dialog.png'
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -42,6 +43,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('one-switch', FILE_ONE_SWITCH);
     this.load.image('modal-bg', FILE_MODAL_BG);
     this.load.image('modal-frame', FILE_MODAL_FRAME);
+    this.load.image('modal-dialog', FILE_MODAL_DIALOG);
   }
 
   create() {

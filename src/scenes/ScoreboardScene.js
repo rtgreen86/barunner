@@ -15,7 +15,7 @@ export default class ScoreboardScene extends Phaser.Scene {
     const width = this.gameScene.game.config.width;
     this.add.text(0, 0, '', Styles.uiText).setName('DistanceText');
     this.add.text(350, 0, '', Styles.uiText).setName('BeatsText');
-    this.add.existing(new Button(this, width - 64, 64, 'button-x')).setStyle('yellowButton').on('click', this.openMenu, this);
+    this.add.existing(new Button(this, width - 64, 64, 'button-x')).on('click', this.openMenu, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false).on('down', this.openMenu, this);
     this.gameScene.events.on('changedata-beats', this.handleBeatsChanged, this);
     this.events.once('shutdown', this.handleShutdown, this);

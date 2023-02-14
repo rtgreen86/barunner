@@ -6,14 +6,13 @@ export default class Button extends Phaser.GameObjects.Container {
   constructor(scene, x, y, texture, frame, caption = '') {
     super(scene, x, y, [
       scene.add.image(0, 0, texture, frame).setName('background'),
-      scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.5),
+      scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.65),
       scene.add.image(-125 - 50, 0, 'one-switch').setName('marker').setVisible(false)
     ]);
 
     const background = this.getByName('background');
 
     this.isDown = false;
-    this.style = {};
 
     this.setSize(background.width, background.height);
     this.setScrollFactor(0, 0);
@@ -30,37 +29,21 @@ export default class Button extends Phaser.GameObjects.Container {
   }
 
   set isFocus(value) {
-    this._focus = value;
-
     this.getByName('marker').setVisible(value);
-
-    if (value) {
-      this.scaleX = 1.3;
-      this.scaleY = 1.3;
-    } else {
-      this.scaleX = 1;
-      this.scaleY = 1;
-    }
   }
 
   setDefault() {
-    this.getByName('background').setTint(this.style.default);
+    this.getByName('background').clearTint();
     return this;
   }
 
   setPressed() {
-    this.getByName('background').setTint(this.style.pressed);
+    this.getByName('background').setTint(Styles.buttonTintColor);
     return this;
   }
 
   setFocus(value) {
     this.isFocus = value;
-    return this;
-  }
-
-  setStyle(styleName) {
-    this.style = Styles[styleName] || {};
-    this.setDefault();
     return this;
   }
 

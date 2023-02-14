@@ -15,13 +15,11 @@ export default class MenuScene extends Phaser.Scene {
     this.add.text(640, 100, 'Пауза', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
 
     this.buttons = [
-      this.add.existing(new Button(this, 640, 200, 'button-gray', 0, 'Продовжити'))
-        .setStyle('greenButton')
+      this.add.existing(new Button(this, 640, 200, 'buttons', 0, 'Продовжити'))
         .setFocus(true)
         .on('click', this.gotoGame, this),
 
-      this.add.existing(new Button(this, 640, 300, 'button-gray', 0, 'Спочатку'))
-        .setStyle('redButton')
+      this.add.existing(new Button(this, 640, 300, 'buttons', 2, 'Спочатку'))
         .on('click', this.gotoConfirm, this),
     ];
 

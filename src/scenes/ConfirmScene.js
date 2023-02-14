@@ -13,15 +13,13 @@ export default class ConfirmScene extends Phaser.Scene {
     const i = this.add.image(640, 360, 'modal-dialog');
     i.angle = 90;
 
-    this.add.text(640, 100, 'Confirm Reset?', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
+    this.add.text(640, 200, 'Confirm Reset?', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
 
     this.buttons = [
-      this.add.existing(new Button(this, 480, 500, 'button-gray', 0, 'Yes'))
-        .setStyle('redButton')
+      this.add.existing(new Button(this, 480, 500, 'buttons', 2, 'Так'))
         .on('click', this.resetGame, this),
 
-      this.add.existing(new Button(this, 800, 500, 'button-gray', 0, 'No'))
-        .setStyle('greenButton')
+      this.add.existing(new Button(this, 800, 500, 'buttons', 0, 'Ні'))
         .setFocus(true)
         .on('click', this.gotoMenu, this),
     ];

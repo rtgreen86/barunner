@@ -9,17 +9,13 @@ import FILE_OBJECTS_PNG from '../../assets/images/objects.png';
 import FILE_RAM_SPRITESHEET_JSON from '../../assets/images/ram-spritesheet.json';
 import FILE_RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
-
-import FILE_BUTTON_GREEN_IMAGE from '../../assets/images/ui/button_green_250.png';
-import FILE_BUTTON_GRAY_IMAGE from '../../assets/images/ui/button_gray_250.png';
 import FILE_SWITCH_IMAGE from '../../assets/images/ui/switch_100.png';
 import FILE_SWITCH_SPRITE from '../../assets/images/ui/switch_100.json';
-import FILE_ONE_SWITCH from '../../assets/images/ui/one_switch.png';
-import FILE_MODAL_BG from '../../assets/images/ui/modal-bg-800.png';
-import FILE_MODAL_FRAME from '../../assets/images/ui/modal-frame-800.png';
 import FILE_MODAL_DIALOG from '../../assets/images/dialog.png'
 import FILE_BUTTONS from '../../assets/images/buttons.png';
 import FILE_BUTTON_X from '../../assets/images/button-x.png';
+import FILE_POINTER_JSON from '../../assets/images/pointer-64.json'
+import FILE_POINTER_PNG from '../../assets/images/pointer-64.png'
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -30,25 +26,29 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
+
     this.load.image('background-layer-1', FILE_BACKGROUND_LAYER_1_PNG);
     this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
     this.load.image('level-1-tileset', FILE_LEVEL_1_TILESET_PNG);
+    this.load.image('modal-dialog', FILE_MODAL_DIALOG);
+    this.load.image('button-x', FILE_BUTTON_X);
+
+    this.load.spritesheet('buttons', FILE_BUTTONS, { frameWidth: 256, frameHeight: 100 });
+
     this.load.aseprite('ram-spritesheet', FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
     this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
-    this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
-    this.load.audio('jump', [FILE_JUMP_WAV]);
-    this.load.image('button-green', FILE_BUTTON_GREEN_IMAGE);
-    this.load.image('button-gray', FILE_BUTTON_GRAY_IMAGE);
     this.load.aseprite('switch', FILE_SWITCH_IMAGE, FILE_SWITCH_SPRITE);
-    this.load.image('one-switch', FILE_ONE_SWITCH);
-    this.load.image('modal-bg', FILE_MODAL_BG);
-    this.load.image('modal-frame', FILE_MODAL_FRAME);
-    this.load.image('modal-dialog', FILE_MODAL_DIALOG);
-    this.load.spritesheet('buttons', FILE_BUTTONS, { frameWidth: 256, frameHeight: 100 });
-    this.load.image('button-x', FILE_BUTTON_X);
+    this.load.aseprite('pointer', FILE_POINTER_PNG, FILE_POINTER_JSON);
+
+    this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
+
+    this.load.audio('jump', [FILE_JUMP_WAV]);
   }
 
   create() {
+    this.anims.createFromAseprite('pointer');
+    this.anims.get('Bidirectional Pointer').repeat = -1;
+
     // Run debug output
     // this.scene.run('DebugScene', {
     //   watch: 'GameScene'

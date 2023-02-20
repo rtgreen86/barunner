@@ -2,22 +2,36 @@ import Phaser from 'Phaser';
 
 import * as Styles from '../Styles';
 
+const BUTTON_WIDTH = 250;
+const BUTTON_HALF_WIDTH = BUTTON_WIDTH / 2;
+const ARROW_WIDTH = 64;
+const ARROW_HALF_WIDTH = ARROW_WIDTH / 2;
+const ARROW_LEFT_POSITION = -BUTTON_HALF_WIDTH - ARROW_HALF_WIDTH;
+const ARROW_RIGHT_POSITION = BUTTON_HALF_WIDTH + ARROW_HALF_WIDTH;
+
 export default class Button extends Phaser.GameObjects.Container {
   constructor(scene, x, y, texture, frame, caption = '') {
     super(scene, x, y, [
-      scene.add.image(0, 0, texture, frame).setName('background'),
-      scene.add.text(0, 0, caption, Styles.buttonText).setOrigin(0.5, 0.65),
-      scene.add.image(-125 - 50, 0, 'one-switch').setName('marker').setVisible(false)
+      scene.add.image(0, 0, texture, frame)
+        .setName('background'),
+
+      scene.add.text(0, 0, caption, Styles.buttonText)
+        .setOrigin(0.5, 0.65),
+
+      scene.add.sprite(ARROW_LEFT_POSITION, 0, 'pointer')
+        .setName('marker-left')
+        .setVisible(false),
+
+      scene.add.sprite(ARROW_RIGHT_POSITION, 0, 'pointer')
+        .setName('marker-right')
+        .toggleFlipX()
+        .setVisible(false),
     ]);
 
     const background = this.getByName('background');
-
-    this.isDown = false;
-
     this.setSize(background.width, background.height);
     this.setScrollFactor(0, 0);
     this.setInteractive();
-    this.updateStatus();
 
     this.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
     this.on(Phaser.Input.Events.POINTER_OUT, this.handlePointerOut);
@@ -25,11 +39,25 @@ export default class Button extends Phaser.GameObjects.Container {
   }
 
   get isFocus() {
-    return this.getByName('marker').visible;
+    return this.getByName('marker-left').visible;
   }
 
   set isFocus(value) {
-    this.getByName('marker').setVisible(value);
+    if (value) {
+      this.getByName('marker-left')
+        .setVisible(value)
+        .play('Bidirectional Pointer');
+      this.getByName('marker-right')
+        .setVisible(value)
+        .play('Bidirectional Pointer');
+    } else {
+      this.getByName('marker-left')
+        .setVisible(value)
+        .stop();
+      this.getByName('marker-right')
+        .setVisible(value)
+        .stop();
+    }
   }
 
   setDefault() {
@@ -45,11 +73,6 @@ export default class Button extends Phaser.GameObjects.Container {
   setFocus(value) {
     this.isFocus = value;
     return this;
-  }
-
-  updateStatus() {
-    const marker = this.getByName('marker');
-    marker.setVisible(this.isFocus);
   }
 
   handlePointerDown() {

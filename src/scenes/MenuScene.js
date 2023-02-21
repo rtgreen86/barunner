@@ -18,6 +18,7 @@ export default class MenuScene extends Phaser.Scene {
       this.add.existing(new Button(this, 640, 200, 'buttons', 0, 'Продовжити'))
         .setFocus(true)
         .on('focus', this.handleButtonFocus, this)
+        .on('pointerOverButton', this.handleButtonOvered, this)
         .on('click', this.gotoGame, this),
 
       this.add.existing(new Button(this, 640, 300, 'buttons', 2, 'Спочатку'))
@@ -25,6 +26,7 @@ export default class MenuScene extends Phaser.Scene {
         .on('pointerover', this.handleMouseOver, this)
         .on('pointerout', this.handleMouseOut, this)
         .on('focus', this.handleButtonFocus, this)
+        .on('pointerOverButton', this.handleButtonOvered, this)
         .on('click', this.gotoConfirm, this),
     ];
 
@@ -104,6 +106,10 @@ export default class MenuScene extends Phaser.Scene {
     }
 
 
+  }
+
+  handleButtonOvered(button) {
+    button.isFocus = true;
   }
 
 

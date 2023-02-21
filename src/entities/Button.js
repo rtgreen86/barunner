@@ -98,6 +98,6 @@ export default class Button extends Phaser.GameObjects.Container {
   }
 
   handlePointerOver() {
-    this.isFocus = true;
+    this.emit('pointerOverButton', this);
   }
 }

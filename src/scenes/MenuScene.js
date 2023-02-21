@@ -20,6 +20,7 @@ export default class MenuScene extends Phaser.Scene {
         .on('click', this.gotoGame, this),
 
       this.add.existing(new Button(this, 640, 300, 'buttons', 2, 'Спочатку'))
+        .setName('restart')
         .on('click', this.gotoConfirm, this),
     ];
 
@@ -30,12 +31,22 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   gotoGame() {
+    let index = this.buttons.findIndex(item => item.isFocus);
+    if (index > -1) {
+      this.buttons[index].isFocus = false
+    }
+    this.buttons[0].isFocus = true;
     this.scene.stop('MenuScene');
     this.scene.resume('GameScene');
     this.scene.wake('ScoreboardScene');
   }
 
   gotoConfirm() {
+    let index = this.buttons.findIndex(item => item.isFocus);
+    if (index > -1) {
+      this.buttons[index].isFocus = false
+    }
+    this.buttons[1].isFocus = true;
     this.scene.stop('MenuScene');
     this.scene.run('ConfirmScene');
   }

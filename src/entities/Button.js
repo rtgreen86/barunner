@@ -13,7 +13,9 @@ export default class Button extends Phaser.GameObjects.Container {
   constructor(scene, x, y, texture, frame, caption = '') {
     super(scene, x, y, [
       scene.add.image(0, 0, texture, frame)
-        .setName('background'),
+      // .on('pointerover', this.handleMouseOver)
+      // .on('pointerout', this.handleMouseOut)
+      .setName('background'),
 
       scene.add.text(0, 0, caption, Styles.buttonText)
         .setOrigin(0.5, 0.65),
@@ -36,6 +38,7 @@ export default class Button extends Phaser.GameObjects.Container {
     this.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
     this.on(Phaser.Input.Events.POINTER_OUT, this.handlePointerOut);
     this.on(Phaser.Input.Events.POINTER_UP, this.handlePointerUp);
+    this.on(Phaser.Input.Events.POINTER_OVER, this.handlePointerOver);
   }
 
   get isFocus() {
@@ -50,6 +53,7 @@ export default class Button extends Phaser.GameObjects.Container {
       this.getByName('marker-right')
         .setVisible(value)
         .play('Bidirectional Pointer');
+      this.emit('focus', this)
     } else {
       this.getByName('marker-left')
         .setVisible(value)
@@ -91,5 +95,9 @@ export default class Button extends Phaser.GameObjects.Container {
       this.setDefault();
       this.emit('click');
     }
+  }
+
+  handlePointerOver() {
+    this.isFocus = true;
   }
 }

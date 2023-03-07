@@ -33,7 +33,9 @@ export default class Button extends Phaser.GameObjects.Container {
     const background = this.getByName('background');
     this.setSize(background.width, background.height);
     this.setScrollFactor(0, 0);
-    this.setInteractive();
+    this.setInteractive({
+      cursor: 'pointer'
+    });
 
     this.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
     this.on(Phaser.Input.Events.POINTER_OUT, this.handlePointerOut);

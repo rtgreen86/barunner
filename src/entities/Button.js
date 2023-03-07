@@ -18,7 +18,8 @@ export default class Button extends Phaser.GameObjects.Container {
       .setName('background'),
 
       scene.add.text(0, 0, caption, Styles.buttonText)
-        .setOrigin(0.5, 0.65),
+        .setOrigin(0.5, 0.65)
+        .setName('text'),
 
       scene.add.sprite(ARROW_LEFT_POSITION, 0, 'pointer')
         .setName('marker-left')
@@ -78,6 +79,11 @@ export default class Button extends Phaser.GameObjects.Container {
 
   setFocus(value) {
     this.isFocus = value;
+    return this;
+  }
+
+  setTextStyle(style) {
+    this.getByName('text').setStyle(Styles[style]);
     return this;
   }
 

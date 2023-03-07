@@ -15,14 +15,16 @@ export default class ConfirmScene extends Phaser.Scene {
 
     this.add.text(640, 200, 'Confirm Reset?', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
 
-    this.buttons = [
-      this.add.existing(new Button(this, 480, 500, 'buttons', 2, 'Так'))
-        .on('click', this.resetGame, this),
+    const buttonYes = this.add.existing(new Button(this, 480, 500, 'buttons', 3, 'Так'))
+      .setTextStyle('dangerlink')
+      .on('click', this.resetGame, this);
 
-      this.add.existing(new Button(this, 800, 500, 'buttons', 0, 'Ні'))
-        .setFocus(true)
-        .on('click', this.gotoMenu, this),
-    ];
+    const buttonNo = this.add.existing(new Button(this, 800, 500, 'buttons', 3, 'Ні'))
+      .setFocus(true)
+      .setTextStyle('link')
+      .on('click', this.gotoMenu, this);
+
+    this.buttons = [buttonYes, buttonNo];
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);

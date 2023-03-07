@@ -8,11 +8,11 @@ export const buttonText = {
 };
 
 export const link = {
-  font: '32px Arial', color: '#0101010',
+  font: '32px Arial', color: '#0101010', color2: 0x0101010
 }
 
 export const dangerlink = {
-  font: '32px Arial', color: '#ff1010',
+  font: '32px Arial', color: '#ff1010', color2: 0xff1010
 }
 
 export const buttonTintColor = 0x999999;

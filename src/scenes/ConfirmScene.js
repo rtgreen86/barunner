@@ -1,6 +1,6 @@
 import Phaser from 'Phaser';
 
-import Button from '../entities/Button';
+import Button2 from '../entities/Button2';
 
 import * as Styles from '../Styles';
 
@@ -15,11 +15,11 @@ export default class ConfirmScene extends Phaser.Scene {
 
     this.add.text(640, 200, 'Confirm Reset?', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
 
-    const buttonYes = this.add.existing(new Button(this, 480, 500, 'buttons', 3, 'Так'))
+    const buttonYes = this.add.existing(new Button2(this, 480, 500, 'buttons', 3, 'Так'))
       .setTextStyle('dangerlink')
       .on('click', this.resetGame, this);
 
-    const buttonNo = this.add.existing(new Button(this, 800, 500, 'buttons', 3, 'Ні'))
+    const buttonNo = this.add.existing(new Button2(this, 800, 500, 'buttons', 3, 'Ні'))
       .setFocus(true)
       .setTextStyle('link')
       .on('click', this.gotoMenu, this);

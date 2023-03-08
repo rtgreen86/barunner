@@ -29,6 +29,7 @@ export default class ConfirmScene extends Phaser.Scene {
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleEnterKeyPressed, this);
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleEscKeyPressed, this);
   }
 
 
@@ -70,5 +71,9 @@ export default class ConfirmScene extends Phaser.Scene {
     if (activeIndex > -1) {
       this.buttons[activeIndex].emit('click');
     }
+  }
+
+  handleEscKeyPressed() {
+    this.buttons[1].emit('click');
   }
 }

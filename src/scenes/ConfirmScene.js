@@ -13,7 +13,7 @@ export default class ConfirmScene extends Phaser.Scene {
     const i = this.add.image(640, 360, 'modal-dialog');
     i.angle = 90;
 
-    this.add.text(640, 200, 'Confirm Reset?', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
+    this.add.text(640, 200, 'Весь прогрес буде скинуто!\nВи впевнені?', Styles.confirmText).setScrollFactor(0, 0).setOrigin(0.5, 0,5);
 
     const buttonYes = this.add.existing(new Button2(this, 480, 500, 'buttons', 3, 'Так'))
       .setTextStyle('dangerlink')

@@ -15,4 +15,8 @@ export const dangerlink = {
   font: '32px Arial', color: '#ff1010', color2: 0xff1010
 }
 
+export const confirmText = {
+  font: '32px Arial', color: '#000000', align: 'center'
+}
+
 export const buttonTintColor = 0x999999;

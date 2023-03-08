@@ -10,6 +10,10 @@ export default class ConfirmScene extends Phaser.Scene {
   }
 
   create() {
+    const graphics = this.add.graphics();
+    graphics.fillStyle(0xFFFFFF, 0.5);
+    graphics.fillRect(0, 0, 1280, 720);
+
     const i = this.add.image(640, 360, 'modal-dialog');
     i.angle = 90;
 

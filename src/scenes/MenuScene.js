@@ -10,6 +10,10 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create() {
+    const graphics = this.add.graphics();
+    graphics.fillStyle(0xFFFFFF, 0.5);
+    graphics.fillRect(0, 0, 1280, 720);
+
     this.add.text(640, 100, 'Пауза', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
 
     this.buttons = [
@@ -27,6 +31,7 @@ export default class MenuScene extends Phaser.Scene {
         .on('pointerOverButton', this.handleButtonOvered, this)
         .on('click', this.gotoConfirm, this),
     ];
+
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, false, false).on('down', this.gotoGame, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);

@@ -1,4 +1,4 @@
-import { Physics } from 'Phaser';
+import { Physics } from 'phaser';
 
 const ANIMATION_IDLE = 'Ram Idle';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';

@@ -1,4 +1,4 @@
-import Phaser from 'Phaser';
+import Phaser from 'phaser';
 
 import FILE_SPLASH from '../../assets/images/splash.jpg';
 

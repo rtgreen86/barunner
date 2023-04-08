@@ -1,4 +1,4 @@
-import Phaser from 'Phaser';
+import Phaser from 'phaser';
 import Button from '../entities/Button';
 import * as Styles from '../Styles';
 

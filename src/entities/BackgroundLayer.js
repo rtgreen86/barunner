@@ -1,4 +1,4 @@
-import Phaser from "Phaser";
+import Phaser from 'phaser';
 
 export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
   constructor(scene, tilemapLayer, x, y) {

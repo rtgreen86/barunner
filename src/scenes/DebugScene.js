@@ -1,4 +1,4 @@
-import Phaser from 'Phaser';
+import Phaser from 'phaser';
 
 export default class DebugScene extends Phaser.Scene {
   constructor(name = 'DebugScene') {

@@ -1,4 +1,4 @@
-import Phaser from 'Phaser';
+import Phaser from 'phaser';
 
 export default class BackgroundTileSprite extends Phaser.GameObjects.TileSprite {
   constructor(scene, image, width, height) {

@@ -1,5 +1,7 @@
 import Phaser from 'Phaser';
 
+import UIPlugin from './entities/UI/UIPlugin';
+
 import SplashScene from './scenes/SplashScene';
 import BootScene from './scenes/BootScene';
 import GameScene from './scenes/GameScene';
@@ -23,6 +25,11 @@ window.game = new Phaser.Game({
       debug: false,
       gravity: { x: 0, y: 2000 }
     }
+  },
+  plugins: {
+    global: [
+      { key: 'UIPlugin', plugin: UIPlugin, start: true }
+    ]
   },
   scale: {
     width: 1280,

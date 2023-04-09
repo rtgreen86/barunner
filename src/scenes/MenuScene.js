@@ -34,6 +34,10 @@ export default class MenuScene extends Phaser.Scene {
 
     this.uiButton = this.add.UIButton(640, 500);
 
+    this.uiButton.on('uibuttonclick', function () {
+      this.gotoGame();
+    }, this);
+
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, false, false).on('down', this.gotoGame, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);

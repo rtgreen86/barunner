@@ -5,6 +5,8 @@ import BackgroundLayer from '../entities/BackgroundLayer';
 import Player from '../entities/Player';
 import Controller from '../entities/Controller';
 
+import '../entities/MySprite';
+
 const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -51,6 +53,14 @@ export default class GameScene extends Phaser.Scene {
 
     this.data.set('distance', 0);
     this.data.set('beats', 0);
+
+
+    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
+    const x = playerX.value * this.map.tileWidth;
+    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
+    const y = playerY.value * this.map.tileHeight - Player.height / 2;
+    const spr = this.add.mySprite(x, y);
+    spr.changeColor();
   }
 
   update(time, delta) {

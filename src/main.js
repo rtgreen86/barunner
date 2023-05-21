@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import UIPlugin from './entities/UI/UIPlugin';
+import UIPlugin from './plugins/UIPlugin';
 
 import SplashScene from './scenes/SplashScene';
 import BootScene from './scenes/BootScene';

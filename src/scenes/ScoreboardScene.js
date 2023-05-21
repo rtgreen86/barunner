@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Button from '../entities/Button';
+import OpenMenuCommand from '../commands/OpenMenuCommand';
 import * as Styles from '../Styles';
 
 export default class ScoreboardScene extends Phaser.Scene {
@@ -33,9 +34,7 @@ export default class ScoreboardScene extends Phaser.Scene {
   }
 
   openMenu() {
-    this.scene.run('MenuScene', { game: 'GameScene' });
-    this.scene.pause('GameScene');
-    this.scene.sleep('ScoreboardScene');
+    new OpenMenuCommand(this).execute();
   }
 
   handleBeatsChanged(gameObject, value) {

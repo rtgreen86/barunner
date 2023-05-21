@@ -3,27 +3,22 @@ import Phaser from "phaser";
 export default class UIButton extends Phaser.GameObjects.Image {
   #isPointerDown = false;
 
-  constructor(scene, x, y) {
-    super(scene, x, y, 'button-x');
+  constructor(scene, x, y, texture, frame) {
+    super(scene, x, y, texture, frame);
 
-    this.setInteractive({
-      cursor: 'pointer'
-    });
+    this.setInteractive({ cursor: 'pointer' });
 
     this.on('pointerdown', this.#handlePointerDown, this);
     this.on('pointerup', this.#handlePointerUp, this);
-    this.on('pointerout', this.#handlePointerOut);
+    this.on('pointerout', this.#handlePointerOut, this);
   }
 
   #handlePointerDown() {
-    console.log('pointerdown');
     this.#isPointerDown = true;
   }
 
   #handlePointerUp(pointer, x, y) {
-    console.log('pointerup');
     if (this.#isPointerDown) {
-      console.log('emit click');
       this.emit('uibuttonclick', this, pointer, x, y);
     }
   }

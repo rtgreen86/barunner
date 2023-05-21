@@ -7,7 +7,7 @@ export default class UIPlugin extends Phaser.Plugins.BasePlugin {
     pluginManager.registerGameObject('UIButton', this.createButton);
   }
 
-  createButton(x, y) {
-    return this.displayList.add(new UIButton(this.scene, x, y));
+  createButton(x, y, texture, frame) {
+    return this.displayList.add(new UIButton(this.scene, x, y, texture, frame));
   }
 }

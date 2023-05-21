@@ -32,7 +32,7 @@ export default class MenuScene extends Phaser.Scene {
         .on('click', this.gotoConfirm, this),
     ];
 
-    this.uiButton = this.add.UIButton(640, 500, 'button-x');
+    this.uiButton = this.add.UIButton(640, 500, 'button-x').setDownTint(0x888888);
 
     this.uiButton.on('uibuttonclick', function () {
       this.gotoGame();

@@ -11,7 +11,10 @@ class MySprite extends Phaser.GameObjects.Sprite {
 }
 
 Phaser.GameObjects.GameObjectFactory.register('mySprite', function (x, y) {
-  return this.scene.add.existing(
-    new MySprite(this.scene, x, y)
-  );
+  const spr = new MySprite(this.scene, x, y);
+
+  this.displayList.add(spr)
+  this.updateList.add(spr)
+
+  return spr;
 })

@@ -17,6 +17,7 @@ export default class UIButton extends Phaser.GameObjects.Image {
   #disabledTexture;
   #disabledFrame;
   #disabledTint = WHITE;
+  #clickCommand = null;
 
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
@@ -35,6 +36,7 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.on('pointerdown', this.#handlePointerDown, this);
     this.on('pointerup', this.#handlePointerUp, this);
     this.on('pointerout', this.#handlePointerOut, this);
+    this.on('uibuttonclick', this.#handleClick, this);
   }
 
   setDownTexture(texture, frame) {
@@ -98,6 +100,11 @@ export default class UIButton extends Phaser.GameObjects.Image {
     return this;
   }
 
+  setClickCommand(command) {
+    this.#clickCommand = command;
+    return this;
+  }
+
   onClick(handler, context) {
     this.on('uibuttonclick', handler, context);
     return this;
@@ -132,5 +139,11 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.#isPointerDown = true;
     this.setTexture(this.#downTexture, this.#downFrame);
     this.setTint(this.#downTint);
+  }
+
+  #handleClick(pointer, x, y) {
+    if (this.#clickCommand && typeof this.#clickCommand.execute === 'function') {
+      this.#clickCommand.execute(pointer, x, y);
+    }
   }
 }

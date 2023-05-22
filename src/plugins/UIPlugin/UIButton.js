@@ -4,20 +4,21 @@ const WHITE = 0xffffff;
 
 export default class UIButton extends Phaser.GameObjects.Image {
   #isPointerDown = false;
-  #isActive = false;
+  #isFocus = false;
   #upTexture;
   #upFrame;
   #upTint = WHITE;
   #downTexture;
   #downFrame;
   #downTint = WHITE;
-  #activeTexture;
-  #activeFrame;
-  #activeTint = WHITE;
+  #focusTexture;
+  #focusFrame;
+  #focusTint = WHITE;
   #disabledTexture;
   #disabledFrame;
   #disabledTint = WHITE;
   #clickCommand = null;
+  #enterKey;
 
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
@@ -26,10 +27,11 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.#upFrame = frame;
     this.#downTexture = texture;
     this.#downFrame = frame;
-    this.#activeTexture = texture;
-    this.#activeFrame = frame;
+    this.#focusTexture = texture;
+    this.#focusFrame = frame;
     this.#disabledTexture = texture;
     this.#disabledFrame = frame;
+    this.#enterKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, false, false);
 
     this.setInteractive({ cursor: 'pointer' });
 
@@ -37,6 +39,47 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.on('pointerup', this.#handlePointerUp, this);
     this.on('pointerout', this.#handlePointerOut, this);
     this.on('uibuttonclick', this.#handleClick, this);
+    this.on('uibuttonpress', this.#handlePress, this);
+    this.#enterKey.on('down', this.#handleEnterDown, this);
+  }
+
+  get isFocus() {
+    return this.#isFocus;
+  }
+
+  set isFocus(focus) {
+    this.#isFocus = focus;
+    if (focus) {
+      this.setFrame(this.#focusTexture, this.#focusFrame);
+      this.setTint(this.#focusTint);
+    } else {
+      this.setFrame(this.#upTexture, this.#upFrame);
+      this.setTint(this.#upTint);
+    }
+  }
+
+  get isDisabled() {
+    return !this.input || !this.input.enabled;
+  }
+
+  set isDisabled(disabled) {
+    if (disabled) {
+      this.disableInteractive();
+      this.setFrame(this.#disabledTexture, this.#disabledFrame);
+      this.setTint(this.#disabledTint);
+      return;
+    }
+
+    this.setInteractive();
+
+    if (this.#isFocus) {
+      this.setFrame(this.#focusTexture, this.#focusFrame);
+      this.setTint(this.#focusTint);
+      return;
+    }
+
+    this.setFrame(this.#upTexture, this.#upFrame);
+    this.setTint(this.#upTint);
   }
 
   setDownTexture(texture, frame) {
@@ -50,14 +93,14 @@ export default class UIButton extends Phaser.GameObjects.Image {
     return this;
   }
 
-  setActiveTexture(texture, frame) {
-    this.#activeTexture = texture;
-    this.#activeFrame = frame;
+  setFocusTexture(texture, frame) {
+    this.#focusTexture = texture;
+    this.#focusFrame = frame;
     return this;
   }
 
-  setActiveTint(tint) {
-    this.#activeTint = tint;
+  setFocusTint(tint) {
+    this.#focusTint = tint;
     return this;
   }
 
@@ -72,37 +115,29 @@ export default class UIButton extends Phaser.GameObjects.Image {
     return this;
   }
 
-  setActive(active) {
-    this.#isActive = active;
-
-    if (active) {
-      this.setFrame(this.#activeTexture, this.#activeFrame);
-      this.setTint(this.#activeTint);
-      return this
-    }
-
-    this.setFrame(this.#upTexture, this.#upFrame);
-    this.setTint(this.#upTint);
+  setFocus(focus) {
+    this.isFocus = focus;
     return this;
   }
 
   setDisabled(disabled) {
-    if (disabled) {
-      this.disableInteractive();
-      this.setFrame(this.#disabledTexture, this.#disabledFrame);
-      this.setTint(this.#disabledTint);
-      return this;
-    }
-
-    this.setInteractive();
-    this.setFrame(this.#upTexture, this.#upFrame);
-    this.setTint(this.#upTint);
+    this.isDisabled = disabled;
     return this;
   }
 
   setClickCommand(command) {
     this.#clickCommand = command;
     return this;
+  }
+
+  destroy() {
+    this.off('pointerdown', this.#handlePointerDown, this);
+    this.off('pointerup', this.#handlePointerUp, this);
+    this.off('pointerout', this.#handlePointerOut, this);
+    this.off('uibuttonclick', this.#handleClick, this);
+    this.off('uibuttonpress', this.#handlePress, this);
+    this.#enterKey.off('down', this.#handleEnterDown, this);
+    super.destroy();
   }
 
   onClick(handler, context) {
@@ -120,12 +155,12 @@ export default class UIButton extends Phaser.GameObjects.Image {
     return this;
   }
 
-  #handlePointerUp(pointer, x, y) {
+  #handlePointerUp(pointer, currentryOver) {
     this.setTexture(this.#upTexture, this.#upFrame);
     this.setTint(this.#upTint);
 
     if (this.#isPointerDown) {
-      this.emit('uibuttonclick', pointer, x, y);
+      this.emit('uibuttonclick', pointer, currentryOver);
     }
   }
 
@@ -141,9 +176,21 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.setTint(this.#downTint);
   }
 
-  #handleClick(pointer, x, y) {
+  #handleClick(pointer, currentryOver) {
     if (this.#clickCommand && typeof this.#clickCommand.execute === 'function') {
-      this.#clickCommand.execute(pointer, x, y);
+      this.#clickCommand.execute({ pointer, currentryOver });
+    }
+  }
+
+  #handleEnterDown(key, keyboardEvent) {
+    if (this.#isFocus && !this.isDisabled) {
+      this.emit('uibuttonpress', key, keyboardEvent);
+    }
+  }
+
+  #handlePress(key, keyboardEvent) {
+    if (this.#clickCommand && typeof this.#clickCommand.execute === 'function') {
+      this.#clickCommand.execute({ key, keyboardEvent });
     }
   }
 }

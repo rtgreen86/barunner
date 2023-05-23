@@ -50,10 +50,10 @@ export default class UIButton extends Phaser.GameObjects.Image {
   set isFocus(focus) {
     this.#isFocus = focus;
     if (focus) {
-      this.setFrame(this.#focusTexture, this.#focusFrame);
+      this.setTexture(this.#focusTexture, this.#focusFrame);
       this.setTint(this.#focusTint);
     } else {
-      this.setFrame(this.#upTexture, this.#upFrame);
+      this.setTexture(this.#upTexture, this.#upFrame);
       this.setTint(this.#upTint);
     }
   }
@@ -65,7 +65,7 @@ export default class UIButton extends Phaser.GameObjects.Image {
   set isDisabled(disabled) {
     if (disabled) {
       this.disableInteractive();
-      this.setFrame(this.#disabledTexture, this.#disabledFrame);
+      this.setTexture(this.#disabledTexture, this.#disabledFrame);
       this.setTint(this.#disabledTint);
       return;
     }
@@ -73,12 +73,12 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.setInteractive();
 
     if (this.#isFocus) {
-      this.setFrame(this.#focusTexture, this.#focusFrame);
+      this.setTexture(this.#focusTexture, this.#focusFrame);
       this.setTint(this.#focusTint);
       return;
     }
 
-    this.setFrame(this.#upTexture, this.#upFrame);
+    this.setTexture(this.#upTexture, this.#upFrame);
     this.setTint(this.#upTint);
   }
 
@@ -150,8 +150,8 @@ export default class UIButton extends Phaser.GameObjects.Image {
     return this;
   }
 
-  offClick(handler) {
-    this.off('uibuttonclick', handler);
+  offClick(handler, context) {
+    this.off('uibuttonclick', handler, context);
     return this;
   }
 

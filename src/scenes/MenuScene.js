@@ -39,7 +39,7 @@ export default class MenuScene extends Phaser.Scene {
       }
     }
 
-    this.uiButton = this.add.UIButton(640, 500, 'button-x')
+    this.uiButton = this.add.UITextButton(640, 500, 'My Button', 'buttons', 2)
       .setDownTint(0x888888)
       .setFocusTint(0xff0000)
       .setFocus(true)

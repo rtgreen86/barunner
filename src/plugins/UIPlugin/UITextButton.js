@@ -11,7 +11,7 @@ export default class UITextButton extends Phaser.GameObjects.Container {
     this.#button = new UIButton(scene, 0, 0, texture, frame);
     this.#text = scene.add.text(0, 0, text, {
       font: '32px Arial', color: '#ffffff',
-    }).setOrigin(0.5, 0.75);
+    }).setOrigin(0.5, 0.5);
 
     this.add(this.#button);
     this.add(this.#text);
@@ -31,6 +31,14 @@ export default class UITextButton extends Phaser.GameObjects.Container {
 
   set isDisabled(disabled) {
     this.#button.isDisabled = disabled;
+  }
+
+  get width() {
+    return this.#button.width;
+  }
+
+  get height() {
+    return this.#button.height;
   }
 
   setDownTexture(texture, frame) {

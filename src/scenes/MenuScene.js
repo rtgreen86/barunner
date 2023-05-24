@@ -39,7 +39,7 @@ export default class MenuScene extends Phaser.Scene {
       }
     }
 
-    this.uiButton = this.add.UITextButton(640, 500, 'My Button', 'buttons', 2)
+    this.uiButton = this.add.UITextButton(640, 500, 'My Button', 'button-green')
       .setDownTint(0x888888)
       .setFocusTint(0xff0000)
       .setFocus(true)
@@ -48,6 +48,13 @@ export default class MenuScene extends Phaser.Scene {
       .setClickCommand(command)
       .setDisabled(false)
       .setFocus(false);
+
+    this.arrow = this.add.sprite(
+      this.uiButton.x - this.uiButton.width / 2,
+      this.uiButton.y,
+      'pointer'
+    ).setOrigin(1, 0.5)
+    .play('Bidirectional Pointer');
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, false, false).on('down', this.gotoGame, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);

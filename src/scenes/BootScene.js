@@ -14,8 +14,12 @@ import FILE_SWITCH_SPRITE from '../../assets/images/ui/switch_100.json';
 import FILE_MODAL_DIALOG from '../../assets/images/dialog.png'
 import FILE_BUTTONS from '../../assets/images/buttons.png';
 import FILE_BUTTON_X from '../../assets/images/button-x.png';
-import FILE_POINTER_JSON from '../../assets/images/pointer-64.json'
-import FILE_POINTER_PNG from '../../assets/images/pointer-64.png'
+import FILE_POINTER_JSON from '../../assets/images/pointer-64.json';
+import FILE_POINTER_PNG from '../../assets/images/pointer-64.png';
+import FILE_BUTTON_GREEN from '../../assets/images/button-green.png';
+import FILE_BUTTON_YELLOW from '../../assets/images/button-yellow.png';
+import FILE_BUTTON_RED from '../../assets/images/button-red.png';
+import FILE_BUTTON_GRAY from '../../assets/images/button-gray.png'
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -34,6 +38,10 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('button-x', FILE_BUTTON_X);
 
     this.load.spritesheet('buttons', FILE_BUTTONS, { frameWidth: 256, frameHeight: 100 });
+    this.load.image('button-green', FILE_BUTTON_GREEN);
+    this.load.image('button-yellow', FILE_BUTTON_YELLOW);
+    this.load.image('button-red', FILE_BUTTON_RED);
+    this.load.image('button-gray', FILE_BUTTON_GRAY);
 
     this.load.aseprite('ram-spritesheet', FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
     this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);

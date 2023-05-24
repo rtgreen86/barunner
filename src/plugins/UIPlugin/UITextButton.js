@@ -15,6 +15,8 @@ export default class UITextButton extends Phaser.GameObjects.Container {
 
     this.add(this.#button);
     this.add(this.#text);
+
+    this.setInteractive(new Phaser.Geom.Circle(0, 0, 60), Phaser.Geom.Circle.Contains);
   }
 
   get isFocus() {

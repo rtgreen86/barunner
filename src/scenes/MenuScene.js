@@ -1,7 +1,5 @@
 import Phaser from 'phaser';
 
-import Button from '../entities/Button';
-
 import * as Styles from '../Styles';
 
 export default class MenuScene extends Phaser.Scene {
@@ -38,35 +36,22 @@ export default class MenuScene extends Phaser.Scene {
       .setClickCommand(gotoGameCmd);
 
 
-  this.uiButton2 = this.add.UITextButton(640, 300, 'Спочатку', 'button-red')
-    .setDownTint(0x888888)
-    .setClickCommand(gotoConfirmCmd);
+    this.uiButton2 = this.add.UITextButton(640, 300, 'Спочатку', 'button-red')
+      .setDownTint(0x888888)
+      .setClickCommand(gotoConfirmCmd);
+
+    this.input.on('pointerover', this.handleMouseOver, this);
 
     this.buttons = [
-      // this.add.existing(new Button(this, 640, 200, 'buttons', 0, 'Продовжити'))
-      //   .setFocus(true)
-      //   .on('focus', this.handleButtonFocus, this)
-      //   .on('pointerOverButton', this.handleButtonOvered, this)
-      //   .on('click', this.gotoGame, this),
-
-      // this.add.existing(new Button(this, 640, 300, 'buttons', 2, 'Спочатку'))
-      //   .setName('restart')
-      //   .on('pointerover', this.handleMouseOver, this)
-      //   .on('pointerout', this.handleMouseOut, this)
-      //   .on('focus', this.handleButtonFocus, this)
-      //   .on('pointerOverButton', this.handleButtonOvered, this)
-      //   .on('click', this.gotoConfirm, this),
-
       this.uiButton, this.uiButton2
     ];
-
 
     this.arrow = this.add.sprite(
       this.uiButton.x - this.uiButton.width / 2,
       this.uiButton.y,
       'pointer'
     ).setOrigin(1, 0.5)
-    .play('Bidirectional Pointer');
+      .play('Bidirectional Pointer');
 
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, false, false).on('down', this.gotoGame, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
@@ -112,40 +97,23 @@ export default class MenuScene extends Phaser.Scene {
       index = 0;
     }
     this.buttons[index].isFocus = true;
-
     this.arrow.setPosition(
       this.buttons[index].x - this.buttons[index].width / 2,
       this.buttons[index].y,
     );
   }
 
-  handleMouseOver(event) {
-    // let index = this.buttons.findIndex(item => item.isFocus);
-    // if (index > -1) {
-    //   this.buttons[index].isFocus = false
-    // }
-    // this.buttons[0].isFocus = true;
-    // console.log('pointer over')
-  }
-
-  handleMouseOut(event) {
-    // this.clearTint();
-  }
-
-  handleButtonFocus(button) {
-
-    for (let i = 0; i < this.buttons.length; i++) {
-      if (this.buttons[i].isFocus && this.buttons[i] !== button) {
-        this.buttons[i].isFocus = false;
-      }
+  handleMouseOver(event, gameObjects) {
+    this.buttons.forEach((btn) => btn.setFocus(false));
+    gameObjects.forEach((btn) => {
+      if (btn.setFocus) btn.setFocus(true);
+    });
+    let index = this.buttons.findIndex(item => item.isFocus);
+    if (index > -1) {
+      this.arrow.setPosition(
+        this.buttons[index].x - this.buttons[index].width / 2,
+        this.buttons[index].y,
+      );
     }
-
-
   }
-
-  handleButtonOvered(button) {
-    button.isFocus = true;
-  }
-
-
 }

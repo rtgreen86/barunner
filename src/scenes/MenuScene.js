@@ -16,38 +16,50 @@ export default class MenuScene extends Phaser.Scene {
 
     this.add.text(640, 100, 'Пауза', Styles.uiText).setScrollFactor(0, 0).setOrigin(0.5, 0.5);
 
-    this.buttons = [
-      this.add.existing(new Button(this, 640, 200, 'buttons', 0, 'Продовжити'))
-        .setFocus(true)
-        .on('focus', this.handleButtonFocus, this)
-        .on('pointerOverButton', this.handleButtonOvered, this)
-        .on('click', this.gotoGame, this),
+    this.activeButton = 0;
 
-      this.add.existing(new Button(this, 640, 300, 'buttons', 2, 'Спочатку'))
-        .setName('restart')
-        .on('pointerover', this.handleMouseOver, this)
-        .on('pointerout', this.handleMouseOut, this)
-        .on('focus', this.handleButtonFocus, this)
-        .on('pointerOverButton', this.handleButtonOvered, this)
-        .on('click', this.gotoConfirm, this),
-    ];
-
-    const command = {
+    const gotoGameCmd = {
       scene: this,
       execute() {
         this.scene.gotoGame()
       }
     }
 
-    this.uiButton = this.add.UITextButton(640, 500, 'My Button', 'button-green')
+    const gotoConfirmCmd = {
+      scene: this,
+      execute() {
+        this.scene.gotoConfirm()
+      }
+    }
+
+    this.uiButton = this.add.UITextButton(640, 200, 'Продовжити', 'button-green')
       .setDownTint(0x888888)
-      .setFocusTint(0xff0000)
       .setFocus(true)
-      .setDisabledTint(0x333333)
-      .setDisabled(true)
-      .setClickCommand(command)
-      .setDisabled(false)
-      .setFocus(false);
+      .setClickCommand(gotoGameCmd);
+
+
+  this.uiButton2 = this.add.UITextButton(640, 300, 'Спочатку', 'button-red')
+    .setDownTint(0x888888)
+    .setClickCommand(gotoConfirmCmd);
+
+    this.buttons = [
+      // this.add.existing(new Button(this, 640, 200, 'buttons', 0, 'Продовжити'))
+      //   .setFocus(true)
+      //   .on('focus', this.handleButtonFocus, this)
+      //   .on('pointerOverButton', this.handleButtonOvered, this)
+      //   .on('click', this.gotoGame, this),
+
+      // this.add.existing(new Button(this, 640, 300, 'buttons', 2, 'Спочатку'))
+      //   .setName('restart')
+      //   .on('pointerover', this.handleMouseOver, this)
+      //   .on('pointerout', this.handleMouseOut, this)
+      //   .on('focus', this.handleButtonFocus, this)
+      //   .on('pointerOverButton', this.handleButtonOvered, this)
+      //   .on('click', this.gotoConfirm, this),
+
+      this.uiButton, this.uiButton2
+    ];
+
 
     this.arrow = this.add.sprite(
       this.uiButton.x - this.uiButton.width / 2,
@@ -59,7 +71,6 @@ export default class MenuScene extends Phaser.Scene {
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, false, false).on('down', this.gotoGame, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleEnterKeyPressed, this);
   }
 
   gotoGame() {
@@ -100,14 +111,12 @@ export default class MenuScene extends Phaser.Scene {
     if (index === this.buttons.length) {
       index = 0;
     }
-    this.buttons[index].isFocus = true
-  }
+    this.buttons[index].isFocus = true;
 
-  handleEnterKeyPressed() {
-    const activeIndex = this.buttons.findIndex(item => item.isFocus);
-    if (activeIndex > -1) {
-      this.buttons[activeIndex].emit('click');
-    }
+    this.arrow.setPosition(
+      this.buttons[index].x - this.buttons[index].width / 2,
+      this.buttons[index].y,
+    );
   }
 
   handleMouseOver(event) {

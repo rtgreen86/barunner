@@ -1,4 +1,5 @@
-import Phaser from "phaser";
+import * as Phaser from "phaser";
+import ICommand from './ICommand';
 
 const WHITE = 0xffffff;
 
@@ -17,10 +18,10 @@ export default class UIButton extends Phaser.GameObjects.Image {
   #disabledTexture;
   #disabledFrame;
   #disabledTint = WHITE;
-  #clickCommand = null;
+  #clickCommand?: ICommand = null;
   #enterKey;
 
-  constructor(scene, x, y, texture, frame) {
+  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: number) {
     super(scene, x, y, texture, frame);
 
     this.#upTexture = texture;
@@ -82,50 +83,50 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.setTint(this.#upTint);
   }
 
-  setDownTexture(texture, frame) {
+  setDownTexture(texture: string, frame: number) {
     this.#downTexture = texture;
     this.#downFrame = frame;
     return this;
   }
 
-  setDownTint(tint) {
+  setDownTint(tint: number) {
     this.#downTint = tint;
     return this;
   }
 
-  setFocusTexture(texture, frame) {
+  setFocusTexture(texture: string, frame: number) {
     this.#focusTexture = texture;
     this.#focusFrame = frame;
     return this;
   }
 
-  setFocusTint(tint) {
+  setFocusTint(tint: number) {
     this.#focusTint = tint;
     return this;
   }
 
-  setDisabledTexture(texture, frame) {
+  setDisabledTexture(texture: string, frame: number) {
     this.#disabledTexture = texture;
     this.#disabledFrame = frame;
     return this;
   }
 
-  setDisabledTint(tint) {
+  setDisabledTint(tint: number) {
     this.#disabledTint = tint;
     return this;
   }
 
-  setFocus(focus) {
+  setFocus(focus: boolean) {
     this.isFocus = focus;
     return this;
   }
 
-  setDisabled(disabled) {
+  setDisabled(disabled: boolean) {
     this.isDisabled = disabled;
     return this;
   }
 
-  setClickCommand(command) {
+  setClickCommand(command: ICommand) {
     this.#clickCommand = command;
     return this;
   }
@@ -140,27 +141,27 @@ export default class UIButton extends Phaser.GameObjects.Image {
     super.destroy();
   }
 
-  onClick(handler, context) {
+  onClick(handler: () => void, context: unknown) {
     this.on('uibuttonclick', handler, context);
     return this;
   }
 
-  oneClick(handler, context) {
-    this.oneClick('uibuttonclick', handler, context);
+  onceClick(handler: () => void, context: unknown) {
+    this.once('uibuttonclick', handler, context);
     return this;
   }
 
-  offClick(handler, context) {
+  offClick(handler: () => void, context: unknown) {
     this.off('uibuttonclick', handler, context);
     return this;
   }
 
-  #handlePointerUp(pointer, currentryOver) {
+  #handlePointerUp(pointer: Phaser.Input.Pointer, localX: number, localY: number, event: 	Phaser.Types.Input.EventData) {
     this.setTexture(this.#upTexture, this.#upFrame);
     this.setTint(this.#upTint);
 
     if (this.#isPointerDown) {
-      this.emit('uibuttonclick', pointer, currentryOver);
+      this.emit('uibuttonclick', pointer, localX, localY, event);
     }
   }
 
@@ -176,21 +177,21 @@ export default class UIButton extends Phaser.GameObjects.Image {
     this.setTint(this.#downTint);
   }
 
-  #handleClick(pointer, currentryOver) {
+  #handleClick(pointer: Phaser.Input.Pointer, localX: number, localY: number, event: 	Phaser.Types.Input.EventData) {
     if (this.#clickCommand && typeof this.#clickCommand.execute === 'function') {
-      this.#clickCommand.execute({ pointer, currentryOver });
+      this.#clickCommand.execute({ pointer, localX, localY, event });
     }
   }
 
-  #handleEnterDown(key, keyboardEvent) {
+  #handleEnterDown(key: Phaser.Input.Keyboard.Key, event:	KeyboardEvent) {
     if (this.#isFocus && !this.isDisabled) {
-      this.emit('uibuttonpress', key, keyboardEvent);
+      this.emit('uibuttonpress', key, event);
     }
   }
 
-  #handlePress(key, keyboardEvent) {
+  #handlePress(key: Phaser.Input.Keyboard.Key, event:	KeyboardEvent) {
     if (this.#clickCommand && typeof this.#clickCommand.execute === 'function') {
-      this.#clickCommand.execute({ key, keyboardEvent });
+      this.#clickCommand.execute({ key, event });
     }
   }
 }

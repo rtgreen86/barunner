@@ -47,7 +47,7 @@ export default class MenuScene extends Phaser.Scene {
     ];
 
     this.arrow = this.add.sprite(
-      this.uiButton.x - this.uiButton.width / 2,
+      this.uiButton.x - this.uiButton.buttonWidth / 2,
       this.uiButton.y,
       'pointer'
     ).setOrigin(1, 0.5)
@@ -98,7 +98,7 @@ export default class MenuScene extends Phaser.Scene {
     }
     this.buttons[index].isFocus = true;
     this.arrow.setPosition(
-      this.buttons[index].x - this.buttons[index].width / 2,
+      this.buttons[index].x - this.buttons[index].buttonWidth / 2,
       this.buttons[index].y,
     );
   }
@@ -111,7 +111,7 @@ export default class MenuScene extends Phaser.Scene {
     let index = this.buttons.findIndex(item => item.isFocus);
     if (index > -1) {
       this.arrow.setPosition(
-        this.buttons[index].x - this.buttons[index].width / 2,
+        this.buttons[index].x - this.buttons[index].buttonWidth / 2,
         this.buttons[index].y,
       );
     }

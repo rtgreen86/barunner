@@ -1,9 +1,10 @@
 import * as Phaser from "phaser";
 import ICommand from './ICommand';
+import IUIButton from "./IUIButton";
 
 const WHITE = 0xffffff;
 
-export default class UIButton extends Phaser.GameObjects.Image {
+export default class UIButton extends Phaser.GameObjects.Image implements IUIButton {
   #isPointerDown = false;
   #isFocus = false;
   #upTexture;

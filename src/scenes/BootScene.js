@@ -20,6 +20,8 @@ import FILE_BUTTON_GREEN from '../../assets/images/button-green.png';
 import FILE_BUTTON_YELLOW from '../../assets/images/button-yellow.png';
 import FILE_BUTTON_RED from '../../assets/images/button-red.png';
 import FILE_BUTTON_GRAY from '../../assets/images/button-gray.png'
+import FILE_WIDE_BUTTON_JSON from '../../assets/images/wide-buttons.json'
+import FILE_WIDE_BUTTON_PNG from '../../assets/images/wide-buttons.png'
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -47,6 +49,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
     this.load.aseprite('switch', FILE_SWITCH_IMAGE, FILE_SWITCH_SPRITE);
     this.load.aseprite('pointer', FILE_POINTER_PNG, FILE_POINTER_JSON);
+    this.load.aseprite('wide-button', FILE_WIDE_BUTTON_PNG, FILE_WIDE_BUTTON_JSON);
 
     this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
 

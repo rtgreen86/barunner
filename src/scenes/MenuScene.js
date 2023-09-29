@@ -58,7 +58,7 @@ export default class MenuScene extends Phaser.Scene {
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, false, false).on(Phaser.Input.Keyboard.Events.DOWN, this.handleArrowKeyPressed, this);
 
 
-    this.btnImage1 = this.add.image(640, 360, 'wide-button', 1).setScale(0.5, 0.5);
+    this.btnImage1 = this.add.button(640, 460, 'wide-button', 1).setScale(0.5, 0.5);
   }
 
   gotoGame() {

@@ -1,4 +1,4 @@
-import {GameObjects} from 'phaser';
+import { GameObjects } from 'phaser';
 
 const WHITE = 0xffffff;
 const GRAY = 0x808080;
@@ -29,8 +29,11 @@ export default class Button extends GameObjects.Image {
   }
 
   private handlePointerUp() {
-    this.isPointerDown = false;
+    if (this.isPointerDown) {
+      Promise.resolve().then(() => this.emit('click', this))
+    }
     this.setTint(WHITE);
+    this.isPointerDown = false;
   }
 
   private handlePointerOut() {

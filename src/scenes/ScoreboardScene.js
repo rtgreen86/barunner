@@ -24,6 +24,9 @@ export default class ScoreboardScene extends Phaser.Scene {
 
     this.btnImage1 = this.add.button(640, 460, 'wide-button', 1).setScale(0.5, 0.5).on('click', () => {
       console.log(new Date().valueOf(), 'click');
+      this.scene.run('MenuScene', { game: 'GameScene' });
+      this.scene.pause('GameScene');
+      this.scene.sleep('ScoreboardScene');
     });
 
     this.btnText = this.add.text(640, 460, 'Hello World!', {
@@ -33,6 +36,8 @@ export default class ScoreboardScene extends Phaser.Scene {
     this.btnImage1.on('pointerup', () => {
       console.log(new Date().valueOf(), 'up');
     })
+
+    this.btnImage1.isFocused = true;
 
   }
 

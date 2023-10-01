@@ -61,6 +61,12 @@ export default class GameScene extends Phaser.Scene {
     const y = playerY.value * this.map.tileHeight - Player.height / 2;
     const spr = this.add.mySprite(x, y);
     spr.changeColor();
+
+
+
+
+
+
   }
 
   update(time, delta) {

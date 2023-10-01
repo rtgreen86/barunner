@@ -21,6 +21,19 @@ export default class ScoreboardScene extends Phaser.Scene {
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false).on('down', this.openMenu, this);
     this.gameScene.events.on('changedata-beats', this.handleBeatsChanged, this);
     this.events.once('shutdown', this.handleShutdown, this);
+
+    this.btnImage1 = this.add.button(640, 460, 'wide-button', 1).setScale(0.5, 0.5).on('click', () => {
+      console.log(new Date().valueOf(), 'click');
+    });
+
+    this.btnText = this.add.text(640, 460, 'Hello World!', {
+      font: '32px Arial', color: '#ffffff'
+    }).setOrigin(0.5, 0.5);
+
+    this.btnImage1.on('pointerup', () => {
+      console.log(new Date().valueOf(), 'up');
+    })
+
   }
 
   update() {

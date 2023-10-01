@@ -9,7 +9,11 @@ export default class Button extends GameObjects.Image {
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: number) {
     super(scene, x, y, texture, frame);
-    this.setInteractive({ cursor: 'pointer' });
+
+    this.setInteractive({
+      cursor: 'pointer',
+      pixelPerfect: true
+    });
 
     this.on('pointerdown', this.handlePointerDown, this);
     this.on('pointerup', this.handlePointerUp, this);

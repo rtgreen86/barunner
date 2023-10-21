@@ -25,14 +25,19 @@ export default class Button extends GameObjects.Image {
     this.on('pointerup', this.handlePointerUp, this);
     this.on('pointerout', this.handlePointerOut, this);
     this.enterKey.on('down', this.handleEnterDown, this);
-    this.enterKey.on('up', this.handleEnterUp, this);
   }
 
   destroy() {
     this.off('pointerdown', this.handlePointerDown, this);
     this.off('pointerup', this.handlePointerUp, this);
     this.off('pointerout', this.handlePointerOut, this);
+    this.enterKey.off('down', this.handleEnterDown, this);
     super.destroy();
+  }
+
+  buttonUp() {
+    this.isPointerDown = false;
+    this.setTint(WHITE);
   }
 
   private handlePointerDown() {
@@ -54,19 +59,10 @@ export default class Button extends GameObjects.Image {
   }
 
   private handleEnterDown(key: Phaser.Input.Keyboard.Key, event:	KeyboardEvent) {
-    console.log('handleEnterDown', this.isFocused, this.isPointerDown);
-
     if (!this.isFocused || this.isPointerDown) {
       return;
     }
-    console.log('handleEnterDown 1');
-
     this.handlePointerDown();
-    Promise.resolve().then(() => this.emit('click', this));
-  }
-
-  private handleEnterUp() {
-    this.isPointerDown = false;
-    this.setTint(WHITE);
+    this.handlePointerUp();
   }
 }

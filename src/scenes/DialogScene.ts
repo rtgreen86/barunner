@@ -33,5 +33,6 @@ export default class DialogScene extends Scene {
     this.add.image(640, 360, 'dialog_bg').setScale(0.3);
     this.add.image(640, 360, 'dialog_frame').setScale(0.3);
 
+    this.add.sprite(640, 360, 'switch-animated').setScale(0.25).play('Indicate');
   }
 }

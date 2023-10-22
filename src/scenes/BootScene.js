@@ -70,6 +70,8 @@ export default class BootScene extends Phaser.Scene {
   create() {
     this.anims.createFromAseprite('pointer');
     this.anims.get('Bidirectional Pointer').repeat = -1;
+    this.anims.createFromAseprite('switch-animated');
+    this.anims.get('Indicate').repeat = -1;
 
     // Run debug output
     // this.scene.run('DebugScene', {

@@ -9,6 +9,7 @@ import DebugScene from './scenes/DebugScene';
 import ScoreboardScene from './scenes/ScoreboardScene';
 import MenuScene from './scenes/MenuScene';
 import ConfirmScene from './scenes/ConfirmScene';
+import DialogScene from './scenes/DialogScene';
 
 import packageJson from '../package.json';
 
@@ -18,7 +19,7 @@ window.game = new Phaser.Game({
   title: 'Barunner',
   version: packageJson.version,
   type: Phaser.AUTO,
-  scene: [SplashScene, BootScene, GameScene, DebugScene, ScoreboardScene, MenuScene, ConfirmScene],
+  scene: [SplashScene, BootScene, GameScene, DebugScene, ScoreboardScene, MenuScene, ConfirmScene, DialogScene],
   physics: {
     default: 'arcade',
     arcade: {

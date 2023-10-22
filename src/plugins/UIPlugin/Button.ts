@@ -4,7 +4,7 @@ const WHITE = 0xffffff;
 const GRAY = 0x808080;
 
 
-export default class Button extends GameObjects.Image {
+export class Button extends GameObjects.Image implements GameObjects.Button {
   private isPointerDown = false;
 
   private enterKey:  Input.Keyboard.Key
@@ -62,7 +62,13 @@ export default class Button extends GameObjects.Image {
     if (!this.isFocused || this.isPointerDown) {
       return;
     }
+    this.click();
+  }
+
+  click() {
     this.handlePointerDown();
     this.handlePointerUp();
   }
 }
+
+export default Button;

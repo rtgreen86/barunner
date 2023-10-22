@@ -1,16 +1,7 @@
 declare namespace Phaser.GameObjects {
-  interface BaClickable {
-    click: () => this;
-    onClick: (fn: Function, context: any) => this;
-  }
+  interface BaMenuItem extends Text { }
 
-  interface BaMenuItem extends BaClickable, Text {
-
-  }
-
-  interface Button extends Image {
-    click: () => void
-  }
+  interface Button extends Image { }
 
   interface GameObjectFactory {
     button(x: number, y: number, texture: string, frame: number): Button

@@ -1,12 +1,14 @@
 import { GameObjects, Input } from 'phaser';
+import { Clickable, Pressable } from '../Behavior';
 
 const WHITE = 0xffffff;
-const GRAY = 0x808080;
 
 export class Button extends GameObjects.Image implements GameObjects.Button {
-  private isPointerDown = false;
-
   private enterKey:  Input.Keyboard.Key
+
+  private clickable: Clickable;
+
+  private pressable: Pressable;
 
   isFocused = false;
 
@@ -20,53 +22,33 @@ export class Button extends GameObjects.Image implements GameObjects.Button {
 
     this.enterKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, false, false);
 
-    this.on('pointerdown', this.handlePointerDown, this);
-    this.on('pointerup', this.handlePointerUp, this);
-    this.on('pointerout', this.handlePointerOut, this);
+    this.clickable = new Clickable(this);
+    this.pressable = new Pressable(this);
+
     this.enterKey.on('down', this.handleEnterDown, this);
   }
 
   destroy() {
-    this.off('pointerdown', this.handlePointerDown, this);
-    this.off('pointerup', this.handlePointerUp, this);
-    this.off('pointerout', this.handlePointerOut, this);
+    this.clickable.destroy();
+    this.pressable.destroy();
     this.enterKey.off('down', this.handleEnterDown, this);
     super.destroy();
   }
 
   buttonUp() {
-    this.isPointerDown = false;
-    this.setTint(WHITE);
-  }
-
-  private handlePointerDown() {
-    this.isPointerDown = true;
-    this.setTint(GRAY);
-  }
-
-  private handlePointerUp() {
-    if (this.isPointerDown) {
-      Promise.resolve().then(() => this.emit('click', this))
-    }
-    this.setTint(WHITE);
-    this.isPointerDown = false;
-  }
-
-  private handlePointerOut() {
-    this.isPointerDown = false;
     this.setTint(WHITE);
   }
 
   private handleEnterDown(key: Phaser.Input.Keyboard.Key, event:	KeyboardEvent) {
-    if (!this.isFocused || this.isPointerDown) {
+    if (!this.isFocused) {
       return;
     }
     this.click();
   }
 
   click() {
-    this.handlePointerDown();
-    this.handlePointerUp();
+    // this.handlePointerDown();
+    // this.handlePointerUp();
   }
 }
 

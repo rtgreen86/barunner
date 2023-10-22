@@ -1,6 +1,9 @@
 import * as Phaser from 'phaser';
+import { Clickable } from '../Behavior';
 
 export default class MenuItem extends Phaser.GameObjects.Text implements Phaser.GameObjects.BaMenuItem {
+  private clickable: Clickable;
+
   constructor(
     scene: Phaser.Scene,
     x: number, y: number,
@@ -8,14 +11,16 @@ export default class MenuItem extends Phaser.GameObjects.Text implements Phaser.
     style: Phaser.Types.GameObjects.Text.TextStyle
   ) {
     super(scene, x, y, text, style);
+
     this.setOrigin(0.5);
+
+    this.setInteractive({cursor: 'pointer'});
+
+    this.clickable = new Clickable(this);
   }
 
-  click() {
-    return this;
-  }
-
-  onClick(fn: Function, context: any) {
-    return this;
+  destroy(fromScene?: boolean): void {
+    super.destroy(fromScene);
+    this.clickable.destroy();
   }
 }

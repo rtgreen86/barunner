@@ -27,7 +27,9 @@ export default class DialogScene extends Scene {
 
     const styles = {font: '54px Arial', color: '#6E4816'};
 
-    this.add.baMenuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles);
+    this.add.baMenuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles).on('click', () => {
+      console.log('Сначала clicked');
+    });
 
     const menuItem = this.add.baMenuItem(640, 90 + 72 + (54 + 27) * 2, 'Продолжить', styles);
 
@@ -45,7 +47,9 @@ export default class DialogScene extends Scene {
 
 
 
-    this.greenButton = this.add.button(dialogX, dialogY, 'button-green', 0).setScale(0.4);
+    this.greenButton = this.add.button(dialogX, dialogY, 'button-green', 0).setScale(0.4).on('click', () => {
+      console.log('Так! Clicked.');
+    });
     const dialogX2 = dialogX - this.greenButton.width * this.greenButton.scale;
     this.redButton = this.add.button(dialogX2, dialogY, 'button-red', 0).setScale(0.4);
 

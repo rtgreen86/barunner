@@ -1,7 +1,7 @@
 import {Plugins} from "phaser";
 import UIButton from "./UIButton";
 import UITextButton from "./UIButtonContainer";
-import Button from "./Button";
+import Button from "./GameObjects/Button";
 import MenuItem from './GameObjects/MenuItem';
 
 export default class UIPlugin extends Plugins.BasePlugin {

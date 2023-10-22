@@ -3,7 +3,6 @@ import { GameObjects, Input } from 'phaser';
 const WHITE = 0xffffff;
 const GRAY = 0x808080;
 
-
 export class Button extends GameObjects.Image implements GameObjects.Button {
   private isPointerDown = false;
 

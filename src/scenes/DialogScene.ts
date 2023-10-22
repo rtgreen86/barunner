@@ -29,5 +29,9 @@ export default class DialogScene extends Scene {
     this.add.text(175, 72 * 5, 'Hello World', buttonTextStyle).setOrigin(0.5, 0.5);
 
     this.xButton = this.add.button(175, 75 * 7, 'button-x', 0).setScale(0.5, 0.5);
+
+    this.add.image(640, 360, 'dialog_bg').setScale(0.3);
+    this.add.image(640, 360, 'dialog_frame').setScale(0.3);
+
   }
 }

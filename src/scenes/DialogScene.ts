@@ -9,6 +9,8 @@ export default class DialogScene extends Scene {
 
   redButton: GameObjects.Button;
 
+  xButton: GameObjects.Button;
+
   constructor() {
     super('DialogScene');
   }
@@ -25,5 +27,7 @@ export default class DialogScene extends Scene {
     this.add.text(175, 65, 'Hello World', buttonTextStyle).setOrigin(0.5, 0.5);
     this.add.text(175, 70 * 3, 'Hello World', buttonTextStyle).setOrigin(0.5, 0.5);
     this.add.text(175, 72 * 5, 'Hello World', buttonTextStyle).setOrigin(0.5, 0.5);
+
+    this.xButton = this.add.button(175, 75 * 7, 'button-x', 0).setScale(0.5, 0.5);
   }
 }

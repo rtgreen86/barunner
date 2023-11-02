@@ -1,16 +1,6 @@
-import { Scene, GameObjects } from 'phaser';
+import { Scene } from 'phaser';
 
 export default class DialogScene extends Scene {
-  shade: GameObjects.Graphics;
-
-  greenButton: GameObjects.Button;
-
-  yellowButton: GameObjects.Button;
-
-  redButton: GameObjects.Button;
-
-  xButton: GameObjects.Button;
-
   constructor() {
     super('DialogScene');
   }
@@ -20,18 +10,18 @@ export default class DialogScene extends Scene {
 
     const buttonTextStyle = {font: '32px Arial', color: '#ffffff'};
 
-    this.xButton = this.add.button(175, 75 * 7, 'button-x', 0).setScale(0.5, 0.5);
+    this.xButton = this.add.ba_button(175, 75 * 7, 'button-x', 0).setScale(0.5, 0.5);
 
     const dialog = this.add.image(640, 360, 'dialog_bg').setScale(0.37).setAngle(90);
     this.add.image(640, 360, 'dialog_frame').setScale(0.37).setAngle(90);
 
     const styles = {font: '54px Arial', color: '#6E4816'};
 
-    this.add.baMenuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles).on('click', () => {
+    this.add.ba_menuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles).on('click', () => {
       console.log('Сначала clicked');
     });
 
-    const menuItem = this.add.baMenuItem(640, 90 + 72 + (54 + 27) * 2, 'Продолжить', styles);
+    const menuItem = this.add.ba_menuItem(640, 90 + 72 + (54 + 27) * 2, 'Продолжить', styles);
 
     this.add.text(640, 90, 'Баранер', {font: '72px Arial', color: '#6E4816'}).setOrigin(0.5);
 
@@ -47,11 +37,11 @@ export default class DialogScene extends Scene {
 
 
 
-    this.greenButton = this.add.button(dialogX, dialogY, 'button-green', 0).setScale(0.4).on('click', () => {
+    this.greenButton = this.add.ba_button(dialogX, dialogY, 'button-green', 0).setScale(0.4).on('click', () => {
       console.log('Так! Clicked.');
     });
     const dialogX2 = dialogX - this.greenButton.width * this.greenButton.scale;
-    this.redButton = this.add.button(dialogX2, dialogY, 'button-red', 0).setScale(0.4);
+    this.redButton = this.add.ba_button(dialogX2, dialogY, 'button-red', 0).setScale(0.4);
 
     console.log(dialog.width);
 

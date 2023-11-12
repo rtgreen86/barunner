@@ -30,7 +30,10 @@ export default class DialogScene extends Scene {
     const x = menuItem.x - (menuItem.width / 2);
     const y = menuItem.y;
 
-    this.add.sprite(x, y, 'switch-animated').setScale(0.25).setOrigin(1.1, 0.5).play('Indicate');
+    const marker = this.add.baMarker(0, 0, 'switch-animated', 'Indicate').setScale(0.25).setOrigin(1.1, 0.5);
+
+    marker.x = x;
+    marker.y = y;
 
     const dialogX = dialog.x + ((dialog.height * dialog.scale) / 2) - 175;
     const dialogY = dialog.y + ((dialog.width * dialog.scale) / 2) - 75;

@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import Button from "./GameObjects/Button";
 import MenuItem from './GameObjects/MenuItem';
+import Marker from './GameObjects/Marker';
 
 export default class UIPlugin extends Phaser.Plugins.BasePlugin {
   constructor(pluginManager) {
@@ -14,6 +15,8 @@ export default class UIPlugin extends Phaser.Plugins.BasePlugin {
       return this.displayList.add(new MenuItem(this.scene, x, y, text,style));
     });
 
-
+    pluginManager.registerGameObject('baMarker', function (x, y, texture, frameOrAnimationName, animationName) {
+      return this.displayList.add(new Marker(this.scene, x, y, texture, frameOrAnimationName, animationName));
+    });
   }
 }

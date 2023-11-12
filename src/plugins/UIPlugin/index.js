@@ -1,1 +1,1 @@
-export {default as default} from './UIPlugin';
+export {default as default} from './plugin';

@@ -1,7 +1,8 @@
 import * as Phaser from 'phaser';
+import Clickable from '../Behavior/Clickable';
 
 export default class MenuItem extends Phaser.GameObjects.Text {
-  #isPointerDown = false;
+  #clickable = new Clickable(this);
 
   constructor(scene, x, y, text, style) {
     super(scene, x, y, text, style);
@@ -11,19 +12,6 @@ export default class MenuItem extends Phaser.GameObjects.Text {
 
   destroy(fromScene) {
     super.destroy(fromScene);
-  }
-
-  #handlePointerDown() {
-    this.#isPointerDown = true;
-  }
-
-  #handlePointerUp() {
-    if (!this.#isPointerDown) return;
-    this.#isPointerDown = false;
-    this.emit('click');
-  }
-
-  #handlePointerOut() {
-    this.#isPointerDown = false;
+    this.#clickable.destroy();
   }
 }

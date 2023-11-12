@@ -17,11 +17,11 @@ export default class DialogScene extends Scene {
 
     const styles = {font: '54px Arial', color: '#6E4816'};
 
-    this.add.ba_menuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles).on('click', () => {
+    this.add.baMenuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles).on('click', () => {
       console.log('Сначала clicked');
     });
 
-    const menuItem = this.add.ba_menuItem(640, 90 + 72 + (54 + 27) * 2, 'Продолжить', styles);
+    const menuItem = this.add.baMenuItem(640, 90 + 72 + (54 + 27) * 2, 'Продолжить', styles);
 
     this.add.text(640, 90, 'Баранер', {font: '72px Arial', color: '#6E4816'}).setOrigin(0.5);
 

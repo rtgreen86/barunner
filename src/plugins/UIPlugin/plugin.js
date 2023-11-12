@@ -10,7 +10,7 @@ export default class UIPlugin extends Phaser.Plugins.BasePlugin {
       return this.displayList.add(new Button(this.scene, x, y, texture, frame));
     });
 
-    pluginManager.registerGameObject('ba_menuItem', function (x, y, text, style) {
+    pluginManager.registerGameObject('baMenuItem', function (x, y, text, style) {
       return this.displayList.add(new MenuItem(this.scene, x, y, text,style));
     });
 

@@ -27,13 +27,8 @@ export default class DialogScene extends Scene {
 
     this.add.graphics().fillStyle(0x6E4816, 1).fillRect(640 - 180, 90 + (72 / 2) + 5, 360, 5);
 
-    const x = menuItem.x - (menuItem.width / 2);
-    const y = menuItem.y;
-
     const marker = this.add.baMarker(0, 0, 'switch-animated', 'Indicate').setScale(0.25).setOrigin(1.1, 0.5);
-
-    marker.x = x;
-    marker.y = y;
+    marker.setPosition(menuItem);
 
     const dialogX = dialog.x + ((dialog.height * dialog.scale) / 2) - 175;
     const dialogY = dialog.y + ((dialog.width * dialog.scale) / 2) - 75;

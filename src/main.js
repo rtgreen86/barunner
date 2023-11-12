@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import UIPlugin from './plugins/UIPlugin';
+import BaUI from './plugins/BaUI';
 
 import SplashScene from './scenes/SplashScene';
 import BootScene from './scenes/BootScene';
@@ -29,7 +29,7 @@ window.game = new Phaser.Game({
   },
   plugins: {
     global: [
-      { key: 'UIPlugin', plugin: UIPlugin, start: true }
+      { key: 'BaUI', plugin: BaUI, start: true }
     ]
   },
   scale: {

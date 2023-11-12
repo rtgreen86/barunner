@@ -10,7 +10,7 @@ export default class DialogScene extends Scene {
 
     const buttonTextStyle = {font: '32px Arial', color: '#ffffff'};
 
-    this.xButton = this.add.ba_button(175, 75 * 7, 'button-x', 0).setScale(0.5, 0.5);
+    this.xButton = this.add.baButton(175, 75 * 7, 'button-x', 0).setScale(0.5, 0.5);
 
     const dialog = this.add.image(640, 360, 'dialog_bg').setScale(0.37).setAngle(90);
     this.add.image(640, 360, 'dialog_frame').setScale(0.37).setAngle(90);
@@ -37,11 +37,11 @@ export default class DialogScene extends Scene {
 
 
 
-    this.greenButton = this.add.ba_button(dialogX, dialogY, 'button-green', 0).setScale(0.4).on('click', () => {
+    this.greenButton = this.add.baButton(dialogX, dialogY, 'button-green', 0).setScale(0.4).on('click', () => {
       console.log('Так! Clicked.');
     });
     const dialogX2 = dialogX - this.greenButton.width * this.greenButton.scale;
-    this.redButton = this.add.ba_button(dialogX2, dialogY, 'button-red', 0).setScale(0.4);
+    this.redButton = this.add.baButton(dialogX2, dialogY, 'button-red', 0).setScale(0.4);
 
     console.log(dialog.width);
 

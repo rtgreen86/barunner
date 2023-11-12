@@ -13,9 +13,6 @@ export class Button extends Phaser.GameObjects.Image {
       pixelPerfect: true
     });
 
-    // this.enterKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, false, false);
-    // this.enterKey.on('down', this.handleEnterDown, this);
-
     this.on('pointerdown', this.#handlePointerDown, this);
     this.on('pointerup', this.#handlePointerUp, this);
     this.on('pointerout', this.#handlePointerOut, this);
@@ -26,6 +23,10 @@ export class Button extends Phaser.GameObjects.Image {
     this.off('pointerdown', this.#handlePointerDown, this);
     this.off('pointerup', this.#handlePointerUp, this);
     this.off('pointerout', this.#handlePointerOut, this);
+  }
+
+  press() {
+    this.emit('click');
   }
 
   #handlePointerDown() {

@@ -11,7 +11,6 @@ export default class Marker extends Phaser.GameObjects.Sprite {
 
     super(scene, x, y, texture, frameOrAnimationName);
 
-    this.#animationName = animationName || 'Indicate';
-    this.play(this.#animationName);
+    if (animationName) this.play(animationName);
   }
 }

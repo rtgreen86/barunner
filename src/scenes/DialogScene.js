@@ -17,23 +17,22 @@ export default class DialogScene extends Scene {
 
     const styles = {font: '54px Arial', color: '#6E4816'};
 
-    this.add.baMenuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles).on('click', () => {
-      console.log('Сначала clicked');
-    });
-
-    const menuItem = this.add.baMenuItem(640, 90 + 72 + (54 + 27) * 2, 'Продолжить', styles);
-
     this.add.text(640, 90, 'Баранер', {font: '72px Arial', color: '#6E4816'}).setOrigin(0.5);
 
     this.add.graphics().fillStyle(0x6E4816, 1).fillRect(640 - 180, 90 + (72 / 2) + 5, 360, 5);
 
-    const marker = this.add.baMarker(0, 0, 'switch-animated', 'Indicate').setScale(0.25).setOrigin(1.1, 0.5);
-    marker.setPosition(menuItem);
+    const menuItem1 = this.add.baMenuItem(640, 90 + 72 + 54 + 27, 'Сначала', styles).on('click', () => {
+      console.log('Сначала clicked');
+    });
+
+    const menuItem2 = this.add.baMenuItem(640, 90 + 72 + (54 + 27) * 2, 'Продолжить', styles);
+
+    const menu = this.add.baMenu('switch-animated', 'Indicate');
+
+    menu.setScale(0.25).setOrigin(1.1, 0.5).add(menuItem1).add(menuItem2).setActive(menuItem2);
 
     const dialogX = dialog.x + ((dialog.height * dialog.scale) / 2) - 175;
     const dialogY = dialog.y + ((dialog.width * dialog.scale) / 2) - 75;
-
-
 
     this.greenButton = this.add.baButton(dialogX, dialogY, 'button-green', 0).setScale(0.4).on('click', () => {
       console.log('Так! Clicked.');

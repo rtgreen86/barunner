@@ -19,13 +19,16 @@ export default class Menu extends Phaser.GameObjects.GameObject {
 
   #downKey;
 
+  #enterKey;
+
   constructor(scene, texture, frameOrAnimationName, animationName) {
     super(scene, 'menu');
 
     this.#marker = scene.add.baMarker(0, 0, texture, frameOrAnimationName, animationName);
 
     this.#upKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, true, false).on('down', this.#handleUpPressed, this);
-    this.#upKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, true, false).on('down', this.#handleDownPressed, this);
+    this.#downKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, true, false).on('down', this.#handleDownPressed, this);
+    this.#enterKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, false).on('down', this.#handleEnterPressed, this);
   }
 
   get length() {
@@ -43,7 +46,8 @@ export default class Menu extends Phaser.GameObjects.GameObject {
 
   destroy() {
     this.#upKey.off('down', this.#handleUpPressed, this);
-    this.#upKey.off('down', this.#handleDownPressed, this);
+    this.#downKey.off('down', this.#handleDownPressed, this);
+    this.#enterKey.off('down', this.#handleEnterPressed, this);
   }
 
   moveMarker(direction) {
@@ -87,5 +91,11 @@ export default class Menu extends Phaser.GameObjects.GameObject {
 
   #handleDownPressed() {
     this.moveMarker(DIRECTION_DOWN);
+  }
+
+  #handleEnterPressed() {
+    if (this.#active) {
+      this.#active.emit('click');
+    }
   }
 }

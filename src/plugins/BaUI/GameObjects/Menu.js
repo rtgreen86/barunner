@@ -95,7 +95,7 @@ export default class Menu extends Phaser.GameObjects.GameObject {
 
   #handleEnterPressed() {
     if (this.#active) {
-      this.#active.emit('click');
+      this.#active.emit('click', this.#active);
     }
   }
 }

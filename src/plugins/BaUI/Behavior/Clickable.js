@@ -26,8 +26,8 @@ export default class Clickable {
 
   #handlePointerUp() {
     this.#gameObject.clearTint();
-    if (!this.#isPointerDown) this.#gameObject.emit('click');
-    this.#isPointerDown = false;
+    if (this.#isPointerDown) this.#gameObject.emit('click', this.#gameObject);
+      this.#isPointerDown = false;
   }
 
   #handlePointerOut() {

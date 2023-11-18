@@ -5,6 +5,13 @@ export default class DialogScene extends Scene {
     super('DialogScene');
   }
 
+  init(arg) {
+    // super.init(arg);
+    console.log('init', this.data);
+    console.log('init', 'argument', JSON.stringify(arg));
+    console.log('init', 'settings', JSON.stringify(this.settings));
+  }
+
   create() {
     this.shade = this.add.graphics().fillStyle(0x000000, 0.5).fillRect(0, 0, 1280, 720);
 

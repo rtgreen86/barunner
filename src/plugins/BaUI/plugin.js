@@ -21,7 +21,7 @@ export default class UIPlugin extends Phaser.Plugins.BasePlugin {
     });
 
     pluginManager.registerGameObject('baMenu', function (texture, frameOrAnimationName, animationName) {
-      return new Menu(this.scene, texture, frameOrAnimationName, animationName);
+      return this.updateList.add(new Menu(this.scene, texture, frameOrAnimationName, animationName));
     });
   }
 }

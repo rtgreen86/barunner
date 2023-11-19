@@ -13,11 +13,6 @@ export default class Button extends Phaser.GameObjects.Image {
     });
   }
 
-  destroy(fromScene) {
-    super.destroy(fromScene);
-    this.#clickable.destroy();
-  }
-
   press() {
     this.emit('click');
   }

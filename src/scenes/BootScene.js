@@ -79,13 +79,5 @@ export default class BootScene extends Phaser.Scene {
     // });
 
     this.scene.run('GameScene');
-    this.scene.run('ScoreboardScene');
-    this.scene.run('MainMenu', {
-      title: 'Баранер',
-      items: [
-        'Продолжить',
-        'Сначала'
-      ]
-    });
   }
 }

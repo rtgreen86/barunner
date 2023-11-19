@@ -10,22 +10,19 @@ export default class Menu extends Phaser.GameObjects.GameObject {
   static DIRECTION_DOWN = DIRECTION_DOWN;
 
   #controls = [];
+
   #marker;
+
   #active;
-  #upKey;
-  #downKey;
-  #enterKey;
 
   constructor(scene, texture, frameOrAnimationName, animationName) {
     super(scene, 'menu');
 
     this.#marker = scene.add.baMarker(0, 0, texture, frameOrAnimationName, animationName);
 
-    this.#upKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, true, false).on('down', this.#handleUpPressed, this);
-
-    this.#downKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, true, false).on('down', this.#handleDownPressed, this);
-
-    this.#enterKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, false).on('down', this.#handleEnterPressed, this);
+    this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, true, false).on('down', this.#handleUpPressed, this);
+    this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, true, false).on('down', this.#handleDownPressed, this);
+    this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, false).on('down', this.#handleEnterPressed, this);
   }
 
   get length() {
@@ -37,21 +34,10 @@ export default class Menu extends Phaser.GameObjects.GameObject {
   }
 
   add(gameObject) {
+    gameObject.on('activating', this.#handleItemActivating, this);
+    gameObject.on('click', this.#handleItemClick, this);
     this.#controls.push(gameObject);
-
-    gameObject.on('activating', this.#handleActivating, this);
-
     return this;
-  }
-
-  destroy() {
-    this.#upKey.off('down', this.#handleUpPressed, this);
-
-    this.#downKey.off('down', this.#handleDownPressed, this);
-
-    this.#enterKey.off('down', this.#handleEnterPressed, this);
-
-    this.#controls.forEach(control => this.remove(control));
   }
 
   moveMarker(direction) {
@@ -67,16 +53,13 @@ export default class Menu extends Phaser.GameObjects.GameObject {
     return this;
   }
 
-  remove(gameObject) {
-    const index = this.#controls.indexOf(gameObject);
-    if (index > -1) {
-      gameObject.off('activating', this.#handleActivating, this)
-      this.#controls.splice(index, 1);
-    }
-    return this;
+  preUpdate() {
+
   }
 
   setActive(gameObject) {
+    if (!gameObject) gameObject = this.#controls[0];
+    if (!gameObject) return;
     this.#marker.setPosition(gameObject);
     this.#active = gameObject;
     return this;
@@ -106,7 +89,11 @@ export default class Menu extends Phaser.GameObjects.GameObject {
     }
   }
 
-  #handleActivating(gameObject) {
+  #handleItemActivating(gameObject) {
     this.setActive(gameObject);
+  }
+
+  #handleItemClick(gameObject) {
+    this.emit('click', gameObject);
   }
 }

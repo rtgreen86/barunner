@@ -13,12 +13,6 @@ export default class Clickable {
     this.#gameObject.on('pointerout', this.#handlePointerOut, this);
   }
 
-  destroy() {
-    this.#gameObject.off('pointerdown', this.#handlePointerDown, this);
-    this.#gameObject.off('pointerup', this.#handlePointerUp, this);
-    this.#gameObject.off('pointerout', this.#handlePointerOut, this);
-  }
-
   #handlePointerDown() {
     this.#isPointerDown = true;
     this.#gameObject.setTint(GRAY);

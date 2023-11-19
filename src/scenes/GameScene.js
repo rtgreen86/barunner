@@ -62,11 +62,27 @@ export default class GameScene extends Phaser.Scene {
     const spr = this.add.mySprite(x, y);
     spr.changeColor();
 
+    this.escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false);
 
+    this.scene.run('ScoreboardScene');
 
+    this.subscribe();
+  }
 
+  subscribe() {
+    this.events.on('destroy', this.#handleDestroy, this);
+    this.events.on('pause', this.#handlePause, this);
+    this.events.on('resume', this.#handleResume, this);
 
+    this.escKey.on('down', this.#handleEscDown, this);
+  }
 
+  unsubscribe() {
+    this.events.off('destroy', this.#handleDestroy, this);
+    this.events.off('pause', this.#handlePause, this);
+    this.events.off('resume', this.#handleResume, this);
+
+    this.escKey.off('down', this.#handleEscDown, this);
   }
 
   update(time, delta) {
@@ -360,5 +376,39 @@ export default class GameScene extends Phaser.Scene {
     }
 
     return true;
+  }
+
+  openMenu() {
+    this.scene.pause();
+    this.scene.run('MainMenu', {
+      title: 'Баранер',
+      items: [
+        'Продолжить',
+        'Сначала'
+      ]
+    });
+
+
+    // this.scene.pause('GameScene');
+    // this.scene.sleep('ScoreboardScene');
+  }
+
+  #handleEscDown() {
+    this.openMenu();
+  }
+
+  #handleDestroy() {
+    console.log('GameScene: destroy');
+    this.unsubscribe();
+  }
+
+  #handlePause() {
+    console.log('GameScene: sleep');
+    this.scene.sleep('ScoreboardScene');
+  }
+
+  #handleResume() {
+    console.log('GameScene: wakeup');
+    this.scene.wake('ScoreboardScene');
   }
 }

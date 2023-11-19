@@ -8,11 +8,6 @@ export default class Activable {
     this.#gameObject.on('pointerdonw', this.#handlePointerDown, this);
   }
 
-  destroy() {
-    this.#gameObject.off('pointerover', this.#handlePointerOver, this);
-    this.#gameObject.off('pointerdown', this.#handlePointerDown, this);
-  }
-
   #handlePointerOver() {
     this.#gameObject.emit('activating', this.#gameObject);
   }

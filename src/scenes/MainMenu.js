@@ -15,43 +15,53 @@ const menuY = 300;
 const menuItemHeight = 81;
 
 export default class MainMenu extends Phaser.Scene {
+  #titleText;
+
+  #itemsCaptions;
+
   constructor() {
     super('MainMenu');
   }
 
   init(data = {}) {
-    this.titleText = data.title || '';
-    this.itemsCaptions = data.items || [];
+    this.#titleText = data.title || '';
+    this.#itemsCaptions = data.items || [];
   }
 
   create() {
-    this.shade = this.add.graphics().fillStyle(0x000000, 0.5).fillRect(0, 0, resolutionX, resolutionY);
+    this.add.graphics().fillStyle(0x000000, 0.5).fillRect(0, 0, resolutionX, resolutionY);
 
-    if (this.titleText) {
-      this.title = this.add.text(640, 140, this.titleText, headerStyle).setOrigin(0.5);
-    }
+    if (this.#titleText) this.add.text(640, 140, this.#titleText, headerStyle).setOrigin(0.5);
 
-    this.menu = this.add.baMenu('switch-animated', 'Indicate').setScale(0.25).setOrigin(1.1, 0.5);
+    const menu = this.add.baMenu('switch-animated', 'Indicate')
+      .setScale(0.25).setOrigin(1.1, 0.5)
+      .on('click', this.#handleMenuClick, this);
 
-    this.items = this.itemsCaptions.map((caption, index) => {
-      const item = this.add.baMenuItem(menuX, menuY + index * menuItemHeight, caption, menuItemStyles);
-      item.on('click', this.#handleMenuClick, this);
-      this.menu.add(item);
-      return item;
+    this.#itemsCaptions.forEach((caption, index) => {
+      const x = menuX;
+      const y = menuY + index * menuItemHeight;
+      const item = this.add.baMenuItem(x, y, caption, menuItemStyles)
+      menu.add(item);
     });
 
-    this.menu.setActive(this.items[0]);
+    menu.setActive();
+  }
 
-    this.events.on('destroy', this.#handleDestroy, this);
+  continueGame() {
+    this.scene.run('GameScene');
+    this.scene.stop();
+  }
+
+  restartGame() {
+    console.log('сначала')
   }
 
   #handleMenuClick(item) {
-    console.log(item.text);
-  }
-
-  #handleDestroy() {
-    this.items.forEach(item => {
-      item.off('click', this.#handleMenuClick, this);
-    });
+    switch (item.text) {
+      case 'Продолжить':
+        return this.continueGame();
+      case 'Сначала':
+        return this.restartGame();
+    }
   }
 }

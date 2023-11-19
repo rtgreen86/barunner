@@ -42,7 +42,7 @@ export default class ScoreboardScene extends Phaser.Scene {
   }
 
   openMenu() {
-    new OpenMenuCommand(this).execute();
+
   }
 
   handleBeatsChanged(gameObject, value) {

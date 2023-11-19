@@ -4,9 +4,9 @@ const resolutionX = 1280;
 
 const resolutionY = 720;
 
-const headerStyle = {font: '108px Arial', color: '#6E4816'};
+const headerStyle = {font: '108px Arial', color: '#FFFFFF'};
 
-const menuItemStyles = {font: '54px Arial', color: '#6E4816'};
+const menuItemStyles = {font: '54px Arial', color: '#FFFFFF'};
 
 const menuX = 640;
 
@@ -26,10 +26,6 @@ export default class MainMenu extends Phaser.Scene {
 
   create() {
     this.shade = this.add.graphics().fillStyle(0x000000, 0.5).fillRect(0, 0, resolutionX, resolutionY);
-
-    this.background = this.add.image(640, 360, 'dialog_bg').setScale(0.37).setAngle(90);
-
-    this.frame = this.add.image(640, 360, 'dialog_frame').setScale(0.37).setAngle(90);
 
     if (this.titleText) {
       this.title = this.add.text(640, 140, this.titleText, headerStyle).setOrigin(0.5);

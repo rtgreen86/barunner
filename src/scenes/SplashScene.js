@@ -4,10 +4,7 @@ import FILE_SPLASH from '../../assets/images/splash.jpg';
 
 export default class SplashScene extends Phaser.Scene {
   constructor() {
-    super({
-      key: 'SplashScene',
-      active: true
-    });
+    super({ key: 'SplashScene', active: true });
   }
 
   preload() {

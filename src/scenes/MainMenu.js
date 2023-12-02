@@ -53,7 +53,21 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   restartGame() {
-    console.log('сначала')
+    this.scene.start('DialogScene', {
+      message: 'Хотите начать сначала?',
+      captionOK: 'Да',
+      captionCancel: 'Нет',
+      context: this,
+      onOK: () => {
+        console.log('OK');
+        this.scene.start('GameScene');
+      },
+      onCancel: () => {
+        console.log('CANCEL');
+        this.scene.run('GameScene');
+      },
+    });
+    this.scene.stop();
   }
 
   #handleMenuClick(item) {

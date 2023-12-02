@@ -78,22 +78,6 @@ export default class BootScene extends Phaser.Scene {
     //   watch: 'GameScene'
     // });
 
-    this.scene.start('GameScene');
-
-    this.scene.start('DialogScene', {
-      message: 'Уверены что хотите начать игру сначала?',
-      captionOK: 'Да',
-      captionCancel: 'Нет',
-    });
-
-    this.scene.get('DialogScene').events.on('OK', (dialog) => {
-      dialog.scene.switch('GameScene');
-      console.log('OK');
-    });
-
-    this.scene.get('DialogScene').events.on('cancel', (dialog) => {
-      dialog.scene.stop();
-      console.log('cancel');
-    });
+    this.scene.run('GameScene');
   }
 }

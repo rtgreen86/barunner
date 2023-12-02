@@ -5,8 +5,6 @@ import BackgroundLayer from '../entities/BackgroundLayer';
 import Player from '../entities/Player';
 import Controller from '../entities/Controller';
 
-import '../entities/MySprite';
-
 const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -29,10 +27,6 @@ export default class GameScene extends Phaser.Scene {
     super('GameScene');
   }
 
-  init() {
-    this.debug = this.scene.get('DebugScene');
-  }
-
   create() {
     this.map = this.createMap();
     this.createBackgroundTileSprite(this.map.images);
@@ -53,14 +47,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.data.set('distance', 0);
     this.data.set('beats', 0);
-
-
-    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
-    const x = playerX.value * this.map.tileWidth;
-    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
-    const y = playerY.value * this.map.tileHeight - Player.height / 2;
-    const spr = this.add.mySprite(x, y);
-    spr.changeColor();
 
     this.escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false);
 
@@ -231,7 +217,7 @@ export default class GameScene extends Phaser.Scene {
         .setActive(true)
         .setVisible(true);
       this.physics.world.enable(obstacle);
-      this.debug.log(`generate object right at ${this.generatedRight}, dist ${dist}`);
+
     }
 
     if (this.player.direction === 'left' && this.generatedLeft - max > zero - SPAWN_DISTANCE) {
@@ -244,14 +230,12 @@ export default class GameScene extends Phaser.Scene {
         .setActive(true)
         .setVisible(true);
       this.physics.world.enable(obstacle);
-      this.debug.log(`generate object left at ${this.generatedRight}, total: ${this.obstacles.getLength()}, active ${this.obstacles.countActive()}`);
     }
 
     this.obstacles.getMatching('active', true).forEach(obstacle => {
       if (obstacle.x < zero - SPAWN_DISTANCE || obstacle.x > zero + SPAWN_DISTANCE) {
         this.obstacles.killAndHide(obstacle);
         this.physics.world.disable(obstacle)
-        this.debug.log('kill obstacle');
       }
     });
 

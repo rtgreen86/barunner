@@ -14,6 +14,6 @@ export default class Button extends Phaser.GameObjects.Image {
   }
 
   press() {
-    this.emit('click');
+    this.emit('click', this);
   }
 }

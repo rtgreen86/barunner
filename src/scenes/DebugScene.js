@@ -3,6 +3,11 @@ import Phaser from 'phaser';
 export default class DebugScene extends Phaser.Scene {
   constructor() {
     super({ key: 'DebugScene', active: true });
+
+    this.properties = {
+      'scene': 'DebugScene',
+    };
+
     this.messages = ['debug scene'];
   }
 
@@ -11,7 +16,16 @@ export default class DebugScene extends Phaser.Scene {
   }
 
   update() {
-    this.text.setText(this.messages.join('\n'));
+    const vg = this.scene.get('VirtualGamepad');
+
+    this.properties.mousedown = vg.input.activePointer.isDown;
+
+    this.messages = this.messages.slice(-10);
+
+    this.text.setText([
+      ...Object.keys(this.properties).map((key) => `${key}: ${this.properties[key]}`),
+      ...this.messages
+    ].join('\n'));
   }
 
   log() { }

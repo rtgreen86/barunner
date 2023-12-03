@@ -20,6 +20,8 @@ export default class Player extends Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
 
+    this.setName('The Player');
+
     this.scene = scene;
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
@@ -170,5 +172,9 @@ export default class Player extends Physics.Arcade.Sprite {
 
   respawn() {
     this.idle();
+  }
+
+  touch() {
+    console.log('Player touched!');
   }
 }

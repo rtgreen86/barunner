@@ -174,7 +174,10 @@ export default class Player extends Physics.Arcade.Sprite {
     this.idle();
   }
 
-  touch() {
-    console.log('Player touched!');
+  touch(isDown, time, delta) {
+    if (this.isDown !== isDown) {
+      this.isDown = isDown;
+      console.log('Player toched!', isDown, time, delta);
+    }
   }
 }

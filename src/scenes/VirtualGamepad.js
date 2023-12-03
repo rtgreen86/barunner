@@ -25,14 +25,11 @@ export default class VirtualGamepad extends Phaser.Scene {
     });
   }
 
-  update() {
+  update(time, delta) {
+    const isOverGameObject = this.input.hitTestPointer(this.input.activePointer).length !== 0;
+    const isDown = !isOverGameObject && this.input.activePointer.isDown;
     const gameScene = this.scene.get('GameScene');
     const player = gameScene.children.getByName('The Player');
-
-    if (this.input.activePointer.isDown) {
-      player.touch();
-    }
-
-    this.isPointerDown = this.input.activePointer.isDown;
+    player.touch(isDown, time, delta);
   }
 }

@@ -3,26 +3,29 @@ import Phaser from 'phaser';
 export default class VirtualGamepad extends Phaser.Scene {
   constructor() {
     super('VirtualGamepad');
+
     this.isPointerDown = false;
+    this.isGameobjectOver = false;
+  }
+
+  get isActivePointerdown() {
+    return !this.isGameobjectOver && this.input.activePointer.isDown;
   }
 
   create() {
-    this.createXButton();
-
-    this.input.on('gameobjectover', () => {
-      console.log('gameobjectover');
-    });
+    this.xButton = this.createXButton();
+    this.input.on('gameobjectover', this.handleGameobjectOver, this);
+    this.input.on('gameobjectout', this.handleGameobjectOut, this);
+    this.xButton.on('click', this.handleXClick, this);
   }
+
 
   createXButton() {
     const texture = this.textures.get('button-x').get();
     const scale = 0.5;
     const x = 1280 - texture.width * scale / 2;
     const y = texture.height * scale / 2;
-    this.add.baButton(x, y, 'button-x', 0).setScale(scale).on('click', () => {
-      this.scene.stop();
-      setTimeout(() => this.scene.start('VirtualGamepad'), 1000);
-    });
+    return this.add.baButton(x, y, 'button-x', 0).setScale(scale);
   }
 
   update(time, delta) {
@@ -31,5 +34,21 @@ export default class VirtualGamepad extends Phaser.Scene {
     const gameScene = this.scene.get('GameScene');
     const player = gameScene.children.getByName('The Player');
     player.touch(isDown, time, delta);
+
+    if (this.isActivePointerdown) {
+      console.log('down');
+    }
+  }
+
+  handleGameobjectOver() {
+    this.isGameobjectOver = true;
+  }
+
+  handleGameobjectOut() {
+    this.isGameobjectOver = false;
+  }
+
+  handleXClick() {
+    console.log('x clicked');
   }
 }

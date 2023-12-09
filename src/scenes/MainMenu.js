@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { CloseMenu } from '../commands';
 
 const resolutionX = 1280;
 
@@ -47,11 +48,6 @@ export default class MainMenu extends Phaser.Scene {
     menu.setActive();
   }
 
-  continueGame() {
-    this.scene.run('GameScene');
-    this.scene.stop();
-  }
-
   restartGame() {
     this.scene.start('DialogScene', {
       message: 'Хотите начать сначала?',
@@ -73,7 +69,7 @@ export default class MainMenu extends Phaser.Scene {
   #handleMenuClick(item) {
     switch (item.text) {
       case 'Продолжить':
-        return this.continueGame();
+        return new CloseMenu(this.scene).execute();
       case 'Сначала':
         return this.restartGame();
     }

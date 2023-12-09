@@ -5,6 +5,8 @@ import BackgroundLayer from '../entities/BackgroundLayer';
 import Player from '../entities/Player';
 import Controller from '../entities/Controller';
 
+import { OpenMainMenu } from '../commands';
+
 const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -363,23 +365,8 @@ export default class GameScene extends Phaser.Scene {
     return true;
   }
 
-  openMenu() {
-    this.scene.pause();
-    this.scene.run('MainMenu', {
-      title: 'Баранер',
-      items: [
-        'Продолжить',
-        'Сначала'
-      ]
-    });
-
-
-    // this.scene.pause('GameScene');
-    // this.scene.sleep('ScoreboardScene');
-  }
-
   #handleEscDown() {
-    this.openMenu();
+    new OpenMainMenu(this.scene).execute();
   }
 
   #handleDestroy() {

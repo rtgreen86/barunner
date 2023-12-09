@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { OpenMainMenu } from '../commands';
 
 export default class VirtualGamepad extends Phaser.Scene {
   constructor() {
@@ -49,6 +50,6 @@ export default class VirtualGamepad extends Phaser.Scene {
   }
 
   handleXClick() {
-    console.log('x clicked');
+    new OpenMainMenu(this.scene).execute();
   }
 }

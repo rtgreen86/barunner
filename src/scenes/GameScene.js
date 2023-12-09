@@ -53,7 +53,7 @@ export default class GameScene extends Phaser.Scene {
     this.escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false);
 
     this.scene.run('ScoreboardScene');
-    this.scene.run('VirtualGamepad');
+    this.scene.run('virtual-gamepad-scene');
 
     this.subscribe();
   }

@@ -16,7 +16,7 @@ export default class DebugScene extends Phaser.Scene {
   }
 
   update() {
-    const vg = this.scene.get('VirtualGamepad');
+    const vg = this.scene.get('virtual-gamepad-scene');
 
     this.properties.mousedown = vg.input.activePointer.isDown;
 

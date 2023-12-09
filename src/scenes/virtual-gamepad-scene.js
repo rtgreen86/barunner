@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import { OpenMainMenu } from '../commands';
 
-export default class VirtualGamepad extends Phaser.Scene {
+export default class VirtualGamepadScene extends Phaser.Scene {
   constructor() {
-    super('VirtualGamepad');
+    super('virtual-gamepad-scene');
 
     this.isPointerDown = false;
     this.isGameobjectOver = false;

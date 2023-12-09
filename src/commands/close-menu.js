@@ -4,7 +4,7 @@ export default class CloseMenu {
   }
 
   execute() {
-    this.scene.stop('MainMenu');
+    this.scene.stop('main-menu-scene');
     this.scene.run('ScoreboardScene');
     this.scene.run('virtual-gamepad-scene');
     this.scene.run('GameScene');

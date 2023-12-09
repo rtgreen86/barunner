@@ -7,7 +7,7 @@ export default class OpenMainMenu {
     this.scene.sleep('ScoreboardScene');
     this.scene.sleep('virtual-gamepad-scene');
     this.scene.pause('GameScene');
-    this.scene.run('MainMenu', {
+    this.scene.run('main-menu-scene', {
       title: 'Баранер',
       items: [
         'Продолжить',

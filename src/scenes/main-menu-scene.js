@@ -2,26 +2,20 @@ import Phaser from 'phaser';
 import { CloseMenu } from '../commands';
 
 const resolutionX = 1280;
-
 const resolutionY = 720;
-
 const headerStyle = {font: '108px Arial', color: '#FFFFFF'};
-
 const menuItemStyles = {font: '54px Arial', color: '#FFFFFF'};
-
 const menuX = 640;
-
 const menuY = 300;
-
 const menuItemHeight = 81;
 
-export default class MainMenu extends Phaser.Scene {
+export default class MainMenuScene extends Phaser.Scene {
   #titleText;
 
   #itemsCaptions;
 
   constructor() {
-    super('MainMenu');
+    super('main-menu-scene');
   }
 
   init(data = {}) {

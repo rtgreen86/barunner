@@ -9,10 +9,9 @@ import ScoreboardScene from './scenes/ScoreboardScene';
 import MenuScene from './scenes/MenuScene';
 import ConfirmScene from './scenes/ConfirmScene';
 import DialogScene from './scenes/DialogScene';
-import MainMenu from './scenes/MainMenu';
 import DebugScene from './scenes/DebugScene';
 
-import { VirtualGamepadScene } from './scenes';
+import { VirtualGamepadScene, MainMenuScene } from './scenes';
 
 import packageJson from '../package.json';
 
@@ -22,7 +21,7 @@ window.game = new Phaser.Game({
   title: 'Barunner',
   version: packageJson.version,
   type: Phaser.AUTO,
-  scene: [SplashScene, BootScene, GameScene, ScoreboardScene, MenuScene, ConfirmScene, DialogScene, MainMenu, VirtualGamepadScene, DebugScene],
+  scene: [SplashScene, BootScene, GameScene, ScoreboardScene, MenuScene, ConfirmScene, DialogScene, MainMenuScene, VirtualGamepadScene, DebugScene],
   physics: {
     default: 'arcade',
     arcade: {

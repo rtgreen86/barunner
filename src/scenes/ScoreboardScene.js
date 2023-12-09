@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import OpenMenuCommand from '../commands/OpenMenuCommand';
 import * as Styles from '../Styles';
 
 export default class ScoreboardScene extends Phaser.Scene {
@@ -17,11 +16,6 @@ export default class ScoreboardScene extends Phaser.Scene {
     this.add.text(0, 0, '', Styles.uiText).setName('DistanceText');
     this.add.text(350, 0, '', Styles.uiText).setName('BeatsText');
 
-    // this.menuBtn = this.add.image(width - 64, 64, 'button-x')
-    //   .setDownTint(0x888888)
-    //   .setClickCommand(new OpenMenuCommand(this));
-
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false).on('down', this.openMenu, this);
     this.gameScene.events.on('changedata-beats', this.handleBeatsChanged, this);
     this.events.once('shutdown', this.handleShutdown, this);
   }
@@ -35,10 +29,6 @@ export default class ScoreboardScene extends Phaser.Scene {
     } else {
       text.setText('Distance: ' + distanceInKilometers.toFixed(2) + ' km');
     }
-  }
-
-  openMenu() {
-
   }
 
   handleBeatsChanged(gameObject, value) {

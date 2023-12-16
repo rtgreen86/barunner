@@ -17,6 +17,17 @@ import packageJson from '../package.json';
 
 import './styles.css';
 
+class TestPlugin extends Phaser.Plugins.BasePlugin {
+  constructor(pluginManager) {
+    super(pluginManager);
+    this.counter = 0;
+  }
+
+  increment() {
+    this.counter++;
+  }
+}
+
 window.game = new Phaser.Game({
   title: 'Barunner',
   version: packageJson.version,
@@ -31,7 +42,8 @@ window.game = new Phaser.Game({
   },
   plugins: {
     global: [
-      { key: 'BaUI', plugin: BaUI, start: true }
+      { key: 'BaUI', plugin: BaUI, start: true },
+      { key: 'TestPlugin', plugin: TestPlugin, start: false, mapping: 'test'}
     ]
   },
   scale: {

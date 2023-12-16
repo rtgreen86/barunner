@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import BaUI from './plugins/BaUI';
+import SensorGamepad from './plugins/SensorGamepad';
 
 import SplashScene from './scenes/SplashScene';
 import BootScene from './scenes/BootScene';
@@ -17,17 +18,6 @@ import packageJson from '../package.json';
 
 import './styles.css';
 
-class TestPlugin extends Phaser.Plugins.BasePlugin {
-  constructor(pluginManager) {
-    super(pluginManager);
-    this.counter = 0;
-  }
-
-  increment() {
-    this.counter++;
-  }
-}
-
 window.game = new Phaser.Game({
   title: 'Barunner',
   version: packageJson.version,
@@ -43,7 +33,7 @@ window.game = new Phaser.Game({
   plugins: {
     global: [
       { key: 'BaUI', plugin: BaUI, start: true },
-      { key: 'TestPlugin', plugin: TestPlugin, start: false, mapping: 'test'}
+      { key: 'SensorGamepad', plugin: SensorGamepad, start: false, mapping: 'sensorGamepad' }
     ]
   },
   scale: {

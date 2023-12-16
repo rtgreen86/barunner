@@ -366,8 +366,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   #handleEscDown() {
-    this.test.increment();
-
     new OpenMainMenu(this.scene).execute();
   }
 

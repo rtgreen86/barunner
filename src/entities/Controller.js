@@ -6,6 +6,7 @@ export default class Controller {
     this.cursor = scene.input.keyboard.createCursorKeys();
     this.pointer = scene.input.pointer1;
     this.mouse = scene.input.activePointer;
+    this.sensor = scene.sensorGamepad;
 
     scene.input.on('pointerdown', () => {
       const dbg = scene.scene.get('DebugScene');
@@ -20,18 +21,15 @@ export default class Controller {
   }
 
   get isActionDown() {
-    return this.cursor.space.isDown || this.pointer.isDown || this.mouse.isDown;
+    return this.cursor.space.isDown || this.sensor.isADown;
   }
 
   getActionDuration() {
     if (this.cursor.space.isDown) {
       return this.cursor.space.getDuration();
     }
-    if (this.pointer.isDown) {
-      return this.pointer.getDuration();
-    }
-    if (this.mouse.isDown) {
-      return this.mouse.getDuration();
+    if (this.sensor.isADown) {
+      return this.sensor.getDuration();
     }
     return 0;
   }

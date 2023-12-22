@@ -7,6 +7,10 @@ export default class SensorGamepad extends Phaser.Plugins.BasePlugin {
     return this.enabled && this.game.input.activePointer.isDown;
   }
 
+  getDuration() {
+    return this.game.input.activePointer.getDuration();
+  }
+
   setDisabled(value) {
     return this.setEnabled(!value);
   }

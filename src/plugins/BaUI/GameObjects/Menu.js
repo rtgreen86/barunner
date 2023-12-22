@@ -22,7 +22,8 @@ export default class Menu extends Phaser.GameObjects.GameObject {
 
     this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP, true, false).on('down', this.#handleUpPressed, this);
     this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN, true, false).on('down', this.#handleDownPressed, this);
-    this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, false).on('down', this.#handleEnterPressed, this);
+    this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, false).on('down', this.#handleActionPressed, this);
+    this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE, true, false).on('down', this.#handleActionPressed, this);
   }
 
   get length() {
@@ -83,7 +84,7 @@ export default class Menu extends Phaser.GameObjects.GameObject {
     this.moveMarker(DIRECTION_DOWN);
   }
 
-  #handleEnterPressed() {
+  #handleActionPressed() {
     if (this.#active) {
       this.#active.emit('click', this.#active);
     }

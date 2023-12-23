@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 export default class DebugScene extends Phaser.Scene {
   constructor() {
-    super({ key: 'DebugScene', active: true });
+    super({ key: 'DebugScene', active: false });
 
     this.properties = {
       'scene': 'DebugScene',

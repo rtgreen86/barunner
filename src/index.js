@@ -9,10 +9,9 @@ import GameScene from './scenes/GameScene';
 import ScoreboardScene from './scenes/ScoreboardScene';
 import MenuScene from './scenes/MenuScene';
 import ConfirmScene from './scenes/ConfirmScene';
-import DialogScene from './scenes/DialogScene';
 import DebugScene from './scenes/DebugScene';
 
-import { VirtualGamepadScene, MainMenuScene } from './scenes';
+import { VirtualGamepadScene, MainMenuScene, DialogScene } from './scenes';
 
 import packageJson from '../package.json';
 

@@ -43,7 +43,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   restartGame() {
-    this.scene.start('DialogScene', {
+    this.scene.run('dialog-scene', {
       message: 'Хотите начать сначала?',
       captionOK: 'Да',
       captionCancel: 'Нет',
@@ -53,11 +53,10 @@ export default class MainMenuScene extends Phaser.Scene {
         this.scene.start('GameScene');
       },
       onCancel: () => {
-        console.log('CANCEL');
-        this.scene.run('GameScene');
+        this.scene.wake();
       },
     });
-    this.scene.stop();
+    this.scene.sleep();
   }
 
   #handleMenuClick(item) {

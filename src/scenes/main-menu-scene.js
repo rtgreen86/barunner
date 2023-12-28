@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { CloseMenu } from '../commands';
+import { CloseMenu, RestartGame } from '../commands';
 
 const resolutionX = 1280;
 const resolutionY = 720;
@@ -49,8 +49,7 @@ export default class MainMenuScene extends Phaser.Scene {
       captionCancel: 'Нет',
       context: this,
       onOK: () => {
-        console.log('OK');
-        this.scene.start('GameScene');
+        new RestartGame(this.scene).execute();
       },
       onCancel: () => {
         this.scene.wake();

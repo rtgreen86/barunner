@@ -6,7 +6,7 @@ export default class RestartScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('GameScene');
+    setTimeout(() => this.scene.start('GameScene'));
     this.scene.stop();
   }
 }

@@ -34,7 +34,7 @@ export default class GameScene extends Phaser.Scene {
     this.createBackgroundTileSprite(this.map.images);
     this.createBackgrounLayers(this.map.layers);
     this.createGroundLayer('ground', 0, 0);
-    this.player = this.createPlayer();
+    this.player = this.add.existing(this.createPlayer()).setName('The Player');
     this.playerStartPosition = this.player.x;
     this.createControls();
     this.createObstacles();

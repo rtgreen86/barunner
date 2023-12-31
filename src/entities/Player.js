@@ -19,12 +19,7 @@ const DIRECTION_LEFT = 'left';
 export default class Player extends Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
-
-    this.setName('The Player');
-
-    this.scene = scene;
     this.scene.physics.world.enable(this);
-    this.scene.add.existing(this);
 
     this.runVelocity = 1200;
     this.jumpVelocity = -500;

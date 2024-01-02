@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import * as Phaser from 'phaser';
 
 import BaUI from './plugins/BaUI';
 import SensorGamepad from './plugins/SensorGamepad';
@@ -21,7 +21,9 @@ import packageJson from '../package.json';
 
 import './styles.css';
 
-window.game = new Phaser.Game({
+console.log('Run game version', packageJson.version);
+
+new Phaser.Game({
   title: 'Barunner',
   version: packageJson.version,
   type: Phaser.AUTO,

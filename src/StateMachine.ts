@@ -11,10 +11,18 @@ export interface State extends StateConfig {
   name: string,
 }
 
-export class StateMachine {
-  private states = new Map<string, State>();
+let lastId = 0;
 
+export class StateMachine {
+  private id = (++lastId).toString();
+  private context?: unknown;
+  private states = new Map<string, State>();
   private currentState?: State;
+
+  constructor(context?: unknown, id?: string) {
+    this.id = id ?? this.id;
+    this.context = context;
+  }
 
   addState(name: string, config?: StateConfig) {
 

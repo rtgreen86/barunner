@@ -253,7 +253,7 @@ export default class GameScene extends Phaser.Scene {
     this.map.layer.tilemapLayer.x = -offset;
   }
 
-  updatePlayer() {
+  updatePlayer(time) {
     if (this.player.isJumping && this.controller.isActionDown) {
       this.player.jump(this.controller.getActionDuration());
     }
@@ -274,6 +274,7 @@ export default class GameScene extends Phaser.Scene {
     if (this.numKeys.key1.isDown) {
       this.player.idle();
     }
+    this.player.update(time);
   }
 
   isFalling(object) {

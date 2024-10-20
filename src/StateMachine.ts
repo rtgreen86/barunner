@@ -21,11 +21,22 @@ export class StateMachine {
   private isChangingState = false;
   private changeStateQueue: string[] = [];
 
+  /**
+   *
+   * @param context - (optional) context for handlers
+   * @param id - (optional) state machine id (e.g. player)
+   */
   constructor(context?: unknown, id?: string) {
     this.id = id ?? this.id;
     this.context = context;
   }
 
+  /**
+   *
+   * @param name - state name (e.g. idle)
+   * @param config - (optional) handlers
+   * @returns @this
+   */
   addState(name: string, config?: StateConfig) {
     this.states.set(name, {
       name,

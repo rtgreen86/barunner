@@ -102,4 +102,10 @@ describe('StateMachine', () => {
     expect(sm.isCurrentState('run')).toBeTruthy();
     expect(player.onEnterRun).toHaveBeenCalled();
   });
+
+  it('should return current state name', () => {
+    const sm = new StateMachine();
+    sm.addState('idle').setState('idle');
+    expect(sm.getCurrentStateName()).toEqual('idle');
+  });
 });

@@ -36,6 +36,14 @@ export class StateMachine {
     return this;
   }
 
+  getCurrentStateName() {
+    return this.currentState?.name
+  }
+
+  isCurrentState(name: string) {
+    return this.getCurrentStateName() === name;
+  }
+
   setState(name: string) {
     if (!this.states.has(name)) {
       console.log(`Tried to change to unknown state: ${name}`);
@@ -64,10 +72,6 @@ export class StateMachine {
     if (this.changeStateQueue.length > 0) this.setState(this.changeStateQueue.shift());
     this.currentState?.onUpdate?.(time);
     return this;
-  }
-
-  isCurrentState(name: string) {
-    return this.currentState?.name === name;
   }
 }
 

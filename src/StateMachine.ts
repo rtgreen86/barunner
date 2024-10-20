@@ -2,7 +2,7 @@
 // See: https://blog.ourcade.co/posts/2020/state-pattern-character-movement-phaser-3/
 
 export interface StateConfig {
-  onEntry?: () => void;
+  onEnter?: () => void;
   onUpdate?: (time: number) => void;
   onExit?: () => void;
 }
@@ -18,6 +18,8 @@ export class StateMachine {
   private context?: unknown;
   private states = new Map<string, State>();
   private currentState?: State;
+  private isChangingState = false;
+  private changeStateQueue: string[] = [];
 
   constructor(context?: unknown, id?: string) {
     this.id = id ?? this.id;
@@ -25,15 +27,47 @@ export class StateMachine {
   }
 
   addState(name: string, config?: StateConfig) {
-
+    this.states.set(name, {
+      name,
+      onEnter: config?.onEnter?.bind(this.context),
+      onUpdate: config?.onUpdate?.bind(this.context),
+      onExit: config?.onExit?.bind(this.context)
+    });
+    return this;
   }
 
   setState(name: string) {
+    if (!this.states.has(name)) {
+      console.log(`Tried to change to unknown state: ${name}`);
+      return this;
+    }
 
+    if (this.isCurrentState(name)) {
+      return this;
+    }
+
+    if (this.isChangingState) {
+      this.changeStateQueue.push(name);
+      return this;
+    }
+
+    this.isChangingState = true;
+    console.log(`[StateMachine (${this.id})] change from ${this.currentState?.name ?? 'none'} to ${name}`);
+    this.currentState?.onExit?.();
+    this.currentState = this.states.get(name);
+    this.currentState?.onEnter?.();
+    this.isChangingState = false;
+    return this;
   }
 
   update(time: number) {
+    if (this.changeStateQueue.length > 0) this.setState(this.changeStateQueue.shift());
+    this.currentState?.onUpdate?.(time);
+    return this;
+  }
 
+  isCurrentState(name: string) {
+    return this.currentState?.name === name;
   }
 }
 

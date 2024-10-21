@@ -1,4 +1,4 @@
-import { Physics } from 'phaser';
+import Phaser, { Physics, Scene } from 'phaser';
 
 const ANIMATION_IDLE = 'Ram Idle';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';
@@ -17,20 +17,25 @@ const DIRECTION_RIGHT = 'right';
 const DIRECTION_LEFT = 'left';
 
 export default class Player extends Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, frame) {
+  private runVelocity = 1200;
+  private jumpVelocity = -500;
+  private jumpMaxTime = 300;
+  private jumpTime = 0;
+  private isRunningStart = false;
+  private isJumpSoundPlayed?: boolean;
+  private isDown?: unknown;
+
+  constructor(
+    scene: Scene,
+    x: number,
+    y: number,
+    texture: Phaser.Textures.Texture,
+    frame: string | number
+  ) {
     super(scene, x, y, texture, frame);
     this.scene.physics.world.enable(this);
-
-    this.runVelocity = 1200;
-    this.jumpVelocity = -500;
-    this.jumpMaxTime = 300;
-    this.jumpTime = 0;
-    this.isRunningStart = false;
     this.direction = DIRECTION_RIGHT;
-
-
     this.initAnimation();
-
     this.setSize(Player.width, Player.height);
     this.setMaxVelocity(1200, 600)
     this.setData('isAlive', true);
@@ -81,7 +86,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.flipX = value === DIRECTION_LEFT;
   }
 
-  jump(duration) {
+  jump(duration: number) {
     const animName = this.anims.getName();
     if (animName === ANIMATION_IDLE || animName === ANIMATION_RUN) {
       this.play(ANIMATION_JUMP_UP);
@@ -169,7 +174,7 @@ export default class Player extends Physics.Arcade.Sprite {
     this.idle();
   }
 
-  touch(isDown, time, delta) {
+  touch(isDown: unknown, time: unknown, delta: unknown) {
     if (this.isDown !== isDown) {
       this.isDown = isDown;
       console.log('Player toched!', isDown, time, delta);

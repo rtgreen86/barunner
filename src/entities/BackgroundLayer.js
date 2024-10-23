@@ -27,10 +27,10 @@ export default class BackgroundLayer extends Phaser.GameObjects.RenderTexture {
 
   update(time) {
     const cameraX = this.scene.cameras.main.scrollX * this.scrollFactorX;
-    this.x = Math.floor(cameraX / this.width) * this.width;
+    this.x = Math.floor(cameraX / this.width) * this.width + 2000 // magic;
 
     if (this.autoScrollX) {
-      this.x = (this.autoScrollX / 1000) * time;
+      this.x = (this.autoScrollX / 1000) * time + 2000 // magic;
       if (this.x < this.width) {
         this.x = this.x % this.width;
       }

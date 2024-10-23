@@ -108,11 +108,13 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createBackgrounLayers(layersData) {
+    const width = this.game.config.width;
+
     return this.add.group(
 
       layersData
         .filter(layerData => getPropertyValueByName(layerData.properties, 'class') === 'BackgroundLayer')
-        .map(layerData => BackgroundLayer.create(this, this.map, layerData.name, 0, 0))
+        .map(layerData => BackgroundLayer.create(this, this.map, layerData.name, 0, 515))
         .map(layer => this.add.existing(layer)),
 
       {runChildUpdate: true}

@@ -108,7 +108,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="25" name="background2" width="32" height="16">
+ <layer id="25" name="background2" class="BackgroundLayer" width="32" height="16">
   <properties>
    <property name="class" value="BackgroundLayer"/>
    <property name="depth" type="int" value="-30"/>
@@ -133,7 +133,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="16" name="background1" width="32" height="16">
+ <layer id="16" name="background1" class="BackgroundLayer" width="32" height="16">
   <properties>
    <property name="class" value="BackgroundLayer"/>
    <property name="depth" type="int" value="-10"/>

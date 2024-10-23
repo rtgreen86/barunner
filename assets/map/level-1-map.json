@@ -116,7 +116,7 @@
                  "value":0
                 }],
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":32,
          "x":0,
          "y":0
@@ -254,7 +254,7 @@
          "value":8
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":128,
  "tilesets":[
         {

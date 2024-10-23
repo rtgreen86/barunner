@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="16" tilewidth="128" tileheight="128" infinite="0" backgroundcolor="#d9f0f5" nextlayerid="26" nextobjectid="16">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="32" height="16" tilewidth="128" tileheight="128" infinite="0" backgroundcolor="#d9f0f5" nextlayerid="26" nextobjectid="16">
  <editorsettings>
   <export target="level-1-map.json" format="json"/>
  </editorsettings>
@@ -82,7 +82,7 @@
    <property name="textureScrollFactorX" type="float" value="0.01"/>
   </properties>
  </imagelayer>
- <layer id="22" name="background5" width="32" height="16" visible="0">
+ <layer id="22" name="background5" width="32" height="16">
   <properties>
    <property name="autoScrollX" type="int" value="10"/>
    <property name="class" value="BackgroundLayer"/>

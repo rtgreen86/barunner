@@ -1,58 +1,44 @@
-// See: https://blog.ourcade.co/posts/2021/character-logic-state-machine-typescript/
-// See: https://blog.ourcade.co/posts/2020/state-pattern-character-movement-phaser-3/
-
-export interface StateConfig {
-  onEnter?: () => void;
-  onUpdate?: (time: number) => void;
-  onExit?: () => void;
-}
-
-export interface State extends StateConfig {
-  name: string,
-}
+import { State, StateConfig, ControlState } from './interfaces';
 
 let lastId = 0;
 
-export class StateMachine {
+export class StateMachine implements ControlState {
   private id = (++lastId).toString();
-  private context?: unknown;
   private states = new Map<string, State>();
   private currentState?: State;
   private isChangingState = false;
   private changeStateQueue: string[] = [];
+  private context: unknown;
 
-  /**
-   *
-   * @param context - (optional) context for handlers
-   * @param id - (optional) state machine id (e.g. player)
-   */
   constructor(context?: unknown, id?: string) {
     this.id = id ?? this.id;
     this.context = context;
   }
 
-  /**
-   *
-   * @param name - state name (e.g. idle)
-   * @param config - (optional) handlers
-   * @returns @this
-   */
-  addState(name: string, config?: StateConfig) {
-    this.states.set(name, {
-      name,
+  get currentStateName() {
+    return this.currentState?.name || '';
+  }
+
+  addState(name: string, config?: StateConfig): this
+  addState(state: State): this
+  addState(nameOrState: string | State, config?: StateConfig): this {
+    if (typeof nameOrState === 'object') {
+      this.states.set(nameOrState.name, nameOrState);
+      return this;
+    }
+
+    this.states.set(nameOrState, {
+      name: nameOrState,
       onEnter: config?.onEnter?.bind(this.context),
       onUpdate: config?.onUpdate?.bind(this.context),
       onExit: config?.onExit?.bind(this.context)
     });
+
     return this;
   }
 
-  getCurrentStateName() {
-    return this.currentState?.name
-  }
-
   isCurrentState(name: string) {
-    return this.getCurrentStateName() === name;
+    return this.currentStateName === name;
   }
 
   setState(name: string) {
@@ -74,8 +60,10 @@ export class StateMachine {
     console.log(`[StateMachine (${this.id})] change from ${this.currentState?.name ?? 'none'} to ${name}`);
     this.currentState?.onExit?.();
     this.currentState = this.states.get(name);
+    this.currentState.stateMachine = this;
     this.currentState?.onEnter?.();
     this.isChangingState = false;
+
     return this;
   }
 

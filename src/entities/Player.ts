@@ -1,5 +1,5 @@
 import Phaser, { Physics, Scene } from 'phaser';
-import StateMachine from '../StateMachine';
+import StateMachine from '../state-machine/StateMachine';
 
 const ANIMATION_IDLE = 'Ram Idle';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';

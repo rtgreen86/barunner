@@ -1,0 +1,2 @@
+https://blog.ourcade.co/posts/2021/character-logic-state-machine-typescript/
+https://blog.ourcade.co/posts/2020/state-pattern-character-movement-phaser-3/

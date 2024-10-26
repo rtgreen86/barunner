@@ -13,7 +13,7 @@ export class Run extends ArcadeState<{
 }> {
   readonly name = 'RUN';
 
-  private onEnter() {
+  onEnter() {
     this.params.sharedState.isRunningStart = true;
     this.sprite.play(this.params.animationName, true);
     if (this.params.direction === DIRECTION_LEFT) this.sprite.setVelocityX(-this.params.runVelocity);

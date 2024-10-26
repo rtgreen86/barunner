@@ -1,5 +1,6 @@
 import Phaser, { Physics, Scene } from 'phaser';
-import StateMachine from '../state-machine/StateMachine';
+import StateMachine, { State } from '../state-machine';
+
 
 const ANIMATION_IDLE = 'Ram Idle';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';
@@ -18,24 +19,27 @@ const DIRECTION_RIGHT = 'right';
 const DIRECTION_LEFT = 'left';
 
 
-const IDLE = 'idle';
-const RUN = 'run';
-const JUMP = 'jump';
-const FLY = 'fly';
-const FALL = 'fall';
-const LANDING = 'landing';
+const IDLE = 'IDLE';
+const RUN = 'RUN';
+const JUMP = 'JUMP_UP';
+const FLY = 'JUMP_TOP';
+const FALL = 'FALL';
+const LANDING = 'LANDING';
 
 export default class Player extends Physics.Arcade.Sprite {
   private runVelocity = 1200;
   private jumpVelocity = -500;
   private jumpMaxTime = 300;
-  private isRunningStart = false;
   private isJumpSoundPlayed?: boolean;
   private isDown?: unknown;
   private stateMachine = new StateMachine(this, 'Player');
 
   private jumpStartTime = 0;
   private jumpCurrentTime = 0;
+
+  private sharedState = {
+    isRunningStart: false,
+  };
 
   constructor(
     scene: Scene,
@@ -73,26 +77,40 @@ export default class Player extends Physics.Arcade.Sprite {
 
   initStateMachine() {
     this.stateMachine
-      .addState(IDLE, {
-        onEnter: this.handleIdleEnter
-      })
-      .addState(RUN, {
-        onEnter: this.handleRunEnter
-      })
-      .addState(JUMP, {
-        onEnter: this.handleJumpEnter,
-        onUpdate: this.handleJumpUpdate
-      })
-      .addState(FLY, {
-        onEnter: this.handleFlyEnter
-      })
-      .addState(FALL, {
-        onEnter: this.handleFallEnter
-      })
-      .addState(LANDING, {
-        onEnter: this.handleLandingEnter,
-        onUpdate: this.handleLandingUpdate
-      });
+
+      .addState(new State.Arcade.Idle(this, {
+        animationName: ANIMATION_IDLE,
+        sharedState: this.sharedState
+      }))
+
+      .addState(new State.Arcade.Run(this, {
+        animationName: ANIMATION_RUN,
+        direction: 'right',
+        runVelocity: this.runVelocity,
+        sharedState: this.sharedState,
+      }))
+
+      .addState(new State.Arcade.JumpUp(this, {
+        animationName: ANIMATION_JUMP_UP,
+        jumpVelocity: this.jumpVelocity,
+        jumpMaxTime: this.jumpMaxTime
+      }))
+
+      .addState(new State.Arcade.JumpTop(this, {
+        animationName: ANIMATION_FLY,
+      }))
+
+      .addState(new State.Arcade.Fall(this, {
+        animationName: ANIMATION_FALL,
+      }))
+
+      .addState(new State.Arcade.Landing(this, {
+        animationName: ANIMATION_LANDING,
+        runAnimationName: ANIMATION_RUN,
+        idleAnimationName: ANIMATION_IDLE,
+        sharedState: this.sharedState,
+      }));
+
     return this;
   }
 
@@ -160,12 +178,12 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   hurt() {
-    this.isRunningStart = false;
+    this.sharedState.isRunningStart = false;
     return this.play(ANIMATION_HURT);
   }
 
   dash() {
-    this.isRunningStart = false;
+    this.sharedState.isRunningStart = false;
     return this.play(ANIMATION_DASH);
   }
 
@@ -231,7 +249,7 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   private handleLandingEnter() {
-    if (this.isRunningStart) {
+    if (this.sharedState.isRunningStart) {
       this.play(ANIMATION_LANDING);
       this.playAfterRepeat(ANIMATION_RUN);
       return;
@@ -247,13 +265,13 @@ export default class Player extends Physics.Arcade.Sprite {
   }
 
   private handleIdleEnter() {
-    this.isRunningStart = false;
+    this.sharedState.isRunningStart = false;
     this.setVelocityX(0);
     this.play(ANIMATION_IDLE);
   }
 
   private handleRunEnter() {
-    this.isRunningStart = true;
+    this.sharedState.isRunningStart = true;
     this.play(ANIMATION_RUN, true);
     this.setVelocityX(
       this.direction === DIRECTION_LEFT

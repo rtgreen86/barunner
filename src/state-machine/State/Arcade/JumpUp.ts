@@ -16,7 +16,7 @@ export class JumpUp extends ArcadeState<{
   }
 
   onUpdate(time: number) {
-    if (!this.jumpStartTime) this.jumpStartTime = 0;
+    if (!this.jumpStartTime) this.jumpStartTime = time;
     if (time - this.jumpStartTime <= this.params.jumpMaxTime) this.sprite.setVelocityY(this.params.jumpVelocity);
     else this.stateMachine.setState('JUMP_TOP');
   }

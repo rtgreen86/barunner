@@ -19,6 +19,6 @@ export class Landing extends ArcadeState<{
   onUpdate() {
     const animName = this.sprite.anims.getName();
     if (animName === this.params.runAnimationName) this.stateMachine.setState('RUN');
-    else this.stateMachine.setState('IDLE');
+    if (animName === this.params.idleAnimationName) this.stateMachine.setState('IDLE');
   }
 }

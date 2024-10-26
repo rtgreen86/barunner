@@ -1,9 +1,8 @@
 import { State, StateConfig } from './State';
-import { HasState } from './HasState';
 
 let lastId = 0;
 
-export class StateMachine implements HasState {
+export class StateMachine {
   private id = (++lastId).toString();
   private states = new Map<string, State>();
   private currentState?: State;
@@ -16,7 +15,7 @@ export class StateMachine implements HasState {
     this.context = context;
   }
 
-  get stateName() {
+  get currentStateName() {
     return this.currentState?.name || '';
   }
 
@@ -39,7 +38,7 @@ export class StateMachine implements HasState {
   }
 
   isCurrentState(name: string) {
-    return this.stateName === name;
+    return this.currentStateName === name;
   }
 
   setState(name: string) {

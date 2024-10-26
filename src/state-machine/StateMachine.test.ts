@@ -106,6 +106,6 @@ describe('StateMachine', () => {
   it('should return current state name', () => {
     const sm = new StateMachine();
     sm.addState('idle').setState('idle');
-    expect(sm.stateName).toEqual('idle');
+    expect(sm.currentStateName).toEqual('idle');
   });
 });

@@ -17,7 +17,8 @@ export class Landing extends BaseState<Params> {
   }
 
   onUpdate() {
-    if (this.actor.animationName === this.runAnimationName) this.actor.stateMachine.setState('RUN');
-    if (this.actor.animationName === this.idleAnimationName) this.actor.stateMachine.setState('IDLE');
+    if (this.actor.animationName === this.runAnimationName) this.actor.setState('RUN');
+    if (this.actor.animationName === this.idleAnimationName) this.actor.setState('IDLE');
+    if (this.actor.animationName === this.idleAnimationName) console.log('to landing');
   }
 }

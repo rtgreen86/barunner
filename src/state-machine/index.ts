@@ -1,4 +1,3 @@
-export * from './HasState';
 export * from './State';
 export * from './StateMachine';
 

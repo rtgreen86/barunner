@@ -19,6 +19,6 @@ export class JumpUp extends BaseState<Params> {
   onUpdate(time: number) {
     if (!this.jumpStartTime) this.jumpStartTime = time;
     if (time - this.jumpStartTime <= this.params.jumpMaxTime) this.actor.setVelocityY(this.params.jumpVelocity);
-    else this.actor.stateMachine.setState('JUMP_TOP');
+    else this.actor.setState('JUMP_TOP');
   }
 }

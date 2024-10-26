@@ -1,8 +1,9 @@
-import { State, StateConfig, ControlState } from './interfaces';
+import { State, StateConfig } from './State';
+import { HasState } from './HasState';
 
 let lastId = 0;
 
-export class StateMachine implements ControlState {
+export class StateMachine implements HasState {
   private id = (++lastId).toString();
   private states = new Map<string, State>();
   private currentState?: State;
@@ -15,7 +16,7 @@ export class StateMachine implements ControlState {
     this.context = context;
   }
 
-  get currentStateName() {
+  get stateName() {
     return this.currentState?.name || '';
   }
 
@@ -38,7 +39,7 @@ export class StateMachine implements ControlState {
   }
 
   isCurrentState(name: string) {
-    return this.currentStateName === name;
+    return this.stateName === name;
   }
 
   setState(name: string) {
@@ -60,7 +61,6 @@ export class StateMachine implements ControlState {
     console.log(`[StateMachine (${this.id})] change from ${this.currentState?.name ?? 'none'} to ${name}`);
     this.currentState?.onExit?.();
     this.currentState = this.states.get(name);
-    this.currentState.stateMachine = this;
     this.currentState?.onEnter?.();
     this.isChangingState = false;
 

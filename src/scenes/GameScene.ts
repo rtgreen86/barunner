@@ -87,6 +87,10 @@ export default class GameScene extends Phaser.Scene {
     this.scene.run('virtual-gamepad-scene');
 
     this.subscribe();
+
+    // new resources
+
+    this.add.image(700, 850, 'new-bg-layer-1').setOrigin(0, 0);
   }
 
   subscribe() {

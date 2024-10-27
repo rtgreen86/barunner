@@ -21,6 +21,12 @@ import BUTTON_X from '../../assets/images/ui/button_x.png';
 import SWITCH_ANIMATED from '../../assets/images/ui/switch_animated.png';
 import SWITCH_ANIMATED_JSON from '../../assets/images/ui/switch_animated.json';
 
+// New Resources
+
+import NEW_BG_LAYER_1 from '../../assets/images/new/hill-background-layer-1.png';
+import NEW_BG_LAYER_2 from '../../assets/images/new/hill-background-layer-2.png';
+import NEW_BG_LAYER_3 from '../../assets/images/new/hill-background-layer-3.png';
+
 export default class BootScene extends Phaser.Scene {
   constructor() {
     super({ key: 'BootScene', active: true });
@@ -39,6 +45,11 @@ export default class BootScene extends Phaser.Scene {
 
     this.loadUI();
     this.loadAudio();
+
+    // Load new resources
+    this.load.image('new-bg-layer-1', NEW_BG_LAYER_1);
+    this.load.image('new-bg-layer-2', NEW_BG_LAYER_2);
+    this.load.image('new-bg-layer-3', NEW_BG_LAYER_3);
   }
 
   loadUI() {

@@ -29,7 +29,7 @@ export function getPropertyByName<T extends Prop>(props: T[], propertyName: stri
   return props.find(prop => prop.name === propertyName) || defaultValue;
 }
 
-export function getPropertyValueByName<T extends Prop> (props: T[], propertyName: string, defaultValue?: unknown) {
+export function getPropertyValueByName<T extends Prop>(props: T[], propertyName: string, defaultValue?: unknown) {
   return getPropertyByName(props, propertyName, { value: defaultValue } as Prop).value;
 }
 
@@ -90,8 +90,17 @@ export default class GameScene extends Phaser.Scene {
 
     // new resources
 
-    this.add.image(700, 850, 'new-bg-layer-1').setOrigin(0, 0);
+    const screenWidth = this.scale.width
+    const screenHeight = this.scale.height
+    const scrollX = this.cameras.main.scrollX;
+    const scrollY = this.cameras.main.scrollY;
+    const texture = this.textures.get('new-bg-layer-1');
+    const textureHeight = texture.getSourceImage().height;
+    const offsetY = -145;
+    this.add.tileSprite(scrollX, scrollY + screenHeight + offsetY, screenWidth, textureHeight, 'new-bg-layer-1').setOrigin(0, 1);
   }
+
+
 
   subscribe() {
     this.events.on('destroy', this.#handleDestroy, this);
@@ -137,7 +146,7 @@ export default class GameScene extends Phaser.Scene {
         .map(image => new BackgroundTileSprite(this, image, width, height))
         .map(layer => this.add.existing(layer)),
 
-      {runChildUpdate: true}
+      { runChildUpdate: true }
 
     );
   }
@@ -152,7 +161,7 @@ export default class GameScene extends Phaser.Scene {
         .map(layerData => BackgroundLayer.create(this, this.map, layerData.name, 0, 515))
         .map(layer => this.add.existing(layer)),
 
-      {runChildUpdate: true}
+      { runChildUpdate: true }
 
     );
   }

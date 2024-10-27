@@ -11,12 +11,13 @@ type Params = {
 
 export class Run extends BaseState<Params> {
   readonly name = 'RUN';
+
   readonly animationName = 'Ram Run';
 
   onEnter() {
     this.params.isRunningStart = true;
-    this.actor.playAnimation(this.animationName, true);
-    if (this.params.direction === DIRECTION_LEFT) this.actor.setVelocityX(-this.params.runVelocity);
-    else this.actor.setVelocityX(this.params.runVelocity);
+    this.sprite.play('Ram Run', true);
+    if (this.params.direction === DIRECTION_LEFT) this.sprite.setVelocityX(-this.params.runVelocity);
+    else this.sprite.setVelocityX(this.params.runVelocity);
   }
 }

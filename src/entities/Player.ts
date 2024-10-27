@@ -1,6 +1,6 @@
 import Phaser, { Physics, Scene } from 'phaser';
 import StateMachine from '../state-machine';
-import { Actor, States } from '../actor';
+import * as States from '../states';
 
 const ANIMATION_IDLE = 'Ram Idle';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';
@@ -26,7 +26,7 @@ const FLY = 'JUMP_TOP';
 const FALL = 'FALL';
 const LANDING = 'LANDING';
 
-export default class Player extends Physics.Arcade.Sprite implements Actor{
+export default class Player extends Physics.Arcade.Sprite {
   private runVelocity = 1200;
   private jumpVelocity = -500;
   private jumpMaxTime = 300;
@@ -101,8 +101,8 @@ export default class Player extends Physics.Arcade.Sprite implements Actor{
       .addState(new States.Idle(this, this.stateParams))
       .addState(new States.Run(this, this.stateParams))
       .addState(new States.JumpUp(this, this.stateParams))
-      .addState(new States.JumpTop(this, this.stateParams))
-      .addState(new States.Fall(this, this.stateParams))
+      .addState(new States.JumpTop(this))
+      .addState(new States.Fall(this))
       .addState(new States.Landing(this, this.stateParams));
 
     return this;

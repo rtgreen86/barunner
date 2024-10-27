@@ -6,11 +6,10 @@ type Params = {
 
 export class Idle extends BaseState<Params> {
   readonly name = 'IDLE';
-  readonly animationName = 'Ram Idle';
 
   onEnter() {
     this.params.isRunningStart = false;
-    this.actor.setVelocityX(0);
-    this.actor.playAnimation(this.animationName);
+    this.sprite.setVelocityX(0);
+    this.sprite.play('Ram Idle');
   }
 }

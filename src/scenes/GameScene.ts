@@ -20,11 +20,42 @@ const SPAWN_DISTANCE = 4000;
 
 const START_FALLING_VELOCITY = 10;
 
-export const getPropertyByName = (props, propertyName, defaultValue) => props.find(prop => prop.name === propertyName) || defaultValue;
+type Prop = {
+  name?: string,
+  value?: unknown
+};
 
-export const getPropertyValueByName = (props, propertyName, defaultValue) => getPropertyByName(props, propertyName, { value: defaultValue}).value;
+export function getPropertyByName<T extends Prop>(props: T[], propertyName: string, defaultValue: T) {
+  return props.find(prop => prop.name === propertyName) || defaultValue;
+}
+
+export function getPropertyValueByName<T extends Prop> (props: T[], propertyName: string, defaultValue?: unknown) {
+  return getPropertyByName(props, propertyName, { value: defaultValue } as Prop).value;
+}
 
 export default class GameScene extends Phaser.Scene {
+  map: Phaser.Tilemaps.Tilemap;
+
+  player: Player;
+
+  playerStartPosition: number;
+
+  jumpSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+
+  generatedRight: number;
+
+  generatedLeft: number;
+
+  prevDistance: number;
+
+  escKey: Phaser.Input.Keyboard.Key;
+
+  obstacles: Phaser.Physics.Arcade.Group;
+
+  controller: Controller;
+
+  numKeys: any;
+
   constructor() {
     super('GameScene');
   }
@@ -74,7 +105,7 @@ export default class GameScene extends Phaser.Scene {
     this.escKey.off('down', this.#handleEscDown, this);
   }
 
-  update(time, delta) {
+  update(time: number, delta: number) {
     this.updateGround();
     this.updatePlayer(time, delta);
     this.updateObjects();
@@ -91,7 +122,7 @@ export default class GameScene extends Phaser.Scene {
     return map;
   }
 
-  createBackgroundTileSprite(images) {
+  createBackgroundTileSprite(images: any[]) {
     const width = this.game.config.width;
     const height = this.game.config.height;
 
@@ -107,7 +138,7 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
-  createBackgrounLayers(layersData) {
+  createBackgrounLayers(layersData: Phaser.Tilemaps.LayerData[]) {
     const width = this.game.config.width;
 
     return this.add.group(
@@ -122,7 +153,7 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
-  createGroundLayer(layerName, x = 0, y = 0) {
+  createGroundLayer(layerName: string, x = 0, y = 0) {
     const layer = this.map.createLayer(layerName, this.map.tilesets, x, y);
     layer.setOrigin(0.5, 0.5);
     layer.setScrollFactor(0, 1);
@@ -179,11 +210,16 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    const playerX = this.map.properties.find(prop => prop.name === 'playerX');
+    type PlayerProperty = {
+      name?: string,
+      value: number,
+    };
+
+    const playerX = (this.map.properties as PlayerProperty[]).find(prop => prop.name === 'playerX');
     const x = playerX.value * this.map.tileWidth;
-    const playerY = this.map.properties.find(prop => prop.name === 'playerY');
+    const playerY = (this.map.properties as PlayerProperty[]).find(prop => prop.name === 'playerY');
     const y = playerY.value * this.map.tileHeight - Player.height / 2;
-    const player = new Player(this, x, y, 'ram-spritesheet', 3)
+    const player = new Player(this, x, y, 'ram-spritesheet' as any, 3)
     player.setDepth(2000);
     return player;
   }
@@ -249,13 +285,13 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateGround() {
-    const width = this.map.layer.tilemapLayer.width - this.game.config.width;
+    const width = this.map.layer.tilemapLayer.width - (this.game.config.width as number);
     const cameraX = this.cameras.main.scrollX;
     const offset = cameraX - Math.floor(cameraX / width) * width;
     this.map.layer.tilemapLayer.x = -offset;
   }
 
-  updatePlayer(time) {
+  updatePlayer(time: number, delta?: number) {
     if (this.player.isJumping && this.controller.isActionDown) {
       this.player.jump(this.controller.getActionDuration());
     }
@@ -279,11 +315,11 @@ export default class GameScene extends Phaser.Scene {
     this.player.update(time);
   }
 
-  isFalling(object) {
+  isFalling(object: any) {
     return object.body.velocity.y > START_FALLING_VELOCITY;
   }
 
-  onNumKeyDown(key) {
+  onNumKeyDown(key: any) {
     switch (key.keyCode) {
       case Phaser.Input.Keyboard.KeyCodes.TWO:
         this.player.dash();
@@ -326,7 +362,7 @@ export default class GameScene extends Phaser.Scene {
     )
   }
 
-  setCameraOffset(offsetX, offsetY) {
+  setCameraOffset(offsetX: number, offsetY: number) {
     this.cameras.main.setLerp(CAMERA_MOVE_LERP, 0);
     this.cameras.main.setFollowOffset(offsetX, offsetY);
   }
@@ -355,7 +391,7 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  handlePlayerCollideObstacle(player, obstacle) {
+  handlePlayerCollideObstacle(player: Player, obstacle: any) {
     const { x: px, y: py } = player.getBottomRight();
     const { x: ox, y: oy } = obstacle.getTopLeft();
     const sideCollide = py - oy >= px - ox;

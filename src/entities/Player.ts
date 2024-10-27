@@ -70,7 +70,7 @@ export default class Player extends Physics.Arcade.Sprite implements Actor{
   }
 
   get stateName() {
-    return this.stateMachine.currentStateName;
+    return this.stateMachine.currentStateName.toString();
   }
 
   get velocityX() {

@@ -2,21 +2,33 @@ import { State, StateConfig } from './State';
 
 let lastId = 0;
 
+type Context = {
+  state: number | string;
+  setState: (state: number | string) => Context;
+}
+
 export class StateMachine {
   private id = (++lastId).toString();
-  private states = new Map<string, State>();
-  private currentState?: State;
-  private isChangingState = false;
-  private changeStateQueue: string[] = [];
-  private context: unknown;
 
-  constructor(context?: unknown, id?: string) {
+  private states = new Map<string, State>();
+
+  private isChangingState = false;
+
+  private changeStateQueue: string[] = [];
+
+  private readonly context;
+
+  constructor(gameObject: Context, id?: string) {
     this.id = id ?? this.id;
-    this.context = context;
+    this.context = gameObject;
   }
 
   get currentStateName() {
-    return this.currentState?.name || '';
+    return this.context.state;
+  }
+
+  get currentState() {
+    return this.states.get(this.currentStateName.toString());
   }
 
   addState(name: string, config?: StateConfig): this
@@ -59,7 +71,7 @@ export class StateMachine {
     this.isChangingState = true;
     console.log(`[StateMachine (${this.id})] change from ${this.currentState?.name ?? 'none'} to ${name}`);
     this.currentState?.onExit?.();
-    this.currentState = this.states.get(name);
+    this.context.state = name;
     this.currentState?.onEnter?.();
     this.isChangingState = false;
 

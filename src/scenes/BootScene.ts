@@ -27,9 +27,11 @@ import NEW_BG_LAYER_1 from '../../assets/images/new/hill-background-layer-1.png'
 import NEW_BG_LAYER_2 from '../../assets/images/new/hill-background-layer-2.png';
 import NEW_BG_LAYER_3 from '../../assets/images/new/hill-background-layer-3.png';
 
+import { TextureKeys, SceneKeys, SpritesheetKeys, AnimationKeys } from '../consts';
+
 export default class BootScene extends Phaser.Scene {
   constructor() {
-    super({ key: 'BootScene', active: true });
+    super({ key: SceneKeys.BootScene, active: true });
   }
 
   preload() {
@@ -37,19 +39,15 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
     this.load.image('level-1-tileset', FILE_LEVEL_1_TILESET_PNG);
     this.load.image('modal-dialog', FILE_MODAL_DIALOG);
-
-    this.load.aseprite('ram-spritesheet', FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
-    this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
-
     this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
 
     this.loadUI();
     this.loadAudio();
 
+
     // Load new resources
-    this.load.image('new-bg-layer-1', NEW_BG_LAYER_1);
-    this.load.image('new-bg-layer-2', NEW_BG_LAYER_2);
-    this.load.image('new-bg-layer-3', NEW_BG_LAYER_3);
+    this.loadBackgrounds();
+    this.loadSprites();
   }
 
   loadUI() {
@@ -68,15 +66,35 @@ export default class BootScene extends Phaser.Scene {
 
   create() {
     this.createAnimation();
-    this.startGame();
+    this.scene.run(SceneKeys.GameScene);
   }
 
   createAnimation() {
     this.anims.createFromAseprite('switch-animated');
     this.anims.get('Indicate').repeat = -1;
+
+    // new RAM
+
+    this.anims.createFromAseprite(SpritesheetKeys.RamSpritesheet);
+    this.anims.get(AnimationKeys.RAM_DASH).repeat = -1;
+    this.anims.get(AnimationKeys.RAM_IDLE).repeat = -1;
+    this.anims.get(AnimationKeys.RAM_DIZZY).repeat = -1;
+    this.anims.get(AnimationKeys.RAM_HURT).repeat = -1;
+    this.anims.get(AnimationKeys.RAM_TAKEOFF_RUN).repeat = -1;
+    this.anims.get(AnimationKeys.RAM_JUMP_UP).repeat = 0;
+    this.anims.get(AnimationKeys.RAM_FALL).repeat = 0;
+    this.anims.get(AnimationKeys.RAM_RUN).repeat = -1;
   }
 
-  startGame() {
-    this.scene.run('GameScene');
+  loadBackgrounds() {
+    // New Resources
+    this.load.image(TextureKeys.BackgroundLayer1, NEW_BG_LAYER_1);
+    this.load.image(TextureKeys.BackgroundLayer2, NEW_BG_LAYER_2);
+    this.load.image(TextureKeys.BackgroundLayer3, NEW_BG_LAYER_3);
+  }
+
+  loadSprites() {
+    this.load.aseprite(SpritesheetKeys.RamSpritesheet, FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
+    this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
   }
 }

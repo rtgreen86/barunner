@@ -7,6 +7,8 @@ import Controller from '../entities/Controller';
 
 import { OpenMainMenu } from '../commands';
 
+import { SceneKeys } from '../consts';
+
 const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -57,7 +59,7 @@ export default class GameScene extends Phaser.Scene {
   numKeys: any;
 
   constructor() {
-    super('GameScene');
+    super(SceneKeys.GameScene);
   }
 
   create() {

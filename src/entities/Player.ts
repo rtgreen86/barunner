@@ -56,7 +56,6 @@ export default class Player extends Physics.Arcade.Sprite {
     super(scene, x, y, texture, frame);
     this.scene.physics.world.enable(this);
     this.direction = DIRECTION_RIGHT;
-    this.initAnimation();
     this.initStateMachine();
     this.setSize(Player.width, Player.height);
     this.setMaxVelocity(1200, 600)
@@ -83,18 +82,6 @@ export default class Player extends Physics.Arcade.Sprite {
 
   static width = 128;
   static height = 64;
-
-  initAnimation() {
-    this.scene.anims.createFromAseprite(this.texture.key);
-    this.scene.anims.get(ANIMATION_DASH).repeat = -1;
-    this.scene.anims.get(ANIMATION_IDLE).repeat = -1;
-    this.scene.anims.get(ANIMATION_DIZZY).repeat = -1;
-    this.scene.anims.get(ANIMATION_HURT).repeat = -1;
-    this.scene.anims.get(ANIMATION_TAKEOFF_RUN).repeat = -1;
-    this.scene.anims.get(ANIMATION_JUMP_UP).repeat = 0;
-    this.scene.anims.get(ANIMATION_FALL).repeat = 0;
-    this.scene.anims.get(ANIMATION_RUN).repeat = -1;
-  }
 
   initStateMachine() {
     this.stateMachine

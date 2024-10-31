@@ -27,7 +27,7 @@ import NEW_BG_LAYER_1 from '../../assets/images/new/hill-background-layer-1.png'
 import NEW_BG_LAYER_2 from '../../assets/images/new/hill-background-layer-2.png';
 import NEW_BG_LAYER_3 from '../../assets/images/new/hill-background-layer-3.png';
 
-import { TextureKeys, SceneKeys, SpritesheetKeys, AnimationKeys } from '../consts';
+import { TextureKeys, SceneKeys, SpritesheetKeys, AnimationKeys } from '../const/keys';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {

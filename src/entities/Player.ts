@@ -1,4 +1,4 @@
-import Phaser, { Physics, Scene } from 'phaser';
+import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
 import * as States from '../states';
 
@@ -26,7 +26,7 @@ const FLY = 'JUMP_TOP';
 const FALL = 'FALL';
 const LANDING = 'LANDING';
 
-export default class Player extends Physics.Arcade.Sprite {
+export default class Player extends Phaser.Physics.Arcade.Sprite {
   private runVelocity = 1200;
   private jumpVelocity = -500;
   private jumpMaxTime = 300;
@@ -62,6 +62,10 @@ export default class Player extends Physics.Arcade.Sprite {
     this.setData('isAlive', true);
     this.setBounceX(0.7);
     this.play(ANIMATION_IDLE);
+
+    // this.body
+
+    (this.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true);
   }
 
   get animationName() {

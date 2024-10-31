@@ -21,6 +21,8 @@ import packageJson from '../package.json';
 
 import './styles.css';
 
+import { CONST } from './const'
+
 new Phaser.Game({
   title: 'Barunner',
   version: packageJson.version,
@@ -30,7 +32,7 @@ new Phaser.Game({
     default: 'arcade',
     arcade: {
       debug: false,
-      gravity: { x: 0, y: 2000 }
+      gravity: { x: CONST.GRAVITY_X, y: CONST.GRAVITY_Y }
     }
   },
   plugins: {
@@ -40,16 +42,16 @@ new Phaser.Game({
     ]
   },
   scale: {
-    width: 1280,
-    height: 720,
+    width: CONST.WIDTH,
+    height: CONST.HEIGHT,
     mode: Phaser.Scale.FIT,
     min: {
-      width: 320,
-      height: 180
+      width: CONST.MIN_WIDTH,
+      height: CONST.MIN_HEIGHT
     },
     max: {
-      width: 1280,
-      height: 720
+      width: CONST.MAX_WIDTH,
+      height: CONST.MAX_HEIGHT
     }
   }
 });

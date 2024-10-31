@@ -7,7 +7,7 @@ import Controller from '../entities/Controller';
 
 import { OpenMainMenu } from '../commands';
 
-import { SceneKeys } from '../consts';
+import { SceneKeys } from '../const/keys';
 
 const CAMERA_ZOOM = 1;
 
@@ -67,8 +67,14 @@ export default class GameScene extends Phaser.Scene {
     this.createBackgroundTileSprite(this.map.images);
     this.createBackgrounLayers(this.map.layers);
     this.createGroundLayer('ground', 0, 0);
+
+    // create player
     this.player = this.add.existing(this.createPlayer()).setName('The Player');
     this.playerStartPosition = this.player.x;
+
+    // setup world
+    this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1200)
+
     this.createControls();
     this.createObstacles();
     this.createCollaider();

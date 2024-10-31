@@ -7,6 +7,7 @@
     "phaser": "^3.55.2"
   },
   "devDependencies": {
+    "@types/file-loader": "^5.0.4",
     "@types/jest": "^29.5.13",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^12.0.0",

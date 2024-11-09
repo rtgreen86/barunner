@@ -66,14 +66,14 @@ export default class GameScene extends Phaser.Scene {
     this.map = this.createMap();
     this.createBackgroundTileSprite(this.map.images);
     this.createBackgrounLayers(this.map.layers);
-    this.createGroundLayer('ground', 0, 0);
+    // this.createGroundLayer('ground', 0, 0);
 
     // create player
     this.player = this.add.existing(this.createPlayer()).setName('The Player');
     this.playerStartPosition = this.player.x;
 
     // setup world
-    this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1200)
+    this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000)
 
     this.createControls();
     this.createObstacles();
@@ -216,6 +216,14 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.player, this.obstacles, this.handlePlayerCollideObstacle, null, this);
+
+    this.player.setCollideWorldBounds(true, null, null, true);
+
+    this.physics.world.on('worldbounds', function (body: Phaser.Physics.Arcade.Body) {
+      if (body.gameObject === this.player) {
+        this.handlePlayerCollideGround();
+      }
+    }, this);
   }
 
   createCamera() {

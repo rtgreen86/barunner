@@ -21,17 +21,20 @@ import BUTTON_X from '../../assets/images/ui/button_x.png';
 import SWITCH_ANIMATED from '../../assets/images/ui/switch_animated.png';
 import SWITCH_ANIMATED_JSON from '../../assets/images/ui/switch_animated.json';
 
-// New Resources
+// Hill
 
-import NEW_BG_LAYER_1 from '../../assets/images/new/hill-background-layer-1.png';
-import NEW_BG_LAYER_2 from '../../assets/images/new/hill-background-layer-2.png';
-import NEW_BG_LAYER_3 from '../../assets/images/new/hill-background-layer-3.png';
+import HILL_LAYER_1_PNG from '../../assets/images/hill/hill-layer-1.png';
+import HILL_LAYER_2_PNG from '../../assets/images/hill/hill-layer-2.png';
+import HILL_LAYER_3_PNG from '../../assets/images/hill/hill-layer-3.png';
+import HILL_LAYER_4_PNG from '../../assets/images/hill/hill-layer-4.png';
 
-import { TextureKeys, SceneKeys, SpritesheetKeys, AnimationKeys } from '../const';
+
+import { TextureKeys, SpritesheetKeys, AnimationKeys } from '../const';
+import * as CONST from '../const';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
-    super({ key: SceneKeys.BootScene, active: true });
+    super({ key: CONST.SCENE_KEYS.BOOT_SCENE, active: true });
   }
 
   preload() {
@@ -45,8 +48,11 @@ export default class BootScene extends Phaser.Scene {
     this.loadAudio();
 
 
-    // Load new resources
-    this.loadBackgrounds();
+    this.load.image(TextureKeys.HillLayer1, HILL_LAYER_1_PNG);
+    this.load.image(TextureKeys.HillLayer2, HILL_LAYER_2_PNG);
+    this.load.image(TextureKeys.HillLayer3, HILL_LAYER_3_PNG);
+    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
+
     this.loadSprites();
   }
 
@@ -66,7 +72,7 @@ export default class BootScene extends Phaser.Scene {
 
   create() {
     this.createAnimation();
-    this.scene.run(SceneKeys.GameScene);
+    this.scene.run(CONST.SCENE_KEYS.GAME_SCENE);
   }
 
   createAnimation() {
@@ -84,13 +90,6 @@ export default class BootScene extends Phaser.Scene {
     this.anims.get(AnimationKeys.RAM_JUMP_UP).repeat = 0;
     this.anims.get(AnimationKeys.RAM_FALL).repeat = 0;
     this.anims.get(AnimationKeys.RAM_RUN).repeat = -1;
-  }
-
-  loadBackgrounds() {
-    // New Resources
-    this.load.image(TextureKeys.BackgroundLayer1, NEW_BG_LAYER_1);
-    this.load.image(TextureKeys.BackgroundLayer2, NEW_BG_LAYER_2);
-    this.load.image(TextureKeys.BackgroundLayer3, NEW_BG_LAYER_3);
   }
 
   loadSprites() {

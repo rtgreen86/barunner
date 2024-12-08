@@ -1,15 +1,12 @@
 import Phaser from 'phaser';
-
 import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
 import Player from '../entities/Player';
 import Controller from '../entities/Controller';
-
 import { OpenMainMenu } from '../commands';
+import { TextureKeys } from '../const';
+import * as CONST from '../const';
 
-import { SceneKeys } from '../const/keys';
-
-const CAMERA_ZOOM = 1;
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -59,25 +56,36 @@ export default class GameScene extends Phaser.Scene {
   numKeys: any;
 
   constructor() {
-    super(SceneKeys.GameScene);
+    super(CONST.SCENE_KEYS.GAME_SCENE);
   }
 
   create() {
     this.map = this.createMap();
-    this.createBackgroundTileSprite(this.map.images);
-    this.createBackgrounLayers(this.map.layers);
+    // this.createBackgroundTileSprite(this.map.images);
+    // this.createBackgrounLayers(this.map.layers);
     // this.createGroundLayer('ground', 0, 0);
 
     // create player
-    this.player = this.add.existing(this.createPlayer()).setName('The Player');
+    // this.player = this.add.existing(this.createPlayer()).setName('The Player');
+    // this.playerStartPosition = this.player.x;
+
+    this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
+
+    const screenWidth = this.scale.width;
+    const screenHeight = this.scale.height;
+
+    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer1).setOrigin(0, 0);
+    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer2).setOrigin(0, 0);
+    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer3).setOrigin(0, 0);
+    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer4).setOrigin(0, 0);
+
+    const player = new Player(this, 0, 0, 'ram-spritesheet' as any, 3)
+    this.player = this.add.existing(player).setName('The Player');
     this.playerStartPosition = this.player.x;
 
-    // setup world
-    this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000)
-
     this.createControls();
-    this.createObstacles();
-    this.createCollaider();
+    // this.createObstacles();
+    // this.createCollaider();
     this.createCamera();
     this.jumpSound = this.sound.add('jump');
 
@@ -98,17 +106,23 @@ export default class GameScene extends Phaser.Scene {
 
     // new resources
 
-    const screenWidth = this.scale.width
-    const screenHeight = this.scale.height
+
     const scrollX = this.cameras.main.scrollX;
     const scrollY = this.cameras.main.scrollY;
     const texture = this.textures.get('new-bg-layer-1');
     const textureHeight = texture.getSourceImage().height;
     const offsetY = -145;
-    this.add.tileSprite(scrollX, scrollY + screenHeight + offsetY, screenWidth, textureHeight, 'new-bg-layer-1').setOrigin(0, 1);
+    // this.add.tileSprite(scrollX, scrollY + screenHeight + offsetY, screenWidth, textureHeight, 'new-bg-layer-1').setOrigin(0, 1);
+
+
+    this.player.setCollideWorldBounds(true, null, null, true);
+
+    this.physics.world.on('worldbounds', function (body: Phaser.Physics.Arcade.Body) {
+      if (body.gameObject === this.player) {
+        this.handlePlayerCollideGround();
+      }
+    }, this);
   }
-
-
 
   subscribe() {
     this.events.on('destroy', this.#handleDestroy, this);
@@ -127,9 +141,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number) {
-    this.updateGround();
+    // this.updateGround();
     this.updatePlayer(time, delta);
-    this.updateObjects();
+    // this.updateObjects();
     this.stabilizeTheCamera();
 
     const distanceDiff = Math.max(this.player.x - this.prevDistance, 0);
@@ -228,13 +242,13 @@ export default class GameScene extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = CAMERA_ZOOM;
+    this.cameras.main.zoom = CONST.CAMERA.ZOOM;
     this.cameras.main.startFollow(
       this.player,
       true,
       1, 0,
       this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
-      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
+      - this.cameras.main.height / 2
     );
   }
 
@@ -249,6 +263,7 @@ export default class GameScene extends Phaser.Scene {
     const playerY = (this.map.properties as PlayerProperty[]).find(prop => prop.name === 'playerY');
     const y = playerY.value * this.map.tileHeight - Player.height / 2;
     const player = new Player(this, x, y, 'ram-spritesheet' as any, 3)
+
     player.setDepth(2000);
     return player;
   }
@@ -314,10 +329,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updateGround() {
-    const width = this.map.layer.tilemapLayer.width - (this.game.config.width as number);
-    const cameraX = this.cameras.main.scrollX;
-    const offset = cameraX - Math.floor(cameraX / width) * width;
-    this.map.layer.tilemapLayer.x = -offset;
+    // const width = this.map.layer.tilemapLayer.width - (this.game.config.width as number);
+    // const cameraX = this.cameras.main.scrollX;
+    // const offset = cameraX - Math.floor(cameraX / width) * width;
+    // this.map.layer.tilemapLayer.x = -offset;
   }
 
   updatePlayer(time: number, delta?: number) {

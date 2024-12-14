@@ -7,13 +7,9 @@ import { OpenMainMenu } from '../commands';
 import { TextureKeys } from '../const';
 import * as CONST from '../const';
 
-
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
 const CAMERA_MOVE_LERP = 0.4;
-
-const PLAYER_CAMERA_POSITION_X = -0.25;
-const PLAYER_CAMERA_POSITION_Y = 0.25;
 
 const SPAWN_DISTANCE = 4000;
 
@@ -67,17 +63,12 @@ export default class GameScene extends Phaser.Scene {
     // this.createBackgrounLayers(this.map.layers);
     // this.createGroundLayer('ground', 0, 0);
 
-    // create player
-    // this.player = this.add.existing(this.createPlayer()).setName('The Player');
-    // this.playerStartPosition = this.player.x;
+
 
     this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
 
     this.createBackground();
-
-    const player = new Player(this, 0, 0, 'ram-spritesheet' as any, 3)
-    this.player = this.add.existing(player).setName('The Player');
-    this.playerStartPosition = this.player.x;
+    this.createPlayer();
 
     this.createControls();
     // this.createObstacles();
@@ -155,6 +146,10 @@ export default class GameScene extends Phaser.Scene {
     const distanceDiff = Math.max(this.player.x - this.prevDistance, 0);
     this.prevDistance = this.player.x;
     this.data.inc('distance', distanceDiff / 70);
+
+
+    console.log(this.cameras.main.height, this.cameras.main.scrollY);
+
   }
 
   updateBackground() {
@@ -254,30 +249,26 @@ export default class GameScene extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
-    this.cameras.main.zoom = CONST.CAMERA.ZOOM;
+    this.cameras.main.zoom = CONST.CAMERA_ZOOM;
     this.cameras.main.startFollow(
       this.player,
       true,
       1, 0,
-      this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
-      - this.cameras.main.height / 2
+      CONST.CAMERA_PLAYER_POSITION_X,
+      CONST.CAMERA_PLAYER_POSITION_Y
     );
   }
 
-  createPlayer() {
-    type PlayerProperty = {
-      name?: string,
-      value: number,
-    };
+  private createPlayer() {
 
-    const playerX = (this.map.properties as PlayerProperty[]).find(prop => prop.name === 'playerX');
-    const x = playerX.value * this.map.tileWidth;
-    const playerY = (this.map.properties as PlayerProperty[]).find(prop => prop.name === 'playerY');
-    const y = playerY.value * this.map.tileHeight - Player.height / 2;
-    const player = new Player(this, x, y, 'ram-spritesheet' as any, 3)
+    const ground = CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE
 
-    player.setDepth(2000);
-    return player;
+    console.log(ground);
+
+    const player = new Player(this, 0, 0, 'ram-spritesheet' as any, 3)
+    this.player = this.add.existing(player).setName('The Player');
+    this.player.setPosition(0, ground)
+    this.playerStartPosition = this.player.x;
   }
 
   createControls() {
@@ -406,15 +397,15 @@ export default class GameScene extends Phaser.Scene {
 
   setCameraToRight() {
     this.setCameraOffset(
-      this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
-      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
+      this.cameras.main.width * CONST.CAMERA_PLAYER_POSITION_X,
+      this.cameras.main.height * CONST.CAMERA_PLAYER_POSITION_Y
     )
   }
 
   setCameraToLeft() {
     this.setCameraOffset(
-      -this.cameras.main.width * PLAYER_CAMERA_POSITION_X,
-      this.cameras.main.height * PLAYER_CAMERA_POSITION_Y
+      -this.cameras.main.width * CONST.CAMERA_PLAYER_POSITION_X,
+      this.cameras.main.height * CONST.CAMERA_PLAYER_POSITION_Y
     )
   }
 

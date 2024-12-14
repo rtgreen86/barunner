@@ -55,6 +55,8 @@ export default class GameScene extends Phaser.Scene {
 
   numKeys: any;
 
+  private backgrounds: Phaser.GameObjects.TileSprite[] = [];
+
   constructor() {
     super(CONST.SCENE_KEYS.GAME_SCENE);
   }
@@ -71,13 +73,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
 
-    const screenWidth = this.scale.width;
-    const screenHeight = this.scale.height;
-
-    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer1).setOrigin(0, 0);
-    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer2).setOrigin(0, 0);
-    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer3).setOrigin(0, 0);
-    this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer4).setOrigin(0, 0);
+    this.createBackground();
 
     const player = new Player(this, 0, 0, 'ram-spritesheet' as any, 3)
     this.player = this.add.existing(player).setName('The Player');
@@ -124,6 +120,15 @@ export default class GameScene extends Phaser.Scene {
     }, this);
   }
 
+  createBackground() {
+    const screenWidth = this.scale.width;
+    const screenHeight = this.scale.height;
+    this.backgrounds[0] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer1).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[1] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer2).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[2] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer3).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[3] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer4).setOrigin(0, 0).setScrollFactor(0, 0);
+  }
+
   subscribe() {
     this.events.on('destroy', this.#handleDestroy, this);
     this.events.on('pause', this.#handlePause, this);
@@ -141,6 +146,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number) {
+    this.updateBackground();
     // this.updateGround();
     this.updatePlayer(time, delta);
     // this.updateObjects();
@@ -149,6 +155,12 @@ export default class GameScene extends Phaser.Scene {
     const distanceDiff = Math.max(this.player.x - this.prevDistance, 0);
     this.prevDistance = this.player.x;
     this.data.inc('distance', distanceDiff / 70);
+  }
+
+  updateBackground() {
+    this.backgrounds[1].setTilePosition(this.cameras.main.scrollX * 0.1);
+    this.backgrounds[2].setTilePosition(this.cameras.main.scrollX * 0.5);
+    this.backgrounds[3].setTilePosition(this.cameras.main.scrollX);
   }
 
   createMap() {

@@ -29,6 +29,12 @@ import HILL_LAYER_3_PNG from '../../assets/images/hill/hill-layer-3.png';
 import HILL_LAYER_4_PNG from '../../assets/images/hill/hill-layer-4.png';
 import HILL_TREE_PNG from '../../assets/images/hill/hill-tree.png';
 
+// new obstacles
+
+import OBSTACLES_PNG from '../../assets/images/obstacles.png';
+import OBSTACLES_EFFECT_PNG from '../../assets/images/obstacle-effect.png';
+import OBSTACLES_EFFECT_JSON from '../../assets/images/obstacle-effect.json';
+
 import { TextureKeys, SpritesheetKeys, AnimationKeys } from '../const';
 import * as CONST from '../const';
 
@@ -50,6 +56,9 @@ export default class BootScene extends Phaser.Scene {
     this.preloadHill();
 
     this.loadSprites();
+
+    this.load.image(CONST.TextureKeys.Obstacles, OBSTACLES_PNG);
+    this.load.aseprite(CONST.TextureKeys.ObstaclesEffects, OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
   }
 
   preloadHill() {

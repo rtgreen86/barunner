@@ -6,6 +6,7 @@ import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
 import { TextureKeys } from '../const';
 import * as CONST from '../const';
+import Obstacle from '../entities/Obstacle';
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
@@ -75,6 +76,12 @@ export default class GameScene extends Phaser.Scene {
     ).setOrigin(0, 1);
 
     this.createPlayer();
+
+
+    // create obstacle
+
+    const rock = new Obstacle(this, 700, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
+    this.add.existing(rock);
 
 
     this.createControls();

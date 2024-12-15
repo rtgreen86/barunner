@@ -27,7 +27,7 @@ import HILL_LAYER_1_PNG from '../../assets/images/hill/hill-layer-1.png';
 import HILL_LAYER_2_PNG from '../../assets/images/hill/hill-layer-2.png';
 import HILL_LAYER_3_PNG from '../../assets/images/hill/hill-layer-3.png';
 import HILL_LAYER_4_PNG from '../../assets/images/hill/hill-layer-4.png';
-
+import HILL_TREE_PNG from '../../assets/images/hill/hill-tree.png';
 
 import { TextureKeys, SpritesheetKeys, AnimationKeys } from '../const';
 import * as CONST from '../const';
@@ -47,13 +47,18 @@ export default class BootScene extends Phaser.Scene {
     this.loadUI();
     this.loadAudio();
 
+    this.preloadHill();
 
+    this.loadSprites();
+  }
+
+  preloadHill() {
     this.load.image(TextureKeys.HillLayer1, HILL_LAYER_1_PNG);
     this.load.image(TextureKeys.HillLayer2, HILL_LAYER_2_PNG);
     this.load.image(TextureKeys.HillLayer3, HILL_LAYER_3_PNG);
     this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
-
-    this.loadSprites();
+    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
+    this.load.image(TextureKeys.HillTree, HILL_TREE_PNG);
   }
 
   loadUI() {

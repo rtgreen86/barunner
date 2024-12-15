@@ -52,6 +52,7 @@ export default class GameScene extends Phaser.Scene {
   numKeys: any;
 
   private backgrounds: Phaser.GameObjects.TileSprite[] = [];
+  private tree: Phaser.GameObjects.Image;
 
   constructor() {
     super(CONST.SCENE_KEYS.GAME_SCENE);
@@ -63,12 +64,18 @@ export default class GameScene extends Phaser.Scene {
     // this.createBackgrounLayers(this.map.layers);
     // this.createGroundLayer('ground', 0, 0);
 
-
-
     this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
 
     this.createBackground();
+
+    this.tree = this.add.image(
+      Phaser.Math.Between(100, 1000),
+      CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE,
+      TextureKeys.HillTree
+    ).setOrigin(0, 1);
+
     this.createPlayer();
+
 
     this.createControls();
     // this.createObstacles();
@@ -147,9 +154,7 @@ export default class GameScene extends Phaser.Scene {
     this.prevDistance = this.player.x;
     this.data.inc('distance', distanceDiff / 70);
 
-
-    console.log(this.cameras.main.height, this.cameras.main.scrollY);
-
+    this.wrapTree();
   }
 
   updateBackground() {
@@ -449,6 +454,15 @@ export default class GameScene extends Phaser.Scene {
     }
 
     return true;
+  }
+
+  private wrapTree() {
+    const scrollX = this.cameras.main.scrollX;
+    const rightEdge = scrollX + this.scale.width;
+
+    if (this.tree.x + this.tree.width < scrollX) {
+      this.tree.x = Phaser.Math.Between(rightEdge + 100, rightEdge + 1000);
+    }
   }
 
   #handleEscDown() {

@@ -233,7 +233,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.stateMachine.update(time);
 
     if (this.stateMachine.currentStateName === 'DIE') {
-      this.setVelocityX(0);
+      const velocityX = this.velocityX;
+      this.setVelocityX(velocityX * 0.99);
     }
   }
 

@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import { TextureKeys, AnimationKeys } from '../const';
 
 export default class Obstacle extends Phaser.GameObjects.Container {
+  private effect: Phaser.GameObjects.Sprite;
+
+  private cursor: Phaser.Types.Input.Keyboard.CursorKeys;
+
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
 
@@ -14,10 +18,24 @@ export default class Obstacle extends Phaser.GameObjects.Container {
     body.setSize(rock.width, rock.height);
     body.setOffset(-rock.width * 0.5, -rock.height);
 
-    const effect = scene.add.sprite(0, 0, TextureKeys.ObstaclesEffects)
+    this.effect = scene.add.sprite(0, 0, TextureKeys.ObstaclesEffects)
       .play(AnimationKeys.OBSTACLE_EFFECT)
 
+    this.runEffect(false);
+
     this.add(rock);
-    this.add(effect);
+    this.add(this.effect);
+
+    this.cursor = scene.input.keyboard.createCursorKeys();
+  }
+
+  runEffect(enabled: boolean) {
+    this.effect.setVisible(enabled);
+  }
+
+  update() {
+    if (this.cursor.space?.isDown) {
+      this.runEffect(true);
+    }
   }
 }

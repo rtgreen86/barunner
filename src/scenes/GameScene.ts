@@ -53,6 +53,8 @@ export default class GameScene extends Phaser.Scene {
 
   numKeys: any;
 
+  private rock: Phaser.GameObjects.Container;
+
   private backgrounds: Phaser.GameObjects.TileSprite[] = [];
   private tree: Phaser.GameObjects.Image;
 
@@ -83,6 +85,7 @@ export default class GameScene extends Phaser.Scene {
 
     const rock = new Obstacle(this, 700, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
     this.add.existing(rock);
+    this.rock = rock;
 
     const rockBody = rock.body as Phaser.Physics.Arcade.Body;
     rockBody.setCollideWorldBounds(true);
@@ -166,6 +169,7 @@ export default class GameScene extends Phaser.Scene {
     this.data.inc('distance', distanceDiff / 70);
 
     this.wrapTree();
+    this.rock.update();
   }
 
   updateBackground() {

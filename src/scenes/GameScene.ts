@@ -452,6 +452,11 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.isFalling) {
       this.player.landing();
     }
+
+    if (this.player.stateMachine.currentStateName === 'DIE') {
+      return;
+    }
+
     if (this.player.isRunning && this.controller.isActionDown) {
       this.player.jump(this.controller.getActionDuration());
     }

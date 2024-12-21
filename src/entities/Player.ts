@@ -231,6 +231,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   update(time: number) {
     this.stateMachine.update(time);
+
+    if (this.stateMachine.currentStateName === 'DIE') {
+      this.setVelocityX(0);
+    }
   }
 
   private handleJumpEnter() {

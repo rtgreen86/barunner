@@ -4,8 +4,6 @@ import FILE_BACKGROUND_LAYER_1_PNG from '../../assets/images/background-layer-1.
 import FILE_BACKGROUND_LAYER_2_PNG from '../../assets/images/background-layer-2.png'
 import FILE_LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
 import FILE_LEVEL_1_TILESET_PNG from '../../assets/images/level-1-tileset.png';
-import FILE_OBJECTS_JSON from '../../assets/images/objects.json';
-import FILE_OBJECTS_PNG from '../../assets/images/objects.png';
 import FILE_RAM_SPRITESHEET_JSON from '../../assets/images/ram-spritesheet.json';
 import FILE_RAM_SPRITESHEET_PNG from '../../assets/images/ram-spritesheet.png';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
@@ -34,6 +32,8 @@ import HILL_TREE_PNG from '../../assets/images/hill/hill-tree.png';
 import OBSTACLES_PNG from '../../assets/images/obstacles.png';
 import OBSTACLES_EFFECT_PNG from '../../assets/images/obstacle-effect.png';
 import OBSTACLES_EFFECT_JSON from '../../assets/images/obstacle-effect.json';
+import FILE_OBJECTS_JSON from '../../assets/images/objects.json';
+import FILE_OBJECTS_PNG from '../../assets/images/objects.png';
 
 import { TextureKeys, SpritesheetKeys, AnimationKeys } from '../const';
 import * as CONST from '../const';
@@ -59,6 +59,8 @@ export default class BootScene extends Phaser.Scene {
 
     this.load.image(CONST.TextureKeys.Obstacles, OBSTACLES_PNG);
     this.load.aseprite(CONST.TextureKeys.ObstaclesEffects, OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
+
+
   }
 
   preloadHill() {
@@ -111,6 +113,6 @@ export default class BootScene extends Phaser.Scene {
 
   loadSprites() {
     this.load.aseprite(SpritesheetKeys.RamSpritesheet, FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
-    this.load.aseprite('objects-spritesheet', FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
+    this.load.aseprite(SpritesheetKeys.Objects, FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
   }
 }

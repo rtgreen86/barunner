@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { TextureKeys, AnimationKeys } from '../const';
+import { TextureKeys, AnimationKeys, SpritesheetKeys } from '../const';
 
 export default class Obstacle extends Phaser.GameObjects.Container {
   private effect: Phaser.GameObjects.Sprite;
@@ -9,7 +9,7 @@ export default class Obstacle extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
 
-    const rock = scene.add.sprite(0, 0, TextureKeys.Obstacles)
+    const rock = scene.add.sprite(0, 0, SpritesheetKeys.Objects, 3)
       .setOrigin(0.5, 1);
 
     scene.physics.add.existing(this);

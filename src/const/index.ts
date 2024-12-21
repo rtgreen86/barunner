@@ -8,6 +8,7 @@ export const CAMERA_PLAYER_POSITION_Y = 280;
 
 export enum SpritesheetKeys {
   RamSpritesheet = 'ram-spritesheet',
+  Objects = 'objects-spritesheet'
 }
 
 export enum AnimationKeys {

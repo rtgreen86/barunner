@@ -169,6 +169,7 @@ export default class GameScene extends Phaser.Scene {
     this.data.inc('distance', distanceDiff / 70);
 
     this.wrapTree();
+    this.wrapObstacle();
     this.rock.update();
   }
 
@@ -477,6 +478,19 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.tree.x + this.tree.width < scrollX) {
       this.tree.x = Phaser.Math.Between(rightEdge + 100, rightEdge + 1000);
+    }
+  }
+
+  private wrapObstacle() {
+    const scrollX = this.cameras.main.scrollX;
+    const rightEdge = scrollX + this.scale.width;
+
+    const width = this.rock.width;
+    if (this.rock.x + width < scrollX) {
+      this.rock.x = Phaser.Math.Between(
+        rightEdge + width,
+        rightEdge + width + 1000
+      );
     }
   }
 

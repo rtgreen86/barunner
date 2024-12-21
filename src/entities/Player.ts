@@ -94,7 +94,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .addState(new States.JumpUp(this, this.stateParams))
       .addState(new States.JumpTop(this))
       .addState(new States.Fall(this))
-      .addState(new States.Landing(this, this.stateParams));
+      .addState(new States.Landing(this, this.stateParams))
+      .addState(new States.Die(this));
 
     return this;
   }
@@ -210,8 +211,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   die() {
     this.isJumpSoundPlayed = false;
-    this.setVelocity(0, 0);
-    this.play('Idle');
+    this.setState('DIE');
+    return this;
   }
 
   isMoving() {

@@ -128,7 +128,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }, this);
 
-    this.physics.add.overlap(
+    this.physics.add.collider(
       this.rock,
       this.player,
       this.handleObstacleOverlap,
@@ -524,6 +524,7 @@ export default class GameScene extends Phaser.Scene {
     obj1: any,
     obj2: any
   ) {
-    console.log('Overlap!');
+    console.log('overlap!');
+    this.player.die();
   }
 }

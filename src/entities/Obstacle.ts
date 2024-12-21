@@ -12,11 +12,18 @@ export default class Obstacle extends Phaser.GameObjects.Container {
     const rock = scene.add.sprite(0, 0, SpritesheetKeys.Objects, 3)
       .setOrigin(0.5, 1);
 
-    scene.physics.add.existing(this);
+    scene.physics.add.existing(this, true);
 
-    const body = this.body as Phaser.Physics.Arcade.Body;
-    body.setSize(rock.width, rock.height);
-    body.setOffset(-rock.width * 0.5, -rock.height);
+
+    const width = rock.displayWidth;
+    const height = rock.displayHeight;
+
+    const body = this.body as Phaser.Physics.Arcade.StaticBody;
+    body.setSize(width, height);
+    body.setOffset(-width * 0.5, 0);
+
+    body.position.x = this.x + body.offset.x;
+    body.position.y = this.y - height;
 
     this.effect = scene.add.sprite(0, 0, TextureKeys.ObstaclesEffects)
       .play(AnimationKeys.OBSTACLE_EFFECT)

@@ -87,9 +87,6 @@ export default class GameScene extends Phaser.Scene {
     this.add.existing(rock);
     this.rock = rock;
 
-    const rockBody = rock.body as Phaser.Physics.Arcade.Body;
-    rockBody.setCollideWorldBounds(true);
-
 
     this.createControls();
     // this.createObstacles();
@@ -130,6 +127,14 @@ export default class GameScene extends Phaser.Scene {
         this.handlePlayerCollideGround();
       }
     }, this);
+
+    this.physics.add.overlap(
+      this.rock,
+      this.player,
+      this.handleObstacleOverlap,
+      undefined,
+      this
+    );
   }
 
   createBackground() {
@@ -485,12 +490,14 @@ export default class GameScene extends Phaser.Scene {
     const scrollX = this.cameras.main.scrollX;
     const rightEdge = scrollX + this.scale.width;
 
-    const width = this.rock.width;
+    const body = this.rock.body as Phaser.Physics.Arcade.StaticBody;
+    const width = body.width;
     if (this.rock.x + width < scrollX) {
       this.rock.x = Phaser.Math.Between(
         rightEdge + width,
         rightEdge + width + 1000
       );
+      body.position.x = this.rock.x + body.offset.x;
     }
   }
 
@@ -511,5 +518,12 @@ export default class GameScene extends Phaser.Scene {
   #handleResume() {
     console.log('GameScene: wakeup');
     this.scene.wake('ScoreboardScene');
+  }
+
+  private handleObstacleOverlap(
+    obj1: any,
+    obj2: any
+  ) {
+    console.log('Overlap!');
   }
 }

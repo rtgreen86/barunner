@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
 import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
-import Player from '../entities/Player';
 import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
 import { TextureKeys } from '../const';
 import * as CONST from '../const';
+
+import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -82,6 +83,9 @@ export default class GameScene extends Phaser.Scene {
 
     const rock = new Obstacle(this, 700, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
     this.add.existing(rock);
+
+    const rockBody = rock.body as Phaser.Physics.Arcade.Body;
+    rockBody.setCollideWorldBounds(true);
 
 
     this.createControls();

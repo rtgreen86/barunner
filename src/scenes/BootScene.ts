@@ -104,6 +104,9 @@ export default class BootScene extends Phaser.Scene {
     this.anims.get(AnimationKeys.RAM_JUMP_UP).repeat = 0;
     this.anims.get(AnimationKeys.RAM_FALL).repeat = 0;
     this.anims.get(AnimationKeys.RAM_RUN).repeat = -1;
+
+    this.anims.createFromAseprite(CONST.TextureKeys.ObstaclesEffects)
+    this.anims.get(AnimationKeys.OBSTACLE_EFFECT).repeat = -1;
   }
 
   loadSprites() {

@@ -23,6 +23,7 @@ export enum AnimationKeys {
   RAM_RUN = 'Ram Run',
   RAM_ATTACK = 'Ram Attack',
   RAM_FAINT = 'Ram Faint',
+  OBSTACLE_EFFECT = 'obstacle-effect'
 }
 
 export enum TextureKeys {

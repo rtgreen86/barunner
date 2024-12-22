@@ -151,6 +151,14 @@ export default class GameScene extends Phaser.Scene {
 
     this.coins = this.physics.add.staticGroup();
     this.spawnCoins();
+
+    this.physics.add.overlap(
+      this.coins,
+      this.player,
+      this.handleCollectCoin,
+      undefined,
+      this
+    );
   }
 
   createBackground() {
@@ -582,5 +590,15 @@ export default class GameScene extends Phaser.Scene {
 
       x += coin.width * 1.5;
     }
+  }
+
+
+  private handleCollectCoin(
+    obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile,
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile
+  ) {
+    const coin = obj2 as Phaser.Physics.Arcade.Sprite;
+    this.coins.killAndHide(coin);
+    coin.body.enable = false;
   }
 }

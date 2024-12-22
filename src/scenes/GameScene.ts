@@ -140,6 +140,11 @@ export default class GameScene extends Phaser.Scene {
       if (!this.scene.isActive(CONST.SCENE_KEYS.GAMEOVER_SCENE))
         this.scene.run(CONST.SCENE_KEYS.GAMEOVER_SCENE);
     });
+
+    this.events.once('restart', () => {
+      console.log('restart');
+      this.scene.restart();
+    })
   }
 
   createBackground() {

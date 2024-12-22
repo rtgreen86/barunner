@@ -23,8 +23,7 @@ export default class GameOver extends Phaser.Scene {
   }
 
   private handleSpacePressed() {
-    this.scene.stop(CONST.SCENE_KEYS.GAMEOVER_SCENE);
-    this.scene.stop(CONST.SCENE_KEYS.GAME_SCENE);
-    this.scene.start(CONST.SCENE_KEYS.GAME_SCENE);
+    this.scene.get(CONST.SCENE_KEYS.GAME_SCENE).events.emit('restart');
+    this.scene.stop();
   }
 }

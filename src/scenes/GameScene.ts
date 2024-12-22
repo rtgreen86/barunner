@@ -56,7 +56,10 @@ export default class GameScene extends Phaser.Scene {
   private rock: Phaser.GameObjects.Container;
 
   private backgrounds: Phaser.GameObjects.TileSprite[] = [];
+
   private tree: Phaser.GameObjects.Image;
+
+  private coins: Phaser.Physics.Arcade.StaticGroup;
 
   constructor() {
     super(CONST.SCENE_KEYS.GAME_SCENE);
@@ -145,6 +148,9 @@ export default class GameScene extends Phaser.Scene {
       console.log('restart');
       this.scene.restart();
     })
+
+    this.coins = this.physics.add.staticGroup();
+    this.spawnCoins();
   }
 
   createBackground() {
@@ -541,5 +547,40 @@ export default class GameScene extends Phaser.Scene {
   ) {
     console.log('overlap!');
     this.player.die();
+  }
+
+  private spawnCoins() {
+    this.coins.children.each(child => {
+      const coin = child as Phaser.Physics.Arcade.Sprite;
+      this.coins.killAndHide(coin);
+      coin.body.enable = false;
+      return true;
+    });
+
+    const scrollX = this.cameras.main.scrollX;
+    const rightEdge = scrollX + this.scale.width;
+
+    let x = rightEdge + 100;
+
+    const numCoins = Phaser.Math.Between(1, 20);
+
+    for (let i = 0; i < numCoins; ++i) {
+      const y = Phaser.Math.Between(100, this.scale.height - 100);
+      const coin = this.coins.get(
+        x, y,
+        CONST.SpritesheetKeys.Objects,
+        7
+      ) as Phaser.Physics.Arcade.Sprite;
+
+      coin.setVisible(true);
+      coin.setActive(true);
+
+      const body = coin.body as Phaser.Physics.Arcade.StaticBody;
+      body.setCircle(body.width * 0.25);
+      body.setOffset(body.width / 2, body.height / 2);
+      body.enable = true;
+
+      x += coin.width * 1.5;
+    }
   }
 }

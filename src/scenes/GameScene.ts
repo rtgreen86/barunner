@@ -135,6 +135,11 @@ export default class GameScene extends Phaser.Scene {
       undefined,
       this
     );
+
+    this.player.once('dead', () => {
+      if (!this.scene.isActive(CONST.SCENE_KEYS.GAMEOVER_SCENE))
+        this.scene.run(CONST.SCENE_KEYS.GAMEOVER_SCENE);
+    });
   }
 
   createBackground() {

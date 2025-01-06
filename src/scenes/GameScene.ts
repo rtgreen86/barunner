@@ -114,7 +114,6 @@ export default class GameScene extends Phaser.Scene {
 
     // new resources
 
-
     const scrollX = this.cameras.main.scrollX;
     const scrollY = this.cameras.main.scrollY;
     const texture = this.textures.get('new-bg-layer-1');
@@ -150,16 +149,13 @@ export default class GameScene extends Phaser.Scene {
     })
 
     // Objects
+
     this.coins = this.physics.add.staticGroup();
     this.spawnCoins();
 
-    this.physics.add.overlap(
-      this.coins,
-      this.player,
-      this.handleCollectCoin,
-      undefined,
-      this
-    );
+    // Overlaps and colliders
+
+    this.physics.add.overlap(this.coins, this.player, this.handleCollectCoin, undefined, this);
   }
 
   createBackground() {
@@ -550,23 +546,6 @@ export default class GameScene extends Phaser.Scene {
     this.scene.wake('ScoreboardScene');
   }
 
-  private handleObstacleOverlap(
-    obj1: any,
-    obj2: any
-  ) {
-    console.log('overlap!');
-    this.player.die();
-  }
-
-  private handleCollectCoin(
-    obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile,
-    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile
-  ) {
-    const coin = obj2 as Phaser.Physics.Arcade.Sprite;
-    this.coins.killAndHide(coin);
-    coin.body.enable = false;
-  }
-
   private spawnCoins() {
     // hide all coins
     this.coins.children.each(child => {
@@ -604,5 +583,22 @@ export default class GameScene extends Phaser.Scene {
       // next coin position
       x += coin.width * 1.5;
     }
+  }
+
+  //
+  // Event handlers
+  //
+
+  private handleObstacleOverlap() {
+    this.player.die();
+  }
+
+  private handleCollectCoin(
+    obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile,
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile
+  ) {
+    const coin = obj2 as Phaser.Physics.Arcade.Sprite;
+    this.coins.killAndHide(coin);
+    coin.body.enable = false;
   }
 }

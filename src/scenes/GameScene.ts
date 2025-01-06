@@ -59,7 +59,7 @@ export default class GameScene extends Phaser.Scene {
 
   private tree: Phaser.GameObjects.Image;
 
-  private coins: Phaser.Physics.Arcade.StaticGroup;
+  private coins!: Phaser.Physics.Arcade.StaticGroup;
 
   constructor() {
     super(SceneKeys.GameScene);
@@ -149,6 +149,7 @@ export default class GameScene extends Phaser.Scene {
       this.scene.restart();
     })
 
+    // Objects
     this.coins = this.physics.add.staticGroup();
     this.spawnCoins();
 
@@ -557,42 +558,6 @@ export default class GameScene extends Phaser.Scene {
     this.player.die();
   }
 
-  private spawnCoins() {
-    this.coins.children.each(child => {
-      const coin = child as Phaser.Physics.Arcade.Sprite;
-      this.coins.killAndHide(coin);
-      coin.body.enable = false;
-      return true;
-    });
-
-    const scrollX = this.cameras.main.scrollX;
-    const rightEdge = scrollX + this.scale.width;
-
-    let x = rightEdge + 100;
-
-    const numCoins = Phaser.Math.Between(1, 20);
-
-    for (let i = 0; i < numCoins; ++i) {
-      const y = Phaser.Math.Between(100, this.scale.height - 100);
-      const coin = this.coins.get(
-        x, y,
-        CONST.SpritesheetKeys.Objects,
-        7
-      ) as Phaser.Physics.Arcade.Sprite;
-
-      coin.setVisible(true);
-      coin.setActive(true);
-
-      const body = coin.body as Phaser.Physics.Arcade.StaticBody;
-      body.setCircle(body.width * 0.25);
-      body.setOffset(body.width / 2, body.height / 2);
-      body.enable = true;
-
-      x += coin.width * 1.5;
-    }
-  }
-
-
   private handleCollectCoin(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile,
     obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Physics.Arcade.Body | Phaser.Tilemaps.Tile
@@ -600,5 +565,44 @@ export default class GameScene extends Phaser.Scene {
     const coin = obj2 as Phaser.Physics.Arcade.Sprite;
     this.coins.killAndHide(coin);
     coin.body.enable = false;
+  }
+
+  private spawnCoins() {
+    // hide all coins
+    this.coins.children.each(child => {
+      const coin = child as Phaser.Physics.Arcade.Sprite;
+      this.coins.killAndHide(coin);
+      coin.body.enable = false;
+      return true;
+    });
+
+    const startGap = 100;
+    const scrollX = this.cameras.main.scrollX;
+    const rightEdge = scrollX + this.scale.width;
+    const numCoins = Phaser.Math.Between(1, 20);
+
+    let x = rightEdge + startGap;
+
+    for (let i = 0; i < numCoins; ++i) {
+      const y = Phaser.Math.Between(100, this.scale.height - 100);
+
+      const coin = this.coins.get(
+        x, y,
+        CONST.SpritesheetKeys.Objects,
+        7 // frame number
+      ) as Phaser.Physics.Arcade.Sprite;
+
+      coin.setVisible(true);
+      coin.setActive(true);
+
+      // enable phisyc
+      const body = coin.body as Phaser.Physics.Arcade.StaticBody;
+      body.setCircle(body.width * 0.25);
+      body.setOffset(body.width / 2, body.height / 2);
+      body.enable = true;
+
+      // next coin position
+      x += coin.width * 1.5;
+    }
   }
 }

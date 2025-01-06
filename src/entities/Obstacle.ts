@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { TextureKeys, AnimationKeys, SpritesheetKeys } from '../const';
+import { AnimationKeys, SpritesheetKeys } from '../const';
 
 export default class Obstacle extends Phaser.GameObjects.Container {
   private effect: Phaser.GameObjects.Sprite;
@@ -25,7 +25,7 @@ export default class Obstacle extends Phaser.GameObjects.Container {
     body.position.x = this.x + body.offset.x;
     body.position.y = this.y - height;
 
-    this.effect = scene.add.sprite(0, 0, TextureKeys.ObstaclesEffects)
+    this.effect = scene.add.sprite(0, 0, SpritesheetKeys.ObstaclesEffects)
       .play(AnimationKeys.OBSTACLE_EFFECT)
 
     this.runEffect(false);

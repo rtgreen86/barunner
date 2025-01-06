@@ -3,7 +3,7 @@ import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
 import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
-import { TextureKeys } from '../const';
+import { SceneKeys, TextureKeys } from '../const';
 import * as CONST from '../const';
 
 import Player from '../entities/Player';
@@ -62,7 +62,7 @@ export default class GameScene extends Phaser.Scene {
   private coins: Phaser.Physics.Arcade.StaticGroup;
 
   constructor() {
-    super(CONST.SCENE_KEYS.GAME_SCENE);
+    super(SceneKeys.GameScene);
   }
 
   create() {
@@ -140,8 +140,8 @@ export default class GameScene extends Phaser.Scene {
     );
 
     this.player.once('dead', () => {
-      if (!this.scene.isActive(CONST.SCENE_KEYS.GAMEOVER_SCENE))
-        this.scene.run(CONST.SCENE_KEYS.GAMEOVER_SCENE);
+      if (!this.scene.isActive(SceneKeys.GameoverScene))
+        this.scene.run(SceneKeys.GameoverScene);
     });
 
     this.events.once('restart', () => {

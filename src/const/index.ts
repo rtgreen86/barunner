@@ -1,15 +1,12 @@
-export * as SCENE_KEYS from './SceneKeys';
+export * from './SceneKeys';
+export * from './SpritesheetKeys';
+export * from './TextureKeys';
 export * as VIEWPORT from './Viewport';
 export * as WORLD from './World';
 
 export const CAMERA_ZOOM = 1;
 export const CAMERA_PLAYER_POSITION_X = -320;
 export const CAMERA_PLAYER_POSITION_Y = 280;
-
-export enum SpritesheetKeys {
-  RamSpritesheet = 'ram-spritesheet',
-  Objects = 'objects-spritesheet'
-}
 
 export enum AnimationKeys {
   RAM_IDLE = 'Ram Idle',
@@ -27,12 +24,3 @@ export enum AnimationKeys {
   OBSTACLE_EFFECT = 'obstacle-effect'
 }
 
-export enum TextureKeys {
-  HillLayer1 = 'hill-layer-1',
-  HillLayer2 = 'hill-layer-2',
-  HillLayer3 = 'hill-layer-3',
-  HillLayer4 = 'hill-layer-4',
-  HillTree = 'hill-tree',
-  Obstacles = 'obstacles',
-  ObstaclesEffects = 'obstacles-effects'
-}

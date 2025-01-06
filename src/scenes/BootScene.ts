@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 
+import { SceneKeys, TextureKeys, SpritesheetKeys, AnimationKeys } from '../const';
+
 import FILE_BACKGROUND_LAYER_1_PNG from '../../assets/images/background-layer-1.png'
 import FILE_BACKGROUND_LAYER_2_PNG from '../../assets/images/background-layer-2.png'
 import FILE_LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
@@ -35,44 +37,24 @@ import OBSTACLES_EFFECT_JSON from '../../assets/images/obstacle-effect.json';
 import FILE_OBJECTS_JSON from '../../assets/images/objects.json';
 import FILE_OBJECTS_PNG from '../../assets/images/objects.png';
 
-import { TextureKeys, SpritesheetKeys, AnimationKeys } from '../const';
-import * as CONST from '../const';
-
 export default class BootScene extends Phaser.Scene {
   constructor() {
-    super({ key: CONST.SCENE_KEYS.BOOT_SCENE, active: true });
+    super({ key: SceneKeys.BootScene, active: true });
   }
 
   preload() {
+    // Old backgrounds
+    // TODO: remove old backgrounds
     this.load.image('background-layer-1', FILE_BACKGROUND_LAYER_1_PNG);
     this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
     this.load.image('level-1-tileset', FILE_LEVEL_1_TILESET_PNG);
-    this.load.image('modal-dialog', FILE_MODAL_DIALOG);
+
+    // Old Map
+    // TODO: Remove old map loading
     this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
 
-    this.loadUI();
-    this.loadAudio();
-
-    this.preloadHill();
-
-    this.loadSprites();
-
-    this.load.image(CONST.TextureKeys.Obstacles, OBSTACLES_PNG);
-    this.load.aseprite(CONST.TextureKeys.ObstaclesEffects, OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
-
-
-  }
-
-  preloadHill() {
-    this.load.image(TextureKeys.HillLayer1, HILL_LAYER_1_PNG);
-    this.load.image(TextureKeys.HillLayer2, HILL_LAYER_2_PNG);
-    this.load.image(TextureKeys.HillLayer3, HILL_LAYER_3_PNG);
-    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
-    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
-    this.load.image(TextureKeys.HillTree, HILL_TREE_PNG);
-  }
-
-  loadUI() {
+    // UI
+    this.load.image('modal-dialog', FILE_MODAL_DIALOG);
     this.load.image('dialog_bg', DIALOG_BG);
     this.load.image('dialog_frame', DIALOG_FRAME);
     this.load.image('button-green', BUTTON_GREEN);
@@ -80,23 +62,31 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('button-red', BUTTON_RED);
     this.load.image('button-x', BUTTON_X);
     this.load.aseprite('switch-animated', SWITCH_ANIMATED, SWITCH_ANIMATED_JSON);
-  }
 
-  loadAudio() {
+    // Audio
     this.load.audio('jump', [FILE_JUMP_WAV]);
+
+    // Hills backgrounds
+    this.load.image(TextureKeys.HillLayer1, HILL_LAYER_1_PNG);
+    this.load.image(TextureKeys.HillLayer2, HILL_LAYER_2_PNG);
+    this.load.image(TextureKeys.HillLayer3, HILL_LAYER_3_PNG);
+    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
+    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
+    this.load.image(TextureKeys.HillTree, HILL_TREE_PNG);
+
+    // Sprites and objects
+    this.load.aseprite(SpritesheetKeys.RamSpritesheet, FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
+    this.load.aseprite(SpritesheetKeys.Objects, FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
+    this.load.aseprite(SpritesheetKeys.ObstaclesEffects, OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
+    this.load.image(TextureKeys.Obstacles, OBSTACLES_PNG);
   }
 
   create() {
-    this.createAnimation();
-    this.scene.run(CONST.SCENE_KEYS.GAME_SCENE);
-  }
-
-  createAnimation() {
+    // UI Animation
     this.anims.createFromAseprite('switch-animated');
     this.anims.get('Indicate').repeat = -1;
 
-    // new RAM
-
+    // Ram animation
     this.anims.createFromAseprite(SpritesheetKeys.RamSpritesheet);
     this.anims.get(AnimationKeys.RAM_DASH).repeat = -1;
     this.anims.get(AnimationKeys.RAM_IDLE).repeat = -1;
@@ -107,12 +97,11 @@ export default class BootScene extends Phaser.Scene {
     this.anims.get(AnimationKeys.RAM_FALL).repeat = 0;
     this.anims.get(AnimationKeys.RAM_RUN).repeat = -1;
 
-    this.anims.createFromAseprite(CONST.TextureKeys.ObstaclesEffects)
+    // Effects
+    this.anims.createFromAseprite(SpritesheetKeys.ObstaclesEffects)
     this.anims.get(AnimationKeys.OBSTACLE_EFFECT).repeat = -1;
-  }
 
-  loadSprites() {
-    this.load.aseprite(SpritesheetKeys.RamSpritesheet, FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
-    this.load.aseprite(SpritesheetKeys.Objects, FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
+    // Run scene
+    this.scene.run(SceneKeys.GameScene);
   }
 }

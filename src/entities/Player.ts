@@ -84,8 +84,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     return this.body.velocity.y;
   }
 
-  static width = 128;
-  static height = 64;
+  static width = 100;
+  static height = 60;
 
   initStateMachine() {
     this.stateMachine

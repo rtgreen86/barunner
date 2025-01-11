@@ -61,8 +61,16 @@ export default class GameScene extends Phaser.Scene {
 
   private coins!: Phaser.Physics.Arcade.StaticGroup;
 
+  private scoreLabel!: Phaser.GameObjects.Text;
+
+  private score = 0;
+
   constructor() {
     super(SceneKeys.GameScene);
+  }
+
+  init() {
+    this.score = 0;
   }
 
   create() {
@@ -146,7 +154,18 @@ export default class GameScene extends Phaser.Scene {
     this.events.once('restart', () => {
       console.log('restart');
       this.scene.restart();
+    });
+
+    // UI elements
+
+    this.scoreLabel = this.add.text(10, 10, `Score: ${this.score}`, {
+      fontSize: '24px',
+      color: '#080808',
+      backgroundColor: '#F8E71C',
+      shadow: { fill: true, blur: 0, offsetY: 0 },
+      padding: { left: 15, right: 15, top: 10, bottom: 10 }
     })
+    .setScrollFactor(0);
 
     // Objects
 
@@ -600,5 +619,7 @@ export default class GameScene extends Phaser.Scene {
     const coin = obj2 as Phaser.Physics.Arcade.Sprite;
     this.coins.killAndHide(coin);
     coin.body.enable = false;
+    this.score += 1;
+    this.scoreLabel.text = `Score: ${this.score}`;
   }
 }

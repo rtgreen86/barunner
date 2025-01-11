@@ -165,7 +165,7 @@ export default class GameScene extends Phaser.Scene {
       shadow: { fill: true, blur: 0, offsetY: 0 },
       padding: { left: 15, right: 15, top: 10, bottom: 10 }
     })
-    .setScrollFactor(0);
+      .setScrollFactor(0);
 
     // Objects
 
@@ -175,6 +175,17 @@ export default class GameScene extends Phaser.Scene {
     // Overlaps and colliders
 
     this.physics.add.overlap(this.coins, this.player, this.handleCollectCoin, undefined, this);
+
+    // Timers
+
+    console.log('!!! create !!!');
+
+    this.time.addEvent({
+      delay: 8000, // ms
+      callback: this.handleRespawnTimer,
+      callbackScope: this,
+      loop: true
+    });
   }
 
   createBackground() {
@@ -592,12 +603,15 @@ export default class GameScene extends Phaser.Scene {
 
       coin.setVisible(true);
       coin.setActive(true);
+      // coin.setOrigin(0.5, 0.5);
+      // coin.setOffset(-164, -164)
 
       // enable phisyc
       const body = coin.body as Phaser.Physics.Arcade.StaticBody;
-      body.setCircle(body.width * 0.25);
-      body.setOffset(body.width / 2, body.height / 2);
       body.enable = true;
+      body.updateFromGameObject();
+      body.setOffset(coin.width / 4, coin.height / 4);
+      body.setCircle(body.width * 0.25);
 
       // next coin position
       x += coin.width * 1.5;
@@ -621,5 +635,13 @@ export default class GameScene extends Phaser.Scene {
     coin.body.enable = false;
     this.score += 1;
     this.scoreLabel.text = `Score: ${this.score}`;
+  }
+
+  private handleRespawnTimer() {
+    console.log('! Timer', this.player.stateMachine.currentStateName);
+    if (this.player.stateMachine.currentStateName !== 'DIE' && this.player.stateMachine.currentStateName !== 'IDLE') {
+      console.log('! Respawn');
+      this.spawnCoins();
+    }
   }
 }

@@ -23,11 +23,11 @@ import SWITCH_ANIMATED_JSON from '../../assets/images/ui/switch_animated.json';
 
 // Hill
 
-import HILL_LAYER_1_PNG from '../../assets/images/hill/hill-layer-1.png';
-import HILL_LAYER_2_PNG from '../../assets/images/hill/hill-layer-2.png';
-import HILL_LAYER_3_PNG from '../../assets/images/hill/hill-layer-3.png';
-import HILL_LAYER_4_PNG from '../../assets/images/hill/hill-layer-4.png';
-import HILL_TREE_PNG from '../../assets/images/hill/hill-tree.png';
+// import HILL_LAYER_1_PNG from '../../assets/images/hill/hill-layer-1.png';
+// import HILL_LAYER_2_PNG from '../../assets/images/hill/hill-layer-2.png';
+// import HILL_LAYER_3_PNG from '../../assets/images/hill/hill-layer-3.png';
+// import HILL_LAYER_4_PNG from '../../assets/images/hill/hill-layer-4.png';
+// import HILL_TREE_PNG from '../../assets/images/hill/hill-tree.png';
 
 // new obstacles
 
@@ -36,6 +36,8 @@ import OBSTACLES_EFFECT_PNG from '../../assets/images/obstacle-effect.png';
 import OBSTACLES_EFFECT_JSON from '../../assets/images/obstacle-effect.json';
 import FILE_OBJECTS_JSON from '../../assets/images/objects.json';
 import FILE_OBJECTS_PNG from '../../assets/images/objects.png';
+
+const baseURL = import.meta.env.VITE_ASSETS_BASE_URL;
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -66,13 +68,15 @@ export default class BootScene extends Phaser.Scene {
     // Audio
     this.load.audio('jump', [FILE_JUMP_WAV]);
 
+    console.log('BASE is: ', import.meta.env.VITE_ASSETS_BASE_URL)
+    console.log('PATH is: ', `${baseURL}/images/hill-layer-1.png`);
+
     // Hills backgrounds
-    this.load.image(TextureKeys.HillLayer1, HILL_LAYER_1_PNG);
-    this.load.image(TextureKeys.HillLayer2, HILL_LAYER_2_PNG);
-    this.load.image(TextureKeys.HillLayer3, HILL_LAYER_3_PNG);
-    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
-    this.load.image(TextureKeys.HillLayer4, HILL_LAYER_4_PNG);
-    this.load.image(TextureKeys.HillTree, HILL_TREE_PNG);
+    this.load.image(TextureKeys.HillLayer1, `${baseURL}/images/hill-layer-1.png`);
+    this.load.image(TextureKeys.HillLayer2, `${baseURL}/images/hill-layer-2.png`);
+    this.load.image(TextureKeys.HillLayer3, `${baseURL}/images/hill-layer-3.png`);
+    this.load.image(TextureKeys.HillLayer4, `${baseURL}/images/hill-layer-4.png`);
+    this.load.image(TextureKeys.HillTree, `${baseURL}/sprites/hill-tree.png`);
 
     // Sprites and objects
     this.load.aseprite(SpritesheetKeys.RamSpritesheet, FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);

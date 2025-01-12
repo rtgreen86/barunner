@@ -6,3 +6,5 @@ assets/map/*.png
 assets/map/*.aseprite
 dist
 *.tiled-session
+public/*/images
+public/*/sprites

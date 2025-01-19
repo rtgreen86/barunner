@@ -1,6 +1,5 @@
 import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
-import * as States from '../states';
 
 const ANIMATION_IDLE = 'Ram Idle';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';
@@ -72,16 +71,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     return this.anims.getName();
   }
 
-  get stateName() {
-    return this.stateMachine.currentStateName.toString();
-  }
-
   get velocityX() {
-    return this.body.velocity.x;
+    return this.body?.velocity.x;
   }
 
   get velocityY() {
-    return this.body.velocity.y;
+    return this.body?.velocity.y;
   }
 
   static width = 100;
@@ -89,13 +84,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   initStateMachine() {
     this.stateMachine
-      .addState(new States.Idle(this, this.stateParams))
-      .addState(new States.Run(this, this.stateParams))
-      .addState(new States.JumpUp(this, this.stateParams))
-      .addState(new States.JumpTop(this))
-      .addState(new States.Fall(this))
-      .addState(new States.Landing(this, this.stateParams))
-      .addState(new States.Die(this));
+      .addState('IDLE', { onEnter: this.handleIdleEnter })
+      .addState('RUN', { onEnter: this.handleRunEnter })
+      .addState('JUMP_UP', { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
+      .addState('JUMP_TOP', { onEnter: this.handleJumpTopEnter })
+      .addState('FALL', { onEnter: this.handleFallEnter })
+      .addState('LANDING', { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
+      .addState('DIE', { onEnter: this.handleDieEnter });
 
     return this;
   }
@@ -216,7 +211,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   isMoving() {
-    return this.body.velocity.x !== 0;
+    return this.body?.velocity.x !== 0;
   }
 
   respawn() {
@@ -232,45 +227,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   update(time: number) {
     this.stateMachine.update(time);
 
-    if (this.stateMachine.currentStateName === 'DIE') {
-      const velocityX = this.velocityX;
+    if (this.stateMachine.currentState === 'DIE') {
+      const velocityX = this.velocityX!;
       this.setVelocityX(velocityX * 0.99);
-    }
-  }
-
-  private handleJumpEnter() {
-    this.play(ANIMATION_JUMP_UP);
-    this.setVelocityY(this.jumpVelocity);
-  }
-
-  private handleJumpUpdate() {
-    const animName = this.anims.getName();
-    if (animName === ANIMATION_JUMP_UP && this.jumpCurrentTime - this.jumpStartTime <= this.jumpMaxTime) {
-      this.setVelocityY(this.jumpVelocity);
-    }
-  }
-
-  private handleFlyEnter() {
-    this.play(ANIMATION_FLY);
-  }
-
-  private handleFallEnter() {
-    this.play(ANIMATION_FALL);
-  }
-
-  private handleLandingEnter() {
-    if (this.stateParams.isRunningStart) {
-      this.play(ANIMATION_LANDING);
-      this.playAfterRepeat(ANIMATION_RUN);
-      return;
-    }
-    this.stateMachine.setState(IDLE);
-  }
-
-  private handleLandingUpdate() {
-    const animName = this.anims.getName();
-    if (animName === ANIMATION_RUN) {
-      this.stateMachine.setState(RUN);
     }
   }
 
@@ -281,12 +240,48 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   private handleRunEnter() {
+    // const DIRECTION_RIGHT = 'right';
+    const DIRECTION_LEFT = 'left';
     this.stateParams.isRunningStart = true;
-    this.play(ANIMATION_RUN, true);
-    this.setVelocityX(
-      this.direction === DIRECTION_LEFT
-        ? -this.runVelocity
-        : this.runVelocity
-    );
+    this.play('Ram Run', true);
+    if (this.stateParams.direction === DIRECTION_LEFT) this.setVelocityX(-this.stateParams.runVelocity);
+    else this.setVelocityX(this.stateParams.runVelocity);
+  }
+
+  private handleJumpUpEnter() {
+    this.play('Ram Jump Up');
+    this.setVelocityY(this.stateParams.jumpVelocity);
+    this.jumpStartTime = 0;
+  }
+
+  private handleJumpUpUpdate(time: number) {
+    if (!this.jumpStartTime) this.jumpStartTime = time;
+    if (time - this.jumpStartTime <= this.stateParams.jumpMaxTime) this.setVelocityY(this.stateParams.jumpVelocity);
+    else this.setState('JUMP_TOP');
+  }
+
+  private handleJumpTopEnter() {
+    this.play('Ram Fly');
+  }
+
+  private handleFallEnter() {
+    this.play('Ram Fall');
+  }
+
+  private handleLandingEnter() {
+    this.play('Ram Landing');
+    if (this.stateParams.isRunningStart) this.playAfterRepeat('Ram Run');
+    else this.playAfterRepeat('Ram Idle');
+  }
+
+  private handleLandingUpdate() {
+    const animationName = this.anims.getName();
+    if (animationName === 'Ram Run') this.setState('RUN');
+    if (animationName === 'Ram Idle') this.setState('IDLE');
+  }
+
+  private handleDieEnter() {
+    this.play('Ram Dizzy');
+    this.emit('dead');
   }
 }

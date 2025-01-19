@@ -1,61 +1,55 @@
-import { State, StateConfig } from './State';
+type Context = { state: StateName };
+
+type StateName = string | number;
+
+export interface StateConfig<T extends Context> {
+  onEnter?: (this: T) => void;
+  onUpdate?: (this: T, time: number) => void;
+  onExit?: (this: T) => void;
+}
 
 let lastId = 0;
 
-type Context = {
-  state: number | string;
-  setState: (state: number | string) => Context;
-}
-
-export class StateMachine {
+export class StateMachine<T extends Context> {
   private id = (++lastId).toString();
 
-  private states = new Map<string, State>();
+  private states = new Map<StateName, StateConfig<T>>();
 
   private isChangingState = false;
 
-  private changeStateQueue: string[] = [];
+  private changeStateQueue: StateName[] = [];
 
   private readonly context;
 
-  constructor(gameObject: Context, id?: string) {
+  constructor(context: T, id?: string) {
     this.id = id ?? this.id;
-    this.context = gameObject;
-  }
-
-  get currentStateName() {
-    return this.context.state;
+    this.context = context;
   }
 
   get currentState() {
-    return this.states.get(this.currentStateName.toString());
+    return this.context.state;
   }
 
-  addState(name: string, config?: StateConfig): this
-  addState(state: State): this
-  addState(nameOrState: string | State, config?: StateConfig): this {
-    if (typeof nameOrState === 'object') {
-      this.states.set(nameOrState.name, nameOrState);
-      return this;
-    }
+  get currentConfig() {
+    return this.states.get(this.currentState);
+  }
 
-    this.states.set(nameOrState, {
-      name: nameOrState,
-      onEnter: config?.onEnter?.bind(this.context),
-      onUpdate: config?.onUpdate?.bind(this.context),
-      onExit: config?.onExit?.bind(this.context)
+  isCurrentState(name: StateName) {
+    return this.currentState === name;
+  }
+
+  addState(name: StateName, config?: StateConfig<T>): this {
+    this.states.set(name, {
+      onEnter: config?.onEnter,
+      onUpdate: config?.onUpdate,
+      onExit: config?.onExit
     });
-
     return this;
   }
 
-  isCurrentState(name: string) {
-    return this.currentStateName === name;
-  }
-
-  setState(name: string) {
+  setState(name: StateName) {
     if (!this.states.has(name)) {
-      console.log(`Tried to change to unknown state: ${name}`);
+      console.warn(`[StateMachine (${this.id})] tried to change to unknown state ${name}.`);
       return this;
     }
 
@@ -69,18 +63,20 @@ export class StateMachine {
     }
 
     this.isChangingState = true;
-    console.log(`[StateMachine (${this.id})] change from ${this.currentState?.name ?? 'none'} to ${name}`);
-    this.currentState?.onExit?.();
-    this.context.state = name;
-    this.currentState?.onEnter?.();
+    console.info(`[StateMachine (${this.id})] change from ${this.currentState ?? 'none'} to ${name}`);
+    this.currentConfig?.onExit?.call?.(this.context);
+    this.context.state = name; // change current state and config
+    this.currentConfig?.onEnter?.call?.(this.context);
     this.isChangingState = false;
 
     return this;
   }
 
   update(time: number) {
-    if (this.changeStateQueue.length > 0) this.setState(this.changeStateQueue.shift());
-    this.currentState?.onUpdate?.(time);
+    if (this.changeStateQueue.length > 0) {
+      this.setState(this.changeStateQueue.shift()!);
+    }
+    this.currentConfig?.onUpdate?.call?.(this.context, time);
     return this;
   }
 }

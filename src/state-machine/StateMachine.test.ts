@@ -91,6 +91,6 @@ describe('StateMachine', () => {
   it('should return current state name', () => {
     const sm = new StateMachine(player);
     sm.addState('idle').setState('idle');
-    expect(sm.currentStateName).toEqual('idle');
+    expect(sm.currentState).toEqual('idle');
   });
 });

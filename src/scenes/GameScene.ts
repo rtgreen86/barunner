@@ -3,8 +3,9 @@ import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
 import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
-import { SceneKeys, TextureKeys } from '../const';
+import { SceneKeys } from '../const';
 import * as CONST from '../const';
+import { TextureKeys } from '../resources';
 
 import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
@@ -74,14 +75,24 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    const screenWidth = this.scale.width;
+    const screenHeight = this.scale.height;
+    const groundPosition = CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE;
+
+    this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, groundPosition);
+
+    // Hill background
+    this.backgrounds[0] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer1).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[1] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer2).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[2] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer3).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[3] = this.add.tileSprite(0, groundPosition, screenWidth, screenHeight - groundPosition , TextureKeys.HillLayer4).setOrigin(0, 0).setScrollFactor(0, 0);
+
+
     this.map = this.createMap();
     // this.createBackgroundTileSprite(this.map.images);
     // this.createBackgrounLayers(this.map.layers);
     // this.createGroundLayer('ground', 0, 0);
 
-    this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
-
-    this.createBackground();
 
     this.tree = this.add.image(
       Phaser.Math.Between(100, 1000),
@@ -186,15 +197,6 @@ export default class GameScene extends Phaser.Scene {
       callbackScope: this,
       loop: true
     });
-  }
-
-  createBackground() {
-    const screenWidth = this.scale.width;
-    const screenHeight = this.scale.height;
-    this.backgrounds[0] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer1).setOrigin(0, 0).setScrollFactor(0, 0);
-    this.backgrounds[1] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer2).setOrigin(0, 0).setScrollFactor(0, 0);
-    this.backgrounds[2] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer3).setOrigin(0, 0).setScrollFactor(0, 0);
-    this.backgrounds[3] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer4).setOrigin(0, 0).setScrollFactor(0, 0);
   }
 
   subscribe() {
@@ -337,8 +339,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private createPlayer() {
-
-    const ground = CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE
+    const ground = CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE + 64;
 
     console.log(ground);
 

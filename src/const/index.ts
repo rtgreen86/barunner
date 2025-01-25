@@ -1,6 +1,5 @@
 export * from './SceneKeys';
 export * from './SpritesheetKeys';
-export * from './TextureKeys';
 export * as VIEWPORT from './Viewport';
 export * as WORLD from './World';
 

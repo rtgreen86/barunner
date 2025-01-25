@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
-import { SceneKeys, TextureKeys, SpritesheetKeys, AnimationKeys } from '../const';
+import { SceneKeys, SpritesheetKeys, AnimationKeys } from '../const';
+import { TextureKeys } from '../resources';
 
 import FILE_BACKGROUND_LAYER_1_PNG from '../../assets/images/background-layer-1.png'
 import FILE_BACKGROUND_LAYER_2_PNG from '../../assets/images/background-layer-2.png'
@@ -72,17 +73,19 @@ export default class BootScene extends Phaser.Scene {
     console.log('PATH is: ', `${baseURL}/images/hill-layer-1.png`);
 
     // Hills backgrounds
-    this.load.image(TextureKeys.HillLayer1, `${baseURL}/images/hill-layer-1.png`);
-    this.load.image(TextureKeys.HillLayer2, `${baseURL}/images/hill-layer-2.png`);
-    this.load.image(TextureKeys.HillLayer3, `${baseURL}/images/hill-layer-3.png`);
-    this.load.image(TextureKeys.HillLayer4, `${baseURL}/images/hill-layer-4.png`);
-    this.load.image(TextureKeys.HillTree, `${baseURL}/sprites/hill-tree.png`);
+    this.load.image('hill-tree', `${baseURL}/sprites/hill-tree.png`);
 
     // Sprites and objects
     this.load.aseprite(SpritesheetKeys.RamSpritesheet, FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
     this.load.aseprite(SpritesheetKeys.Objects, FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
     this.load.aseprite(SpritesheetKeys.ObstaclesEffects, OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
-    this.load.image(TextureKeys.Obstacles, OBSTACLES_PNG);
+    this.load.image('obstacles', OBSTACLES_PNG);
+
+    // Hills background
+    this.load.image(TextureKeys.HillLayer1, `${baseURL}/images/hill-layer-1.png`);
+    this.load.image(TextureKeys.HillLayer2, `${baseURL}/images/hill-layer-2.png`);
+    this.load.image(TextureKeys.HillLayer3, `${baseURL}/images/hill-layer-3.png`);
+    this.load.image(TextureKeys.HillLayer4, `${baseURL}/images/hill-layer-4.png`);
   }
 
   create() {

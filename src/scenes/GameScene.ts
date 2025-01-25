@@ -83,8 +83,8 @@ export default class GameScene extends Phaser.Scene {
 
     // Hill background
     this.backgrounds[0] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer1).setOrigin(0, 0).setScrollFactor(0, 0);
-    this.backgrounds[1] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer2).setOrigin(0, 0).setScrollFactor(0, 0);
-    this.backgrounds[2] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer3).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[1] = this.add.tileSprite(0, screenHeight - 100, screenWidth, 258, TextureKeys.HillLayer2).setOrigin(0, 1).setScrollFactor(0, 0);
+    this.backgrounds[2] = this.add.tileSprite(0, screenHeight - 100, screenWidth, 203, TextureKeys.HillLayer3).setOrigin(0, 1).setScrollFactor(0, 0);
     this.backgrounds[3] = this.add.tileSprite(0, groundPosition, screenWidth, screenHeight - groundPosition , TextureKeys.HillLayer4).setOrigin(0, 0).setScrollFactor(0, 0);
 
 

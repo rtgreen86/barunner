@@ -86,6 +86,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image(TextureKeys.HillLayer2, `${baseURL}/images/hill-layer-2.png`);
     this.load.image(TextureKeys.HillLayer3, `${baseURL}/images/hill-layer-3.png`);
     this.load.image(TextureKeys.HillLayer4, `${baseURL}/images/hill-layer-4.png`);
+    this.load.image(TextureKeys.HillLayer5, `${baseURL}/images/hill-layer-5.png`);
   }
 
   create() {

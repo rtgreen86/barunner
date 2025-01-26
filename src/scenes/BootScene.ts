@@ -2,10 +2,7 @@ import Phaser from 'phaser';
 
 import { TextureKey, SpritesheetKey, RamAnimationKey, ObjectsAnimationKey, SceneKey } from '../resources';
 
-import FILE_BACKGROUND_LAYER_1_PNG from '../../assets/images/background-layer-1.png'
-import FILE_BACKGROUND_LAYER_2_PNG from '../../assets/images/background-layer-2.png'
 import FILE_LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
-import FILE_LEVEL_1_TILESET_PNG from '../../assets/images/level-1-tileset.png';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
 import FILE_MODAL_DIALOG from '../../assets/images/dialog.png'
 
@@ -32,12 +29,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    // Old backgrounds
-    // TODO: remove old backgrounds
-    this.load.image('background-layer-1', FILE_BACKGROUND_LAYER_1_PNG);
-    this.load.image('background-layer-2', FILE_BACKGROUND_LAYER_2_PNG);
-    this.load.image('level-1-tileset', FILE_LEVEL_1_TILESET_PNG);
-
     // Old Map
     // TODO: Remove old map loading
     this.load.tilemapTiledJSON('map-level-1', FILE_LEVEL_1_MAP_JSON);
@@ -57,9 +48,6 @@ export default class BootScene extends Phaser.Scene {
 
     console.log('BASE is: ', import.meta.env.VITE_ASSETS_BASE_URL)
     console.log('PATH is: ', `${baseURL}/images/hill-layer-1.png`);
-
-    // Hills backgrounds
-    this.load.image('hill-tree', `${baseURL}/sprites/hill-tree.png`);
 
     // Sprites and objects
     this.load.aseprite('obstacles-effects', OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);

@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 
-import { SceneKeys } from '../const';
-import { TextureKey, SpritesheetKey, RamAnimationKey, ObjectsAnimationKey } from '../resources';
+import { TextureKey, SpritesheetKey, RamAnimationKey, ObjectsAnimationKey, SceneKey } from '../resources';
 
 import FILE_BACKGROUND_LAYER_1_PNG from '../../assets/images/background-layer-1.png'
 import FILE_BACKGROUND_LAYER_2_PNG from '../../assets/images/background-layer-2.png'
@@ -29,7 +28,7 @@ const baseURL = import.meta.env.VITE_ASSETS_BASE_URL;
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
-    super({ key: SceneKeys.BootScene, active: true });
+    super({ key: SceneKey.BootScene, active: true });
   }
 
   preload() {
@@ -99,6 +98,6 @@ export default class BootScene extends Phaser.Scene {
     this.anims.get(ObjectsAnimationKey.BOX).repeat = -1;
 
     // Run scene
-    this.scene.run(SceneKeys.GameScene);
+    this.scene.run(SceneKey.GameScene);
   }
 }

@@ -3,9 +3,8 @@ import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
 import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
-import { SceneKeys } from '../const';
 import * as CONST from '../const';
-import { ObjectsAnimationKey, SpritesheetKey, TextureKey } from '../resources';
+import { SceneKey, SpritesheetKey, TextureKey } from '../resources';
 
 import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
@@ -67,7 +66,7 @@ export default class GameScene extends Phaser.Scene {
   private score = 0;
 
   constructor() {
-    super(SceneKeys.GameScene);
+    super(SceneKey.GameScene);
   }
 
   init() {
@@ -77,7 +76,7 @@ export default class GameScene extends Phaser.Scene {
   create() {
     const screenWidth = this.scale.width;
     const screenHeight = this.scale.height;
-    const groundPosition = CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE;
+    const groundPosition = CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE;
 
     this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, groundPosition);
 
@@ -97,7 +96,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.tree = this.add.image(
       Phaser.Math.Between(100, 1000),
-      CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE,
+      CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE,
       TextureKey.HillTree
     ).setOrigin(0, 1);
 
@@ -106,7 +105,7 @@ export default class GameScene extends Phaser.Scene {
 
     // create obstacle
 
-    const rock = new Obstacle(this, 700, CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE);
+    const rock = new Obstacle(this, 700, CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE);
     this.add.existing(rock);
     this.rock = rock;
 
@@ -159,8 +158,8 @@ export default class GameScene extends Phaser.Scene {
     );
 
     this.player.once('dead', () => {
-      if (!this.scene.isActive(SceneKeys.GameoverScene))
-        this.scene.run(SceneKeys.GameoverScene);
+      if (!this.scene.isActive(SceneKey.GameoverScene))
+        this.scene.run(SceneKey.GameoverScene);
     });
 
     this.events.once('restart', () => {
@@ -341,7 +340,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private createPlayer() {
-    const ground = CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE + 64;
+    const ground = CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE + 64;
 
     console.log(ground);
 

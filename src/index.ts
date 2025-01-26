@@ -33,7 +33,7 @@ new Phaser.Game({
     default: 'arcade',
     arcade: {
       debug: true,
-      gravity: { x: CONST.WORLD.GRAVITY_X, y: CONST.WORLD.GRAVITY_Y }
+      gravity: { x: CONST.WORLD_GRAVITY_X, y: CONST.WORLD_GRAVITY_Y }
     }
   },
   plugins: {
@@ -43,16 +43,16 @@ new Phaser.Game({
     ]
   },
   scale: {
-    width: CONST.VIEWPORT.WIDTH,
-    height: CONST.VIEWPORT.HEIGHT,
+    width: CONST.VIEWPORT_WIDTH,
+    height: CONST.VIEWPORT_HEIGHT,
     mode: Phaser.Scale.FIT,
     min: {
-      width: CONST.VIEWPORT.MIN_WIDTH,
-      height: CONST.VIEWPORT.MIN_HEIGHT
+      width: CONST.VIEWPORT_MIN_WIDTH,
+      height: CONST.VIEWPORT_MIN_HEIGHT
     },
     max: {
-      width: CONST.VIEWPORT.MAX_WIDTH,
-      height: CONST.VIEWPORT.MAX_HEIGHT
+      width: CONST.VIEWPORT_MAX_WIDTH,
+      height: CONST.VIEWPORT_MAX_HEIGHT
     }
   }
 });

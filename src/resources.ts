@@ -46,3 +46,9 @@ export enum ObjectsFrame {
   HEART = 10,
   ENERGY = 20
 };
+
+export enum SceneKey {
+  BootScene = 'BootScene',
+  GameScene = 'GameScene',
+  GameoverScene = 'GameOver'
+};

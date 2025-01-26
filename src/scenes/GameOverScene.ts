@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
-import {SceneKeys} from '../const';
+import { SceneKey } from '../resources';
 
 export default class GameOver extends Phaser.Scene {
   constructor() {
-    super(SceneKeys.GameoverScene);
+    super(SceneKey.GameoverScene);
   }
 
   create() {
@@ -23,7 +23,7 @@ export default class GameOver extends Phaser.Scene {
   }
 
   private handleSpacePressed() {
-    this.scene.get(SceneKeys.GameScene).events.emit('restart');
+    this.scene.get(SceneKey.GameScene).events.emit('restart');
     this.scene.stop();
   }
 }

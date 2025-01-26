@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
-import { ObjectsAnimationKey, SpritesheetKey } from '../resources';
+import { SpritesheetKey, ObjectsAnimationKey, ObjectsFrame } from '../resources';
 
 export default class Obstacle extends Phaser.GameObjects.Container {
+  private sprite: Phaser.GameObjects.Sprite;
+
   private effect: Phaser.GameObjects.Sprite;
 
   private cursor: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -9,31 +11,19 @@ export default class Obstacle extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
 
-    const rock = scene.add.sprite(0, 0, SpritesheetKey.Objects, 3)
-      .setOrigin(0.5, 1);
+    this.sprite = scene.add.sprite(0, 0, SpritesheetKey.Objects, ObjectsFrame.ROCK_1);
+    this.sprite.setPosition(0, -32);
+    this.add(this.sprite);
+
+    this.effect = scene.add.sprite(0, 0, SpritesheetKey.Objects);
+    this.effect.play(ObjectsAnimationKey.YELLOW_STARS);
+    this.add(this.effect);
 
     scene.physics.add.existing(this, true);
 
-
-    const width = rock.displayWidth;
-    const height = rock.displayHeight;
-
-    const body = this.body as Phaser.Physics.Arcade.StaticBody;
-    body.setSize(width, height);
-    body.setOffset(-width * 0.5, 0);
-
-    body.position.x = this.x + body.offset.x;
-    body.position.y = this.y - height;
-
-    this.effect = scene.add.sprite(0, 0, 'obstacles-effects')
-      .play('obstacles-effects')
-
+    this.fixBodyPosition();
     this.runEffect(false);
-
-    this.add(rock);
-    this.add(this.effect);
-
-    this.cursor = scene.input.keyboard.createCursorKeys();
+    this.cursor = scene.input.keyboard!.createCursorKeys();
   }
 
   runEffect(enabled: boolean) {
@@ -44,5 +34,17 @@ export default class Obstacle extends Phaser.GameObjects.Container {
     if (this.cursor.space?.isDown) {
       this.runEffect(true);
     }
+  }
+
+  move(x: number) {
+    this.x = x;
+    this.fixBodyPosition();
+  }
+
+  private fixBodyPosition() {
+    const body = this.body as Phaser.Physics.Arcade.StaticBody;
+    body.setSize(64, 64);
+    body.position.x = this.x - 32;
+    body.position.y = this.y - 48;
   }
 }

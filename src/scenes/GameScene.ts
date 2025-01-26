@@ -53,7 +53,7 @@ export default class GameScene extends Phaser.Scene {
 
   numKeys: any;
 
-  private rock!: Phaser.GameObjects.Container;
+  private obstacle!: Obstacle;
 
   private backgrounds: Phaser.GameObjects.TileSprite[] = [];
 
@@ -96,10 +96,8 @@ export default class GameScene extends Phaser.Scene {
 
     // create obstacle
 
-    const rock = new Obstacle(this, 700, CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE);
-    this.add.existing(rock);
-    this.rock = rock;
-
+    this.obstacle = new Obstacle(this, 700, CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE);
+    this.add.existing(this.obstacle);
 
     this.createControls();
     // this.createObstacles();
@@ -141,7 +139,7 @@ export default class GameScene extends Phaser.Scene {
     }, this);
 
     this.physics.add.collider(
-      this.rock,
+      this.obstacle,
       this.player,
       this.handleObstacleOverlap,
       undefined,
@@ -218,7 +216,7 @@ export default class GameScene extends Phaser.Scene {
     this.data.inc('distance', distanceDiff / 70);
 
     this.wrapObstacle();
-    this.rock.update();
+    this.obstacle.update();
   }
 
   updateBackground() {
@@ -529,14 +527,11 @@ export default class GameScene extends Phaser.Scene {
     const scrollX = this.cameras.main.scrollX;
     const rightEdge = scrollX + this.scale.width;
 
-    const body = this.rock.body as Phaser.Physics.Arcade.StaticBody;
-    const width = body.width;
-    if (this.rock.x + width < scrollX) {
-      this.rock.x = Phaser.Math.Between(
-        rightEdge + width,
-        rightEdge + width + 1000
-      );
-      body.position.x = this.rock.x + body.offset.x;
+    if (this.obstacle.x + this.obstacle.width < scrollX) {
+      this.obstacle.move(Phaser.Math.Between(
+        rightEdge + this.obstacle.width,
+        rightEdge + this.obstacle.width + 1000
+      ));
     }
   }
 

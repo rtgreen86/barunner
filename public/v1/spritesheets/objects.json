@@ -19,7 +19,7 @@
     "frame": { "x": 341, "y": 103, "w": 105, "h": 86 },
     "rotated": false,
     "trimmed": true,
-    "spriteSourceSize": { "x": 12, "y": 31, "w": 103, "h": 84 },
+    "spriteSourceSize": { "x": 13, "y": 31, "w": 103, "h": 84 },
     "sourceSize": { "w": 128, "h": 128 },
     "duration": 100
    },

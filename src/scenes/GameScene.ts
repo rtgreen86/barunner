@@ -5,7 +5,7 @@ import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
 import { SceneKeys } from '../const';
 import * as CONST from '../const';
-import { TextureKeys } from '../resources';
+import { ObjectsAnimationKey, SpritesheetKey, TextureKey } from '../resources';
 
 import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
@@ -82,11 +82,11 @@ export default class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, groundPosition);
 
     // Hill background
-    this.backgrounds[0] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKeys.HillLayer1).setOrigin(0, 0).setScrollFactor(0, 0);
-    this.backgrounds[1] = this.add.tileSprite(0, screenHeight - 100, screenWidth, 258, TextureKeys.HillLayer2).setOrigin(0, 1).setScrollFactor(0, 0);
-    this.backgrounds[2] = this.add.tileSprite(0, screenHeight - 100, screenWidth, 203, TextureKeys.HillLayer3).setOrigin(0, 1).setScrollFactor(0, 0);
-    this.backgrounds[3] = this.add.tileSprite(0, groundPosition, screenWidth, 256, TextureKeys.HillLayer4).setOrigin(0, 1).setScrollFactor(0, 0);
-    this.backgrounds[4] = this.add.tileSprite(0, groundPosition, screenWidth, screenHeight - groundPosition, TextureKeys.HillLayer5).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[0] = this.add.tileSprite(0, 0, screenWidth, screenHeight, TextureKey.HillLayer1).setOrigin(0, 0).setScrollFactor(0, 0);
+    this.backgrounds[1] = this.add.tileSprite(0, screenHeight - 100, screenWidth, 258, TextureKey.HillLayer2).setOrigin(0, 1).setScrollFactor(0, 0);
+    this.backgrounds[2] = this.add.tileSprite(0, screenHeight - 100, screenWidth, 203, TextureKey.HillLayer3).setOrigin(0, 1).setScrollFactor(0, 0);
+    this.backgrounds[3] = this.add.tileSprite(0, groundPosition, screenWidth, 256, TextureKey.HillLayer4).setOrigin(0, 1).setScrollFactor(0, 0);
+    this.backgrounds[4] = this.add.tileSprite(0, groundPosition, screenWidth, screenHeight - groundPosition, TextureKey.HillLayer5).setOrigin(0, 0).setScrollFactor(0, 0);
 
 
     this.map = this.createMap();
@@ -98,7 +98,7 @@ export default class GameScene extends Phaser.Scene {
     this.tree = this.add.image(
       Phaser.Math.Between(100, 1000),
       CONST.WORLD.GROUND_ROW * CONST.WORLD.BLOCK_SIZE,
-      TextureKeys.HillTree
+      TextureKey.HillTree
     ).setOrigin(0, 1);
 
     this.createPlayer();
@@ -600,7 +600,7 @@ export default class GameScene extends Phaser.Scene {
 
       const coin = this.coins.get(
         x, y,
-        CONST.SpritesheetKeys.Objects,
+        SpritesheetKey.Objects,
         7 // frame number
       ) as Phaser.Physics.Arcade.Sprite;
 

@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
-import { SceneKeys, SpritesheetKeys, AnimationKeys } from '../const';
-import { TextureKeys } from '../resources';
+import { SceneKeys } from '../const';
+import { TextureKey, SpritesheetKey, RamAnimationKey, ObjectsAnimationKey } from '../resources';
 
 import FILE_BACKGROUND_LAYER_1_PNG from '../../assets/images/background-layer-1.png'
 import FILE_BACKGROUND_LAYER_2_PNG from '../../assets/images/background-layer-2.png'
@@ -76,17 +76,19 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('hill-tree', `${baseURL}/sprites/hill-tree.png`);
 
     // Sprites and objects
-    this.load.aseprite(SpritesheetKeys.RamSpritesheet, FILE_RAM_SPRITESHEET_PNG, FILE_RAM_SPRITESHEET_JSON);
-    this.load.aseprite(SpritesheetKeys.Objects, FILE_OBJECTS_PNG, FILE_OBJECTS_JSON);
-    this.load.aseprite(SpritesheetKeys.ObstaclesEffects, OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
-    this.load.image('obstacles', OBSTACLES_PNG);
+    this.load.aseprite('obstacles-effects', OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
+
 
     // Hills background
-    this.load.image(TextureKeys.HillLayer1, `${baseURL}/images/hill-layer-1.png`);
-    this.load.image(TextureKeys.HillLayer2, `${baseURL}/images/hill-layer-2.png`);
-    this.load.image(TextureKeys.HillLayer3, `${baseURL}/images/hill-layer-3.png`);
-    this.load.image(TextureKeys.HillLayer4, `${baseURL}/images/hill-layer-4.png`);
-    this.load.image(TextureKeys.HillLayer5, `${baseURL}/images/hill-layer-5.png`);
+    this.load.image(TextureKey.HillLayer1, `${baseURL}/images/hill-layer-1.png`);
+    this.load.image(TextureKey.HillLayer2, `${baseURL}/images/hill-layer-2.png`);
+    this.load.image(TextureKey.HillLayer3, `${baseURL}/images/hill-layer-3.png`);
+    this.load.image(TextureKey.HillLayer4, `${baseURL}/images/hill-layer-4.png`);
+    this.load.image(TextureKey.HillLayer5, `${baseURL}/images/hill-layer-5.png`);
+
+    // Spritesheets
+    this.load.aseprite(SpritesheetKey.RamSpritesheet, `${baseURL}/spritesheets/ram-spritesheet.png`, `${baseURL}/spritesheets/ram-spritesheet.json`);
+    this.load.aseprite(SpritesheetKey.Objects, `${baseURL}/spritesheets/objects.png`, `${baseURL}/spritesheets/objects.json`);
   }
 
   create() {
@@ -95,19 +97,19 @@ export default class BootScene extends Phaser.Scene {
     this.anims.get('Indicate').repeat = -1;
 
     // Ram animation
-    this.anims.createFromAseprite(SpritesheetKeys.RamSpritesheet);
-    this.anims.get(AnimationKeys.RAM_DASH).repeat = -1;
-    this.anims.get(AnimationKeys.RAM_IDLE).repeat = -1;
-    this.anims.get(AnimationKeys.RAM_DIZZY).repeat = -1;
-    this.anims.get(AnimationKeys.RAM_HURT).repeat = -1;
-    this.anims.get(AnimationKeys.RAM_TAKEOFF_RUN).repeat = -1;
-    this.anims.get(AnimationKeys.RAM_JUMP_UP).repeat = 0;
-    this.anims.get(AnimationKeys.RAM_FALL).repeat = 0;
-    this.anims.get(AnimationKeys.RAM_RUN).repeat = -1;
+    this.anims.createFromAseprite(SpritesheetKey.RamSpritesheet);
+    this.anims.get(RamAnimationKey.RAM_DASH).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_IDLE).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_DIZZY).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_HURT).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_TAKEOFF_RUN).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_JUMP_UP).repeat = 0;
+    this.anims.get(RamAnimationKey.RAM_FALL).repeat = 0;
+    this.anims.get(RamAnimationKey.RAM_RUN).repeat = -1;
 
     // Effects
-    this.anims.createFromAseprite(SpritesheetKeys.ObstaclesEffects)
-    this.anims.get(AnimationKeys.OBSTACLE_EFFECT).repeat = -1;
+    this.anims.createFromAseprite(SpritesheetKey.Objects);
+    this.anims.get(ObjectsAnimationKey.BOX).repeat = -1;
 
     // Run scene
     this.scene.run(SceneKeys.GameScene);

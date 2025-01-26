@@ -53,11 +53,9 @@ export default class GameScene extends Phaser.Scene {
 
   numKeys: any;
 
-  private rock: Phaser.GameObjects.Container;
+  private rock!: Phaser.GameObjects.Container;
 
   private backgrounds: Phaser.GameObjects.TileSprite[] = [];
-
-  private tree: Phaser.GameObjects.Image;
 
   private coins!: Phaser.Physics.Arcade.StaticGroup;
 
@@ -92,13 +90,6 @@ export default class GameScene extends Phaser.Scene {
     // this.createBackgroundTileSprite(this.map.images);
     // this.createBackgrounLayers(this.map.layers);
     // this.createGroundLayer('ground', 0, 0);
-
-
-    this.tree = this.add.image(
-      Phaser.Math.Between(100, 1000),
-      CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE,
-      TextureKey.HillTree
-    ).setOrigin(0, 1);
 
     this.createPlayer();
 
@@ -226,7 +217,6 @@ export default class GameScene extends Phaser.Scene {
     this.prevDistance = this.player.x;
     this.data.inc('distance', distanceDiff / 70);
 
-    this.wrapTree();
     this.wrapObstacle();
     this.rock.update();
   }
@@ -533,15 +523,6 @@ export default class GameScene extends Phaser.Scene {
     }
 
     return true;
-  }
-
-  private wrapTree() {
-    const scrollX = this.cameras.main.scrollX;
-    const rightEdge = scrollX + this.scale.width;
-
-    if (this.tree.x + this.tree.width < scrollX) {
-      this.tree.x = Phaser.Math.Between(rightEdge + 100, rightEdge + 1000);
-    }
   }
 
   private wrapObstacle() {

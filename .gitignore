@@ -7,4 +7,4 @@ assets/map/*.aseprite
 dist
 *.tiled-session
 public/*/images
-public/*/sprites
+public/*/spritesheets

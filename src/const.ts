@@ -15,3 +15,6 @@ export const WORLD_BLOCKS_IN_ROW = 20;
 export const WORLD_GRAVITY_X = 0;
 export const WORLD_GRAVITY_Y = 2000;
 export const WORLD_GROUND_ROW = 9;
+
+export const SPRITESHEET_RAM = 'ram-spritesheet';
+export const SPRITESHEET_OBJECTS = 'objects-spritesheet';

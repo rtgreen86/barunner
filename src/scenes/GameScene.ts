@@ -4,7 +4,7 @@ import BackgroundLayer from '../entities/BackgroundLayer';
 import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
 import * as CONST from '../const';
-import { SceneKey, SpritesheetKey, TextureKey } from '../resources';
+import { SceneKey, TextureKey } from '../resources';
 
 import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
@@ -330,11 +330,10 @@ export default class GameScene extends Phaser.Scene {
   private createPlayer() {
     const ground = CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE + 64;
 
-    console.log(ground);
+    this.player = this.add.existing(new Player(this))
+      .setName('The Player')
+      .setPosition(0, ground);
 
-    const player = new Player(this, 0, 0, 'ram-spritesheet' as any, 3)
-    this.player = this.add.existing(player).setName('The Player');
-    this.player.setPosition(0, ground)
     this.playerStartPosition = this.player.x;
   }
 
@@ -575,7 +574,7 @@ export default class GameScene extends Phaser.Scene {
 
       const coin = this.coins.get(
         x, y,
-        SpritesheetKey.Objects,
+        CONST.SPRITESHEET_OBJECTS,
         7 // frame number
       ) as Phaser.Physics.Arcade.Sprite;
 

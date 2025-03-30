@@ -6,11 +6,6 @@ export enum TextureKey {
   HillLayer5 = 'hill-layer-5'
 };
 
-export enum SpritesheetKey {
-  RamSpritesheet = 'ram-spritesheet',
-  Objects = 'objects-spritesheet'
-};
-
 export enum RamAnimationKey {
   RAM_DASH = 'Ram Dash',
   RAM_IDLE = 'Ram Idle',

@@ -1,5 +1,6 @@
 import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
+import * as CONST from '../const';
 
 const ANIMATION_IDLE = 'Ram Idle';
 const ANIMATION_JUMP_UP = 'Ram Jump Up';
@@ -45,14 +46,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   readonly stateMachine = new StateMachine(this, 'Player');
 
-  constructor(
-    scene: Scene,
-    x: number,
-    y: number,
-    texture: Phaser.Textures.Texture,
-    frame: string | number
-  ) {
-    super(scene, x, y, texture, frame);
+  constructor(scene: Scene, x: number = 0, y: number = 0) {
+    super(scene, x, y, CONST.SPRITESHEET_RAM, 0);
     this.scene.physics.world.enable(this);
     this.direction = DIRECTION_RIGHT;
     this.initStateMachine();

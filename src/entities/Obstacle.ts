@@ -6,8 +6,6 @@ export default class Obstacle extends Phaser.GameObjects.Container {
 
   private effect: Phaser.GameObjects.Sprite;
 
-  private cursor: Phaser.Types.Input.Keyboard.CursorKeys;
-
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
 
@@ -23,7 +21,6 @@ export default class Obstacle extends Phaser.GameObjects.Container {
 
     this.fixBodyPosition();
     this.runEffect(false);
-    this.cursor = scene.input.keyboard!.createCursorKeys();
   }
 
   runEffect(enabled: boolean) {
@@ -31,9 +28,8 @@ export default class Obstacle extends Phaser.GameObjects.Container {
   }
 
   update() {
-    if (this.cursor.space?.isDown) {
-      this.runEffect(true);
-    }
+    // You can call this.runEffect(true) here
+    // to start effect
   }
 
   move(x: number) {

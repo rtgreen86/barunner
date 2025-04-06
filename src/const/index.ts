@@ -1,4 +1,6 @@
 export * from './AnimationKey';
+export * from './Directions';
+export * from './State';
 
 export const CAMERA_ZOOM = 1;
 export const CAMERA_PLAYER_POSITION_X = -320;

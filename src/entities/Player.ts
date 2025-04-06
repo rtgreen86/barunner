@@ -2,15 +2,6 @@ import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
 import * as CONST from '../const';
 
-const DIRECTION_RIGHT = 'right';
-const DIRECTION_LEFT = 'left';
-
-const IDLE = 'IDLE';
-const RUN = 'RUN';
-const JUMP = 'JUMP_UP';
-const FLY = 'JUMP_TOP';
-const FALL = 'FALL';
-const LANDING = 'LANDING';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   private runVelocity = 1200;
@@ -35,7 +26,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene: Scene, x: number = 0, y: number = 0) {
     super(scene, x, y, CONST.SPRITESHEET_RAM, 0);
     this.scene.physics.world.enable(this);
-    this.direction = DIRECTION_RIGHT;
+    this.direction = CONST.DIRECTION.RIGHT;
     this.initStateMachine();
     this.setSize(Player.width, Player.height);
     this.setMaxVelocity(1200, 600)
@@ -77,31 +68,31 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   get isJumping() {
-    return this.stateMachine.isCurrentState(JUMP);
+    return this.stateMachine.isCurrentState(CONST.STATE.JUMP);
   }
 
   get isRunning() {
-    return this.stateMachine.isCurrentState(RUN);
+    return this.stateMachine.isCurrentState(CONST.STATE.RUN);
   }
 
   get isFalling() {
-    return this.stateMachine.isCurrentState(FALL);
+    return this.stateMachine.isCurrentState(CONST.STATE.FALL);
   }
 
   get isLanding() {
-    return this.stateMachine.isCurrentState(LANDING);
+    return this.stateMachine.isCurrentState(CONST.STATE.LANDING);
   }
 
   get isIdle() {
-    return this.stateMachine.isCurrentState(IDLE);
+    return this.stateMachine.isCurrentState(CONST.STATE.IDLE);
   }
 
   get direction() {
-    return this.flipX ? DIRECTION_LEFT : DIRECTION_RIGHT;
+    return this.flipX ? CONST.DIRECTION.LEFT : CONST.DIRECTION.RIGHT;
   }
 
   set direction(value) {
-    this.flipX = value === DIRECTION_LEFT;
+    this.flipX = value === CONST.DIRECTION.LEFT;
   }
 
   isCurrentState(stateName: string) {
@@ -112,7 +103,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const animName = this.anims.getName();
     if (animName === CONST.ANIMATION_KEY.RAM_IDLE || animName === CONST.ANIMATION_KEY.RAM_RUN) {
       this.jumpStartTime = duration;
-      this.stateMachine.setState(JUMP);
+      this.stateMachine.setState(CONST.STATE.JUMP);
     }
     this.jumpCurrentTime = duration;
     return this;
@@ -129,27 +120,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   fly() {
-    this.stateMachine.setState(FLY);
+    this.stateMachine.setState(CONST.STATE.FLY);
     return this;
   }
 
   fall() {
-    this.stateMachine.setState(FALL);
+    this.stateMachine.setState(CONST.STATE.FALL);
     return this;
   }
 
   landing() {
-    this.stateMachine.setState(LANDING);
+    this.stateMachine.setState(CONST.STATE.LANDING);
     return this;
   }
 
   idle() {
-    this.stateMachine.setState(IDLE);
+    this.stateMachine.setState(CONST.STATE.IDLE);
     return this;
   }
 
   run() {
-    this.stateMachine.setState(RUN);
+    this.stateMachine.setState(CONST.STATE.RUN);
     return this;
   }
 

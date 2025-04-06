@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import { ObjectsAnimationKey, ObjectsFrame } from '../resources';
-import { SPRITESHEET_OBJECTS } from '../const';
+import { ObjectsFrame } from '../resources';
+import { SPRITESHEET_OBJECTS, ANIMATION_KEY } from '../const';
 
 export default class Obstacle extends Phaser.GameObjects.Container {
   private sprite: Phaser.GameObjects.Sprite;
@@ -15,7 +15,7 @@ export default class Obstacle extends Phaser.GameObjects.Container {
     this.add(this.sprite);
 
     this.effect = scene.add.sprite(0, 0, SPRITESHEET_OBJECTS);
-    this.effect.play(ObjectsAnimationKey.YELLOW_STARS);
+    this.effect.play(ANIMATION_KEY.YELLOW_STARS);
     this.add(this.effect);
 
     scene.physics.add.existing(this, true);

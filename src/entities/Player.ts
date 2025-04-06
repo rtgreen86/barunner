@@ -2,22 +2,8 @@ import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
 import * as CONST from '../const';
 
-const ANIMATION_IDLE = 'Ram Idle';
-const ANIMATION_JUMP_UP = 'Ram Jump Up';
-const ANIMATION_FLY = 'Ram Fly';
-const ANIMATION_FALL = 'Ram Fall';
-const ANIMATION_LANDING = 'Ram Landing';
-const ANIMATION_DASH = 'Ram Dash';
-const ANIMATION_DIZZY = 'Ram Dizzy';
-const ANIMATION_HURT = 'Ram Hurt';
-const ANIMATION_TAKEOFF_RUN = 'Ram Takeoff Run';
-const ANIMATION_RUN = 'Ram Run';
-const ANIMATION_ATTACK = 'Ram Attack';
-const ANIMATION_FAINT = 'Ram Faint';
-
 const DIRECTION_RIGHT = 'right';
 const DIRECTION_LEFT = 'left';
-
 
 const IDLE = 'IDLE';
 const RUN = 'RUN';
@@ -55,7 +41,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setMaxVelocity(1200, 600)
     this.setData('isAlive', true);
     this.setBounceX(0.7);
-    this.play(ANIMATION_IDLE);
+    this.play(CONST.ANIMATION_KEY.RAM_IDLE);
 
     // this.body
 
@@ -124,7 +110,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   jump(duration: number) {
     const animName = this.anims.getName();
-    if (animName === ANIMATION_IDLE || animName === ANIMATION_RUN) {
+    if (animName === CONST.ANIMATION_KEY.RAM_IDLE || animName === CONST.ANIMATION_KEY.RAM_RUN) {
       this.jumpStartTime = duration;
       this.stateMachine.setState(JUMP);
     }
@@ -174,29 +160,29 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   hurt() {
     this.stateParams.isRunningStart = false;
-    return this.play(ANIMATION_HURT);
+    return this.play(CONST.ANIMATION_KEY.RAM_HURT);
   }
 
   dash() {
     this.stateParams.isRunningStart = false;
-    return this.play(ANIMATION_DASH);
+    return this.play(CONST.ANIMATION_KEY.RAM_DASH);
   }
 
   takeoffRun() {
-    this.play(ANIMATION_TAKEOFF_RUN);
+    this.play(CONST.ANIMATION_KEY.RAM_TAKEOFF_RUN);
     this.setVelocityX(-100);
   }
 
   dizzy() {
-    this.play(ANIMATION_DIZZY);
+    this.play(CONST.ANIMATION_KEY.RAM_DIZZY);
   }
 
   attack() {
-    this.play(ANIMATION_ATTACK);
+    this.play(CONST.ANIMATION_KEY.RAM_ATTACK);
   }
 
   faint() {
-    this.play(ANIMATION_FAINT);
+    this.play(CONST.ANIMATION_KEY.RAM_FAINT);
   }
 
   die() {
@@ -231,7 +217,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   private handleIdleEnter() {
     this.stateParams.isRunningStart = false;
     this.setVelocityX(0);
-    this.play(ANIMATION_IDLE);
+    this.play(CONST.ANIMATION_KEY.RAM_IDLE);
   }
 
   private handleRunEnter() {

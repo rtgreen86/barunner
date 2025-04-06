@@ -1,5 +1,6 @@
 export * from './AnimationKey';
 export * from './Directions';
+export * from './player';
 export * from './Spritesheet';
 export * from './State';
 
@@ -22,6 +23,4 @@ export const WORLD_GRAVITY_X = 0;
 export const WORLD_GRAVITY_Y = 2000;
 export const WORLD_GROUND_ROW = 9;
 
-export const PLAYER_RUN_VELOCITY = 1200;
-export const PLAYER_JUMP_VELOCITY = -500;
-export const PLAYER_JUMP_MAX_TIME = 300;
+

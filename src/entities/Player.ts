@@ -14,27 +14,28 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   private readonly stateMachine;
 
+
   constructor(scene: Scene, x: number = 0, y: number = 0) {
     super(scene, x, y, CONST.SPRITESHEET.RAM, 0);
     this.scene.physics.world.enable(this);
 
     this.direction = CONST.DIRECTION.RIGHT;
-    this.setSize(Player.width, Player.height);
-    this.setMaxVelocity(1200, 600)
+
+    this.setSize(CONST.PLAYER_WIDTH, CONST.PLAYER_HEIGHT);
+    this.setMaxVelocity(CONST.PLAYER_RUN_VELOCITY, CONST.PLAYER_MAX_VERTICAL_VELOCITY)
     this.setData('isAlive', true);
-    this.setBounceX(0.7);
+    this.setBounceX(CONST.PLAYER_BOUNCE_X);
+
     this.play(CONST.ANIMATION_KEY.RAM_IDLE);
 
     this.stateMachine = new StateMachine(this, 'Player')
-      .addState('IDLE', { onEnter: this.handleIdleEnter })
-      .addState('RUN', { onEnter: this.handleRunEnter })
-      .addState('JUMP_UP', { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
-      .addState('JUMP_TOP', { onEnter: this.handleJumpTopEnter })
-      .addState('FALL', { onEnter: this.handleFallEnter })
-      .addState('LANDING', { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
-      .addState('DIE', { onEnter: this.handleDieEnter });
-
-    // this.body
+      .addState(CONST.STATE.IDLE, { onEnter: this.handleIdleEnter })
+      .addState(CONST.STATE.RUN, { onEnter: this.handleRunEnter })
+      .addState(CONST.STATE.JUMP, { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
+      .addState(CONST.STATE.JUMP_TOP, { onEnter: this.handleJumpTopEnter })
+      .addState(CONST.STATE.FALL, { onEnter: this.handleFallEnter })
+      .addState(CONST.STATE.LANDING, { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
+      .addState(CONST.STATE.DIE, { onEnter: this.handleDieEnter });
 
     (this.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true);
   }
@@ -50,9 +51,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   get velocityY() {
     return this.body?.velocity.y;
   }
-
-  static width = 100;
-  static height = 60;
 
   initStateMachine() {
     this.stateMachine

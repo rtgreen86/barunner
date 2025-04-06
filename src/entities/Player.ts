@@ -4,21 +4,15 @@ import * as CONST from '../const';
 
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private runVelocity = 1200;
-  private jumpVelocity = -500;
-  private jumpMaxTime = 300;
-  private isJumpSoundPlayed?: boolean;
   private isDown?: unknown;
-
   private jumpStartTime = 0;
-  private jumpCurrentTime = 0;
 
   private stateParams = {
     isRunningStart: false,
     direction: 'right' as "right" | "left",
-    runVelocity: this.runVelocity,
-    jumpVelocity: this.jumpVelocity,
-    jumpMaxTime: this.jumpMaxTime
+    runVelocity: CONST.PLAYER_RUN_VELOCITY,
+    jumpVelocity: CONST.PLAYER_JUMP_VELOCITY,
+    jumpMaxTime: CONST.PLAYER_JUMP_MAX_TIME
   };
 
   readonly stateMachine = new StateMachine(this, 'Player');

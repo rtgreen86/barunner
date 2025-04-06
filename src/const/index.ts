@@ -22,3 +22,7 @@ export const WORLD_GROUND_ROW = 9;
 
 export const SPRITESHEET_RAM = 'ram-spritesheet';
 export const SPRITESHEET_OBJECTS = 'objects-spritesheet';
+
+export const PLAYER_RUN_VELOCITY = 1200;
+export const PLAYER_JUMP_VELOCITY = -500;
+export const PLAYER_JUMP_MAX_TIME = 300;

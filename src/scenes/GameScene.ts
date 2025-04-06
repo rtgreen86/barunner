@@ -493,7 +493,7 @@ export default class GameScene extends Phaser.Scene {
       this.player.landing();
     }
 
-    if (this.player.stateMachine.currentStateName === 'DIE') {
+    if (this.player.currentStateName === 'DIE') {
       return;
     }
 
@@ -615,8 +615,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private handleRespawnTimer() {
-    console.log('! Timer', this.player.stateMachine.currentStateName);
-    if (this.player.stateMachine.currentStateName !== 'DIE' && this.player.stateMachine.currentStateName !== 'IDLE') {
+    console.log('! Timer', this.player.currentStateName);
+    if (this.player.currentStateName !== 'DIE' && this.player.currentStateName !== 'IDLE') {
       console.log('! Respawn');
       this.spawnCoins();
     }

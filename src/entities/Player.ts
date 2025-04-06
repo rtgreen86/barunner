@@ -15,7 +15,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   readonly stateMachine = new StateMachine(this, 'Player');
 
   constructor(scene: Scene, x: number = 0, y: number = 0) {
-    super(scene, x, y, CONST.SPRITESHEET_RAM, 0);
+    super(scene, x, y, CONST.SPRITESHEET.RAM, 0);
     this.scene.physics.world.enable(this);
 
     this.direction = CONST.DIRECTION.RIGHT;

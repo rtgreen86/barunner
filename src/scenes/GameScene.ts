@@ -574,7 +574,7 @@ export default class GameScene extends Phaser.Scene {
 
       const coin = this.coins.get(
         x, y,
-        CONST.SPRITESHEET_OBJECTS,
+        CONST.SPRITESHEET.OBJECTS,
         7 // frame number
       ) as Phaser.Physics.Arcade.Sprite;
 

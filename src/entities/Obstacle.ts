@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { ObjectsFrame } from '../resources';
-import { SPRITESHEET_OBJECTS, ANIMATION_KEY } from '../const';
+import { ANIMATION_KEY, SPRITESHEET } from '../const';
 
 export default class Obstacle extends Phaser.GameObjects.Container {
   private sprite: Phaser.GameObjects.Sprite;
@@ -10,11 +10,11 @@ export default class Obstacle extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
 
-    this.sprite = scene.add.sprite(0, 0, SPRITESHEET_OBJECTS, ObjectsFrame.ROCK_1);
+    this.sprite = scene.add.sprite(0, 0, SPRITESHEET.OBJECTS, ObjectsFrame.ROCK_1);
     this.sprite.setPosition(0, -32);
     this.add(this.sprite);
 
-    this.effect = scene.add.sprite(0, 0, SPRITESHEET_OBJECTS);
+    this.effect = scene.add.sprite(0, 0, SPRITESHEET.OBJECTS);
     this.effect.play(ANIMATION_KEY.YELLOW_STARS);
     this.add(this.effect);
 

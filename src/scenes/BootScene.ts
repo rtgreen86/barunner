@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { TextureKey, SceneKey } from '../resources';
-import { SPRITESHEET_OBJECTS, SPRITESHEET_RAM, ANIMATION_KEY } from '../const';
+import { SPRITESHEET, ANIMATION_KEY } from '../const';
 
 import FILE_LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
@@ -61,8 +61,8 @@ export default class BootScene extends Phaser.Scene {
     this.load.image(TextureKey.HillLayer5, `${baseURL}/images/hill-layer-5.png`);
 
     // Spritesheets
-    this.load.aseprite(SPRITESHEET_RAM, `${baseURL}/spritesheets/ram-spritesheet.png`, `${baseURL}/spritesheets/ram-spritesheet.json`);
-    this.load.aseprite(SPRITESHEET_OBJECTS, `${baseURL}/spritesheets/objects.png`, `${baseURL}/spritesheets/objects.json`);
+    this.load.aseprite(SPRITESHEET.RAM, `${baseURL}/spritesheets/ram-spritesheet.png`, `${baseURL}/spritesheets/ram-spritesheet.json`);
+    this.load.aseprite(SPRITESHEET.OBJECTS, `${baseURL}/spritesheets/objects.png`, `${baseURL}/spritesheets/objects.json`);
   }
 
   create() {
@@ -71,7 +71,7 @@ export default class BootScene extends Phaser.Scene {
     this.anims.get('Indicate').repeat = -1;
 
     // Ram animation
-    this.anims.createFromAseprite(SPRITESHEET_RAM);
+    this.anims.createFromAseprite(SPRITESHEET.RAM);
     this.anims.get(ANIMATION_KEY.RAM_DASH).repeat = -1;
     this.anims.get(ANIMATION_KEY.RAM_IDLE).repeat = -1;
     this.anims.get(ANIMATION_KEY.RAM_DIZZY).repeat = -1;
@@ -82,7 +82,7 @@ export default class BootScene extends Phaser.Scene {
     this.anims.get(ANIMATION_KEY.RAM_RUN).repeat = -1;
 
     // Effects
-    this.anims.createFromAseprite(SPRITESHEET_OBJECTS);
+    this.anims.createFromAseprite(SPRITESHEET.OBJECTS);
     this.anims.get(ANIMATION_KEY.BOX).repeat = -1;
 
     // Run scene

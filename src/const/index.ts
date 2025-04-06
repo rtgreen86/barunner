@@ -1,6 +1,8 @@
 export * from './AnimationKey';
 export * from './Directions';
+export * from './Spritesheet';
 export * from './State';
+
 
 export const CAMERA_ZOOM = 1;
 export const CAMERA_PLAYER_POSITION_X = -320;
@@ -19,9 +21,6 @@ export const WORLD_BLOCKS_IN_ROW = 20;
 export const WORLD_GRAVITY_X = 0;
 export const WORLD_GRAVITY_Y = 2000;
 export const WORLD_GROUND_ROW = 9;
-
-export const SPRITESHEET_RAM = 'ram-spritesheet';
-export const SPRITESHEET_OBJECTS = 'objects-spritesheet';
 
 export const PLAYER_RUN_VELOCITY = 1200;
 export const PLAYER_JUMP_VELOCITY = -500;

@@ -4,22 +4,20 @@ import * as CONST from '../const';
 
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private isDown?: unknown;
-  private jumpStartTime = 0;
+  private readonly jumpMaxTime = CONST.PLAYER_JUMP_MAX_TIME;
+  private readonly jumpVelocity = CONST.PLAYER_JUMP_VELOCITY;
+  private readonly runVelocity = CONST.PLAYER_RUN_VELOCITY;
 
-  private stateParams = {
-    isRunningStart: false,
-    direction: 'right' as "right" | "left",
-    runVelocity: CONST.PLAYER_RUN_VELOCITY,
-    jumpVelocity: CONST.PLAYER_JUMP_VELOCITY,
-    jumpMaxTime: CONST.PLAYER_JUMP_MAX_TIME
-  };
+  private isDown?: unknown;
+  private isRunningStart = false;
+  private jumpStartTime = 0;
 
   readonly stateMachine = new StateMachine(this, 'Player');
 
   constructor(scene: Scene, x: number = 0, y: number = 0) {
     super(scene, x, y, CONST.SPRITESHEET_RAM, 0);
     this.scene.physics.world.enable(this);
+
     this.direction = CONST.DIRECTION.RIGHT;
     this.initStateMachine();
     this.setSize(Player.width, Player.height);
@@ -99,7 +97,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       this.jumpStartTime = duration;
       this.stateMachine.setState(CONST.STATE.JUMP);
     }
-    this.jumpCurrentTime = duration;
     return this;
   }
 
@@ -144,12 +141,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   hurt() {
-    this.stateParams.isRunningStart = false;
+    this.isRunningStart = false;
     return this.play(CONST.ANIMATION_KEY.RAM_HURT);
   }
 
   dash() {
-    this.stateParams.isRunningStart = false;
+    this.isRunningStart = false;
     return this.play(CONST.ANIMATION_KEY.RAM_DASH);
   }
 
@@ -171,7 +168,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   die() {
-    this.isJumpSoundPlayed = false;
     this.setState('DIE');
     return this;
   }
@@ -200,7 +196,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   private handleIdleEnter() {
-    this.stateParams.isRunningStart = false;
+    this.isRunningStart = false;
     this.setVelocityX(0);
     this.play(CONST.ANIMATION_KEY.RAM_IDLE);
   }
@@ -208,21 +204,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   private handleRunEnter() {
     // const DIRECTION_RIGHT = 'right';
     const DIRECTION_LEFT = 'left';
-    this.stateParams.isRunningStart = true;
+    this.isRunningStart = true;
     this.play('Ram Run', true);
-    if (this.stateParams.direction === DIRECTION_LEFT) this.setVelocityX(-this.stateParams.runVelocity);
-    else this.setVelocityX(this.stateParams.runVelocity);
+    if (this.direction === DIRECTION_LEFT) this.setVelocityX(-this.runVelocity);
+    else this.setVelocityX(this.runVelocity);
   }
 
   private handleJumpUpEnter() {
     this.play('Ram Jump Up');
-    this.setVelocityY(this.stateParams.jumpVelocity);
+    this.setVelocityY(this.jumpVelocity);
     this.jumpStartTime = 0;
   }
 
   private handleJumpUpUpdate(time: number) {
     if (!this.jumpStartTime) this.jumpStartTime = time;
-    if (time - this.jumpStartTime <= this.stateParams.jumpMaxTime) this.setVelocityY(this.stateParams.jumpVelocity);
+    if (time - this.jumpStartTime <= this.jumpMaxTime) this.setVelocityY(this.jumpVelocity);
     else this.setState('JUMP_TOP');
   }
 
@@ -236,7 +232,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   private handleLandingEnter() {
     this.play('Ram Landing');
-    if (this.stateParams.isRunningStart) this.playAfterRepeat('Ram Run');
+    if (this.isRunningStart) this.playAfterRepeat('Ram Run');
     else this.playAfterRepeat('Ram Idle');
   }
 

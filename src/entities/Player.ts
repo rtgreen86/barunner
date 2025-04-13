@@ -2,16 +2,33 @@ import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
 import * as CONST from '../const';
 
-export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private isRunningStart = false;
-  private jumpStartTime = 0;
+// TODO: delete CONST.STATE.*
+
+// TODO: поменять на константы строк. Это нужно для использования встроенной переменной this.state
+
+export enum PlayerState {
+  Die = 'DIE',
+  Fall = 'FALL',
+  Fly = 'JUMP_TOP',
+  Idle = 'IDLE',
+  Jump = 'JUMP_UP',
+  JumpTop = 'JUMP_TOP',
+  Landing = 'LANDING',
+  Run = 'RUN',
+};
+
+export class Player extends Phaser.Physics.Arcade.Sprite {
+  private isRunningStart = false; // TODO: move to state machine
+  private jumpStartTime = 0; // TODO: move to state machine
 
   private readonly stateMachine;
 
 
   constructor(scene: Scene, x: number = 0, y: number = 0) {
     super(scene, x, y, CONST.SPRITESHEET.RAM, 0);
+
     this.scene.physics.world.enable(this);
+    this.arcadeBody?.setCollideWorldBounds(true);
 
     this.direction = CONST.DIRECTION.RIGHT;
 
@@ -19,45 +36,36 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setMaxVelocity(CONST.PLAYER_RUN_VELOCITY, CONST.PLAYER_MAX_VERTICAL_VELOCITY)
     this.setData('isAlive', true);
     this.setBounceX(CONST.PLAYER_BOUNCE_X);
-
     this.play(CONST.ANIMATION_KEY.RAM_IDLE);
 
     this.stateMachine = new StateMachine(this, 'Player')
-      .addState(CONST.STATE.IDLE, { onEnter: this.handleIdleEnter })
-      .addState(CONST.STATE.RUN, { onEnter: this.handleRunEnter })
-      .addState(CONST.STATE.JUMP, { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
-      .addState(CONST.STATE.JUMP_TOP, { onEnter: this.handleJumpTopEnter })
-      .addState(CONST.STATE.FALL, { onEnter: this.handleFallEnter })
-      .addState(CONST.STATE.LANDING, { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
-      .addState(CONST.STATE.DIE, { onEnter: this.handleDieEnter });
-
-    (this.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true);
+      .addState(PlayerState.Idle, { onEnter: this.handleIdleEnter })
+      .addState(PlayerState.Run, { onEnter: this.handleRunEnter })
+      .addState(PlayerState.Jump, { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
+      .addState(PlayerState.JumpTop, { onEnter: this.handleJumpTopEnter })
+      .addState(PlayerState.Fall, { onEnter: this.handleFallEnter })
+      .addState(PlayerState.Landing, { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
+      .addState(PlayerState.Die, { onEnter: this.handleDieEnter });
   }
 
-  get animationName() {
-    return this.anims.getName();
+  get arcadeBody() {
+    return this.body as Phaser.Physics.Arcade.Body | null;
   }
 
   get velocityX() {
-    return this.body?.velocity.x;
+    return this.body?.velocity.x || 0;
   }
 
   get velocityY() {
-    return this.body?.velocity.y;
+    return this.body?.velocity.y || 0;
   }
 
-  initStateMachine() {
-    this.stateMachine
-      .addState('IDLE', { onEnter: this.handleIdleEnter })
-      .addState('RUN', { onEnter: this.handleRunEnter })
-      .addState('JUMP_UP', { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
-      .addState('JUMP_TOP', { onEnter: this.handleJumpTopEnter })
-      .addState('FALL', { onEnter: this.handleFallEnter })
-      .addState('LANDING', { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
-      .addState('DIE', { onEnter: this.handleDieEnter });
 
-    return this;
-  }
+
+
+
+
+  // TODO: Использовать встроенную переменную this.state, она уже записывается в стейт-машине
 
   get currentStateName() {
     return this.stateMachine.currentState;
@@ -245,3 +253,5 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.emit('dead');
   }
 }
+
+export default Player;

@@ -34,7 +34,7 @@ export default class VirtualGamepadScene extends Phaser.Scene {
     const isDown = !isOverGameObject && this.input.activePointer.isDown;
     const gameScene = this.scene.get('GameScene');
     const player = gameScene.children.getByName('The Player');
-    player.touch(isDown, time, delta);
+    // player.touch(isDown, time, delta);
 
     this.sensorGamepad.setDisabled(this.input.hitTestPointer(this.input.activePointer).length !== 0);
 

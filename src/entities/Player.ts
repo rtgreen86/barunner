@@ -3,7 +3,6 @@ import StateMachine from '../state-machine';
 import * as CONST from '../const';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private isDown?: unknown;
   private isRunningStart = false;
   private jumpStartTime = 0;
 
@@ -183,12 +182,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   respawn() {
     this.idle();
-  }
-
-  touch(isDown: unknown, time: unknown, delta: unknown) {
-    if (this.isDown !== isDown) {
-      this.isDown = isDown;
-    }
   }
 
   update(time: number) {

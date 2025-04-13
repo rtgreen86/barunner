@@ -2,12 +2,7 @@ import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
 import * as CONST from '../const';
 
-
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private readonly jumpMaxTime = CONST.PLAYER_JUMP_MAX_TIME;
-  private readonly jumpVelocity = CONST.PLAYER_JUMP_VELOCITY;
-  private readonly runVelocity = CONST.PLAYER_RUN_VELOCITY;
-
   private isDown?: unknown;
   private isRunningStart = false;
   private jumpStartTime = 0;
@@ -216,19 +211,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const DIRECTION_LEFT = 'left';
     this.isRunningStart = true;
     this.play('Ram Run', true);
-    if (this.direction === DIRECTION_LEFT) this.setVelocityX(-this.runVelocity);
-    else this.setVelocityX(this.runVelocity);
+    if (this.direction === DIRECTION_LEFT) this.setVelocityX(-CONST.PLAYER_RUN_VELOCITY);
+    else this.setVelocityX(CONST.PLAYER_RUN_VELOCITY);
   }
 
   private handleJumpUpEnter() {
     this.play('Ram Jump Up');
-    this.setVelocityY(this.jumpVelocity);
+    this.setVelocityY(CONST.PLAYER_JUMP_VELOCITY);
     this.jumpStartTime = 0;
   }
 
   private handleJumpUpUpdate(time: number) {
     if (!this.jumpStartTime) this.jumpStartTime = time;
-    if (time - this.jumpStartTime <= this.jumpMaxTime) this.setVelocityY(this.jumpVelocity);
+    if (time - this.jumpStartTime <= CONST.PLAYER_JUMP_MAX_TIME) this.setVelocityY(CONST.PLAYER_JUMP_VELOCITY);
     else this.setState('JUMP_TOP');
   }
 

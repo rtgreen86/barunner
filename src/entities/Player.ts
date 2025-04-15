@@ -1,16 +1,12 @@
 import Phaser, { Scene } from 'phaser';
 import StateMachine from '../state-machine';
 import * as CONST from '../const';
+import {Direction} from './Direction';
 
 // TODO: delete CONST.STATE.*
 // TODO: delete CONST.DIRECTION
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private isRunningStart = false; // TODO: move to state machine
-  private jumpStartTime = 0; // TODO: move to state machine
-
-  private readonly stateMachine;
-
   static readonly STATE_DIE = 'DIE';
   static readonly STATE_FALL = 'FALL';
   static readonly STATE_FLY = 'JUMP_TOP';
@@ -20,13 +16,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   static readonly STATE_LANDING = 'LANDING';
   static readonly STATE_RUN = 'RUN';
 
+
+  private isRunningStart = false; // TODO: move to state machine
+  private jumpStartTime = 0; // TODO: move to state machine
+
+  private readonly stateMachine;
+
+
   constructor(scene: Scene, x: number = 0, y: number = 0) {
     super(scene, x, y, CONST.SPRITESHEET.RAM, 0);
 
     this.scene.physics.world.enable(this);
     this.arcadeBody?.setCollideWorldBounds(true);
 
-    this.direction = CONST.DIRECTION.RIGHT;
+    this.direction = Direction.Right;
 
     this.setSize(CONST.PLAYER_WIDTH, CONST.PLAYER_HEIGHT);
     this.setMaxVelocity(CONST.PLAYER_RUN_VELOCITY, CONST.PLAYER_MAX_VERTICAL_VELOCITY)
@@ -44,6 +47,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .addState(Player.STATE_DIE, { onEnter: this.handleDieEnter });
   }
 
+
   get arcadeBody() {
     return this.body as Phaser.Physics.Arcade.Body | null;
   }
@@ -56,19 +60,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     return this.body?.velocity.y || 0;
   }
 
-
-
-
-
-
-
   get direction() {
-    return this.flipX ? CONST.DIRECTION.LEFT : CONST.DIRECTION.RIGHT;
+    return this.flipX ? Direction.Left : Direction.Right;
   }
 
   set direction(value) {
-    this.flipX = value === CONST.DIRECTION.LEFT;
+    this.flipX = value === Direction.Left;
   }
+
+
+
+
+
+
 
 
 
@@ -187,7 +191,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const DIRECTION_LEFT = 'left';
     this.isRunningStart = true;
     this.play('Ram Run', true);
-    if (this.direction === DIRECTION_LEFT) this.setVelocityX(-CONST.PLAYER_RUN_VELOCITY);
+    if (this.direction === Direction.Left) this.setVelocityX(-CONST.PLAYER_RUN_VELOCITY);
     else this.setVelocityX(CONST.PLAYER_RUN_VELOCITY);
   }
 

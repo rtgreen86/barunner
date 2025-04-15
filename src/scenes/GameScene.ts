@@ -5,6 +5,7 @@ import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
 import * as CONST from '../const';
 import { SceneKey, TextureKey } from '../resources';
+import { Direction } from '../entities/Direction';
 
 import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
@@ -361,7 +362,7 @@ export default class GameScene extends Phaser.Scene {
 
     const zero = this.player.x;
 
-    if (this.player.direction === 'right' && this.generatedRight + max < zero + SPAWN_DISTANCE) {
+    if (this.player.direction === Direction.Left && this.generatedRight + max < zero + SPAWN_DISTANCE) {
       const x = this.generatedRight + dist;
       const y = (this.map.heightInPixels / 2) - 64 / 2;
       this.obstacles.shuffle();
@@ -374,7 +375,7 @@ export default class GameScene extends Phaser.Scene {
 
     }
 
-    if (this.player.direction === 'left' && this.generatedLeft - max > zero - SPAWN_DISTANCE) {
+    if (this.player.direction === Direction.Right && this.generatedLeft - max > zero - SPAWN_DISTANCE) {
       const x = this.generatedLeft - dist;
       const y = (this.map.heightInPixels / 2) - 64 / 2;
       this.obstacles.shuffle();
@@ -415,11 +416,11 @@ export default class GameScene extends Phaser.Scene {
       this.player.fall();
     }
     if (this.controller.cursor.right.isDown) {
-      this.player.direction = 'right';
+      this.player.direction = Direction.Right;
       this.setCameraToRight();
     }
     if (this.controller.cursor.left.isDown) {
-      this.player.direction = 'left';
+      this.player.direction = Direction.Left;
       this.setCameraToLeft();
     }
     if (this.numKeys.key1.isDown) {

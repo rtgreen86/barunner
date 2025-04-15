@@ -1,5 +1,4 @@
 export * from './AnimationKey';
-export * from './Directions';
 export * from './player';
 export * from './Spritesheet';
 export * from './State';

@@ -120,11 +120,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   private handleIdleEnter() {
-
-
-
-
-
+    this.play(RamAnimationKey.RAM_IDLE);
   }
 
   private handleRunEnter() {}

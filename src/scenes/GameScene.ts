@@ -7,7 +7,7 @@ import * as CONST from '../const';
 import { SceneKey, TextureKey } from '../resources';
 import { Direction, CharAttributes } from '../enums';
 
-import Player from '../entities/Player';
+import Player, { PlayerState } from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -335,7 +335,7 @@ export default class GameScene extends Phaser.Scene {
     this.player.setName('The Player');
     this.player.setPosition(0, ground);
     this.player.data.set(CharAttributes.Health, 1);
-    this.player.data.set(CharAttributes.JumpSpeed, 0);
+    this.player.data.set(CharAttributes.JumpSpeed, 0); // CONST.PLAYER_JUMP_VELOCITY
     this.player.data.set(CharAttributes.JumpTime, 0);
     this.player.data.set(CharAttributes.RunSpeed, 0);
     this.player.idle();
@@ -411,26 +411,33 @@ export default class GameScene extends Phaser.Scene {
   }
 
   updatePlayer(time: number, delta?: number) {
-    if (this.player.state === Player.STATE_JUMP && this.controller.isActionDown) {
-      this.player.jump(this.controller.getActionDuration());
+    if (
+      this.controller.isActionDown && (
+        this.player.isCurrentState(PlayerState.JUMP) ||
+        this.player.isCurrentState(PlayerState.RUN) ||
+        this.player.isCurrentState(PlayerState.IDLE)
+      )
+    ) {
+      this.player.jump();
     }
-    if (this.player.state === Player.STATE_JUMP && !this.controller.isActionDown) {
-      this.player.fly();
-    }
-    if (this.isFalling(this.player)) {
-      this.player.fall();
-    }
-    if (this.controller.cursor.right.isDown) {
-      this.player.direction = Direction.Right;
-      this.setCameraToRight();
-    }
-    if (this.controller.cursor.left.isDown) {
-      this.player.direction = Direction.Left;
-      this.setCameraToLeft();
-    }
-    if (this.numKeys.key1.isDown) {
-      this.player.idle();
-    }
+
+    // if (this.player.state === Player.STATE_JUMP && !this.controller.isActionDown) {
+    //   this.player.fly();
+    // }
+    // if (this.isFalling(this.player)) {
+    //   this.player.fall();
+    // }
+    // if (this.controller.cursor.right.isDown) {
+    //   this.player.direction = Direction.Right;
+    //   this.setCameraToRight();
+    // }
+    // if (this.controller.cursor.left.isDown) {
+    //   this.player.direction = Direction.Left;
+    //   this.setCameraToLeft();
+    // }
+    // if (this.numKeys.key1.isDown) {
+    //   this.player.idle();
+    // }
     this.player.update(time);
   }
 
@@ -506,13 +513,13 @@ export default class GameScene extends Phaser.Scene {
     if (this.player.state === Player.STATE_RUN && this.controller.isActionDown) {
       this.player.jump(this.controller.getActionDuration());
     }
-    if (this.controller.isActionDown) {
-      this.player.run();
-      this.player.jump(this.controller.getActionDuration());
-    }
-    if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
-      this.player.run();
-    }
+    // if (this.controller.isActionDown) {
+    //   this.player.run();
+    //   this.player.jump(this.controller.getActionDuration());
+    // }
+    // if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
+    //   this.player.run();
+    // }
   }
 
   handlePlayerCollideObstacle(player: Player, obstacle: any) {

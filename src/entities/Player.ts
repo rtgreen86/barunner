@@ -21,6 +21,8 @@ export enum PlayerState {
 };
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
+  private jumpTime = 0;
+
   private readonly stateMachine;
 
   constructor(scene: Scene, x: number = 0, y: number = 0) {
@@ -123,13 +125,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.play(RamAnimationKey.RAM_IDLE);
   }
 
-  private handleRunEnter() {}
+  private handleJumpUpEnter() {
+    const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
+    this.jumpTime = 0;
+    this.play(RamAnimationKey.RAM_JUMP_UP);
+    this.setVelocityY(velocity);
+  }
 
-  private handleJumpUpEnter() {}
 
-  private handleJumpUpUpdate() {}
+
 
   private handleJumpTopEnter() {}
+
+  private handleRunEnter() {}
+
+  private handleJumpUpUpdate() {}
 
   private handleFallEnter() {}
 
@@ -163,11 +173,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   //   else this.setVelocityX(CONST.PLAYER_RUN_VELOCITY);
   // }
 
-  // private handleJumpUpEnter() {
-  //   this.play('Ram Jump Up');
-  //   this.setVelocityY(CONST.PLAYER_JUMP_VELOCITY);
-  //   this.jumpStartTime = 0;
-  // }
+
 
   // private handleJumpUpUpdate(time: number) {
   //   if (!this.jumpStartTime) this.jumpStartTime = time;

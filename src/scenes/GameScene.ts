@@ -336,7 +336,7 @@ export default class GameScene extends Phaser.Scene {
     this.player.setPosition(0, ground);
     this.player.data.set(CharAttributes.Health, 1);
     this.player.data.set(CharAttributes.JumpSpeed, CONST.PLAYER_JUMP_VELOCITY);
-    this.player.data.set(CharAttributes.JumpTime, 0);
+    this.player.data.set(CharAttributes.JumpTime, CONST.PLAYER_JUMP_MAX_TIME);
     this.player.data.set(CharAttributes.RunSpeed, 0);
     this.player.idle();
 

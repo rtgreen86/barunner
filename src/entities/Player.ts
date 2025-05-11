@@ -131,9 +131,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   private handleJumpUpUpdate(time: number, delta: number) {
     const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
-    // const maxTime = this.data.get(CharAttributes.JumpTime) || 0;
-    this.jumpTime += delta;
     this.setVelocityY(velocity);
+
+    const maxTime = this.data.get(CharAttributes.JumpTime) || 0;
+    this.jumpTime += delta;
+    if (this.jumpTime >= maxTime) this.fly();
   }
 
   private handleFlyEnter() {

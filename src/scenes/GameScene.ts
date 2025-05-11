@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
-import Controller from '../entities/Controller';
+import Controller from '../Controller';
 import { OpenMainMenu } from '../commands';
 import * as CONST from '../const';
 import { SceneKey, TextureKey } from '../resources';
@@ -50,7 +50,7 @@ export default class GameScene extends Phaser.Scene {
 
   obstacles: Phaser.Physics.Arcade.Group;
 
-  controller: Controller;
+  private controller!: Controller;
 
   numKeys: any;
 

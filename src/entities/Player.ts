@@ -11,11 +11,10 @@ import {
 export enum PlayerState {
   DIE = 'DIE',
   FALL = 'FALL',
-  FLY = 'JUMP_TOP',
+  FLY = 'FLY',
   HURT = 'HURT',
   IDLE = 'IDLE',
   JUMP = 'JUMP_UP',
-  JUMP_TOP = 'JUMP_TOP',
   LANDING = 'LANDING',
   RUN = 'RUN',
 };
@@ -40,7 +39,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .addState(PlayerState.IDLE, { onEnter: this.handleIdleEnter })
       .addState(PlayerState.RUN, { onEnter: this.handleRunEnter })
       .addState(PlayerState.JUMP, { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
-      .addState(PlayerState.JUMP_TOP, { onEnter: this.handleJumpTopEnter })
+      .addState(PlayerState.FLY, { onEnter: this.handleFlyEnter, onUpdate: this.handleFlyUpdate })
       .addState(PlayerState.FALL, { onEnter: this.handleFallEnter })
       .addState(PlayerState.LANDING, { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
       .addState(PlayerState.HURT, { onEnter: this.handleHurtEnter, onUpdate: this.handleHurtUpdate })
@@ -117,8 +116,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.idle();
   }
 
-  update(time: number) {
-    this.stateMachine.update(time);
+  update(time: number, delta: number) {
+    this.stateMachine.update(time, delta);
   }
 
   private handleIdleEnter() {
@@ -126,22 +125,30 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   private handleJumpUpEnter() {
-    const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
     this.jumpTime = 0;
     this.play(RamAnimationKey.RAM_JUMP_UP);
+  }
+
+  private handleJumpUpUpdate(time: number, delta: number) {
+    const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
+    // const maxTime = this.data.get(CharAttributes.JumpTime) || 0;
+    this.jumpTime += delta;
     this.setVelocityY(velocity);
+  }
+
+  private handleFlyEnter() {
+    this.play(RamAnimationKey.RAM_FLY);
   }
 
 
 
 
-  private handleJumpTopEnter() {}
+  private handleFallEnter() {}
+
+
+  private handleFlyUpdate() {}
 
   private handleRunEnter() {}
-
-  private handleJumpUpUpdate() {}
-
-  private handleFallEnter() {}
 
   private handleLandingEnter() {}
 

@@ -4,7 +4,7 @@ type StateName = string | number;
 
 export interface StateConfig<T extends Context> {
   onEnter?: (this: T) => void;
-  onUpdate?: (this: T, time: number) => void;
+  onUpdate?: (this: T, time: number, delta: number) => void;
   onExit?: (this: T) => void;
 }
 
@@ -72,11 +72,11 @@ export class StateMachine<T extends Context> {
     return this;
   }
 
-  update(time: number) {
+  update(time: number, delta: number) {
     if (this.changeStateQueue.length > 0) {
       this.setState(this.changeStateQueue.shift()!);
     }
-    this.currentConfig?.onUpdate?.call?.(this.context, time);
+    this.currentConfig?.onUpdate?.call?.(this.context, time, delta);
     return this;
   }
 }

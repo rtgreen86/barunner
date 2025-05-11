@@ -335,7 +335,7 @@ export default class GameScene extends Phaser.Scene {
     this.player.setName('The Player');
     this.player.setPosition(0, ground);
     this.player.data.set(CharAttributes.Health, 1);
-    this.player.data.set(CharAttributes.JumpSpeed, 0); // CONST.PLAYER_JUMP_VELOCITY
+    this.player.data.set(CharAttributes.JumpSpeed, CONST.PLAYER_JUMP_VELOCITY);
     this.player.data.set(CharAttributes.JumpTime, 0);
     this.player.data.set(CharAttributes.RunSpeed, 0);
     this.player.idle();
@@ -410,7 +410,9 @@ export default class GameScene extends Phaser.Scene {
     // this.map.layer.tilemapLayer.x = -offset;
   }
 
-  updatePlayer(time: number, delta?: number) {
+  updatePlayer(time: number, delta: number) {
+    this.player.update(time, delta);
+
     if (
       this.controller.isActionDown && (
         this.player.isCurrentState(PlayerState.JUMP) ||
@@ -419,6 +421,10 @@ export default class GameScene extends Phaser.Scene {
       )
     ) {
       this.player.jump();
+    }
+
+    if (!this.controller.isActionDown && this.player.isCurrentState(PlayerState.JUMP)) {
+      this.player.fly();
     }
 
     // if (this.player.state === Player.STATE_JUMP && !this.controller.isActionDown) {
@@ -438,7 +444,6 @@ export default class GameScene extends Phaser.Scene {
     // if (this.numKeys.key1.isDown) {
     //   this.player.idle();
     // }
-    this.player.update(time);
   }
 
   isFalling(object: any) {
@@ -628,10 +633,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private handleRespawnTimer() {
-    console.log('! Timer', this.player.state);
-    if (this.player.state !== Player.STATE_DIE && this.player.state !== Player.STATE_IDLE) {
-      console.log('! Respawn');
-      this.spawnCoins();
-    }
+    // console.log('! Timer', this.player.state);
+    // if (this.player.state !== Player.STATE_DIE && this.player.state !== Player.STATE_IDLE) {
+    //   console.log('! Respawn');
+    //   this.spawnCoins();
+    // }
   }
 }

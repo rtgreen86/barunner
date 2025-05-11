@@ -14,10 +14,6 @@ export default class ControllerScene
 {
   private cursor?: Phaser.Types.Input.Keyboard.CursorKeys;
 
-  private isGameObjectOver = false;
-
-  private enabled = true;
-
   private xButton!: Phaser.GameObjects.Image;
 
   constructor() {
@@ -25,7 +21,6 @@ export default class ControllerScene
   }
 
   get isActionDown() {
-    // console.log(this.input.activePointer.isDown)
     return this.cursor?.space.isDown || this.isPointerDown || false;
   }
 
@@ -40,14 +35,8 @@ export default class ControllerScene
   }
 
   get isPointerDown() {
-    // TODO: delete one of this method
-
-    // Method I
-    return !this.isGameObjectOver && this.input.activePointer.isDown;
-
-    // Method II
-    // const isOver = this.input.hitTestPointer(this.input.activePointer).length !== 0;
-    // return !isOver && this.input.activePointer.isDown
+    const isOver = this.input.hitTestPointer(this.input.activePointer).length !== 0;
+    return !isOver && this.input.activePointer.isDown
   }
 
   create() {
@@ -60,20 +49,12 @@ export default class ControllerScene
     this.subscribe();
   }
 
-  update() {
-    // this.sensorGamepad.setDisabled(this.input.hitTestPointer(this.input.activePointer).length !== 0);
-  }
-
   subscribe() {
-    this.input.on('gameobjectover', this.handleGameObjectOver, this);
-    this.input.on('gameobjectout', this.handleGameObjectOut, this);
     this.xButton.on('click', this.handleXClick, this);
     this.events.on('destroy', this.handleDestroy, this);
   }
 
   unsubscribe() {
-    this.input.off('gameobjectover', this.handleGameObjectOver);
-    this.input.off('gameobjectout', this.handleGameObjectOut);
     this.xButton.off('click', this.handleXClick);
     this.events.off('destroy', this.handleDestroy);
   }
@@ -84,14 +65,6 @@ export default class ControllerScene
     const x = 1280 - texture.width * scale / 2;
     const y = texture.height * scale / 2;
     return (this.add as any).baButton(x, y, 'button-x', 0).setScale(scale); // TODO: fix type
-  }
-
-  private handleGameObjectOver() {
-    this.isGameObjectOver = true;
-  }
-
-  private handleGameObjectOut() {
-    this.isGameObjectOver = false;
   }
 
   private handleXClick() {

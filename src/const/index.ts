@@ -1,8 +1,6 @@
 export * from './AnimationKey';
 export * from './player';
 export * from './Spritesheet';
-export * from './State';
-
 
 export const CAMERA_ZOOM = 1;
 export const CAMERA_PLAYER_POSITION_X = -320;

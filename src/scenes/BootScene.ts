@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { TextureKey, SceneKey } from '../resources';
 import { SPRITESHEET, ANIMATION_KEY } from '../const';
+import { RamAnimationKey } from '../enums';
 
 import FILE_LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
@@ -72,14 +73,14 @@ export default class BootScene extends Phaser.Scene {
 
     // Ram animation
     this.anims.createFromAseprite(SPRITESHEET.RAM);
-    this.anims.get(ANIMATION_KEY.RAM_DASH).repeat = -1;
-    this.anims.get(ANIMATION_KEY.RAM_IDLE).repeat = -1;
-    this.anims.get(ANIMATION_KEY.RAM_DIZZY).repeat = -1;
-    this.anims.get(ANIMATION_KEY.RAM_HURT).repeat = -1;
-    this.anims.get(ANIMATION_KEY.RAM_TAKEOFF_RUN).repeat = -1;
-    this.anims.get(ANIMATION_KEY.RAM_JUMP_UP).repeat = 0;
-    this.anims.get(ANIMATION_KEY.RAM_FALL).repeat = 0;
-    this.anims.get(ANIMATION_KEY.RAM_RUN).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_DASH).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_IDLE).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_DIZZY).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_HURT).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_TAKEOFF_RUN).repeat = -1;
+    this.anims.get(RamAnimationKey.RAM_JUMP_UP).repeat = 0;
+    this.anims.get(RamAnimationKey.RAM_FALL).repeat = 0;
+    this.anims.get(RamAnimationKey.RAM_RUN).repeat = -1;
 
     // Effects
     this.anims.createFromAseprite(SPRITESHEET.OBJECTS);

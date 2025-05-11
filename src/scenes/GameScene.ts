@@ -5,7 +5,7 @@ import Controller from '../entities/Controller';
 import { OpenMainMenu } from '../commands';
 import * as CONST from '../const';
 import { SceneKey, TextureKey } from '../resources';
-import { Direction } from '../entities/Direction';
+import { Direction, CharAttributes } from '../enums';
 
 import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
@@ -34,7 +34,7 @@ export function getPropertyValueByName<T extends Prop>(props: T[], propertyName:
 export default class GameScene extends Phaser.Scene {
   map: Phaser.Tilemaps.Tilemap;
 
-  player: Player;
+  player!: Player;
 
   playerStartPosition: number;
 
@@ -331,9 +331,14 @@ export default class GameScene extends Phaser.Scene {
   private createPlayer() {
     const ground = CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE + 64;
 
-    this.player = this.add.existing(new Player(this))
-      .setName('The Player')
-      .setPosition(0, ground);
+    this.player = this.add.existing(new Player(this));
+    this.player.setName('The Player');
+    this.player.setPosition(0, ground);
+    this.player.data.set(CharAttributes.Health, 1);
+    this.player.data.set(CharAttributes.JumpSpeed, 0);
+    this.player.data.set(CharAttributes.JumpTime, 0);
+    this.player.data.set(CharAttributes.RunSpeed, 0);
+    this.player.idle();
 
     this.playerStartPosition = this.player.x;
   }

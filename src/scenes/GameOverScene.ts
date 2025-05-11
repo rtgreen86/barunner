@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { SceneKey } from '../resources';
+import { SceneKey } from '../enums';
 
 export default class GameOver extends Phaser.Scene {
   constructor() {

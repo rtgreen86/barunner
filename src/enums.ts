@@ -25,3 +25,10 @@ export enum RamAnimationKey {
   RAM_RUN = 'Ram Run',
   RAM_TAKEOFF_RUN = 'Ram Takeoff Run',
 };
+
+export enum SceneKey {
+  BootScene = 'BootScene',
+  GameScene = 'GameScene',
+  GameoverScene = 'GameOver',
+  ControllerScene = 'ControllerScene'
+};

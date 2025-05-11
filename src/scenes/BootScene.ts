@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import { TextureKey, SceneKey } from '../resources';
+import { TextureKey  } from '../resources';
 import { SPRITESHEET, ANIMATION_KEY } from '../const';
-import { RamAnimationKey } from '../enums';
+import { RamAnimationKey, SceneKey } from '../enums';
 
 import FILE_LEVEL_1_MAP_JSON from '../../assets/map/level-1-map.json';
 import FILE_JUMP_WAV from '../../assets/sound/jump.wav';
@@ -88,5 +88,6 @@ export default class BootScene extends Phaser.Scene {
 
     // Run scene
     this.scene.run(SceneKey.GameScene);
+    this.scene.run(SceneKey.ControllerScene);
   }
 }

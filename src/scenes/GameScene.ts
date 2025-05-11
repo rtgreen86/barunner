@@ -1,11 +1,11 @@
-import Phaser from 'phaser';
+import Phaser, { Scene } from 'phaser';
 import BackgroundTileSprite from '../entities/BackgroundTileSprite';
 import BackgroundLayer from '../entities/BackgroundLayer';
-import Controller from '../Controller';
+import { Controller } from './ControllerScene';
 import { OpenMainMenu } from '../commands';
 import * as CONST from '../const';
-import { SceneKey, TextureKey } from '../resources';
-import { Direction, CharAttributes } from '../enums';
+import { TextureKey } from '../resources';
+import { Direction, CharAttributes, SceneKey } from '../enums';
 
 import Player, { PlayerState } from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
@@ -100,6 +100,8 @@ export default class GameScene extends Phaser.Scene {
     this.obstacle = new Obstacle(this, 700, CONST.WORLD_GROUND_ROW * CONST.WORLD_BLOCK_SIZE);
     this.add.existing(this.obstacle);
 
+    this.controller = this.scene.get(SceneKey.ControllerScene) as unknown as Controller; // TODO: fix types
+
     this.createControls();
     // this.createObstacles();
     // this.createCollaider();
@@ -117,7 +119,7 @@ export default class GameScene extends Phaser.Scene {
     this.escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, false);
 
     this.scene.run('ScoreboardScene');
-    this.scene.run('virtual-gamepad-scene');
+
 
     this.subscribe();
 
@@ -338,8 +340,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createControls() {
-    this.controller = new Controller(this);
-
     this.numKeys = {
       key1: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE, true, false).on('down', this.onNumKeyDown, this),
       key2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO, true, false).on('down', this.onNumKeyDown, this),

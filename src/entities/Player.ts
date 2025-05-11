@@ -150,28 +150,23 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.play(RamAnimationKey.RAM_FALL);
   }
 
+  private handleLandingEnter() {
+    this.play(RamAnimationKey.RAM_LANDING);
+  }
 
-
-
+  private handleLandingUpdate() {
+    this.idle();
+  }
 
 
 
   private handleRunEnter() {}
-
-  private handleLandingEnter() {}
-
-  private handleLandingUpdate() {}
 
   private handleHurtEnter() {}
 
   private handleHurtUpdate() {}
 
   private handleDieEnter() {}
-
-
-
-
-
 
   // private handleIdleEnter() {
   //   this.isRunningStart = false;
@@ -187,8 +182,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   //   if (this.direction === Direction.Left) this.setVelocityX(-CONST.PLAYER_RUN_VELOCITY);
   //   else this.setVelocityX(CONST.PLAYER_RUN_VELOCITY);
   // }
-
-
 
   // private handleJumpUpUpdate(time: number) {
   //   if (!this.jumpStartTime) this.jumpStartTime = time;

@@ -130,14 +130,8 @@ export default class GameScene extends Phaser.Scene {
     const offsetY = -145;
     // this.add.tileSprite(scrollX, scrollY + screenHeight + offsetY, screenWidth, textureHeight, 'new-bg-layer-1').setOrigin(0, 1);
 
-
-    this.player.setCollideWorldBounds(true, null, null, true);
-
-    this.physics.world.on('worldbounds', function (body: Phaser.Physics.Arcade.Body) {
-      if (body.gameObject === this.player) {
-        this.handlePlayerCollideGround();
-      }
-    }, this);
+    this.player.setCollideWorldBounds(true, undefined, undefined, true);
+    this.physics.world.on('worldbounds', this.handleWorldbounds, this);
 
     this.physics.add.collider(
       this.obstacle,
@@ -506,27 +500,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  handlePlayerCollideGround() {
-    if (this.player.state === Player.STATE_FALL) {
-      this.player.landing();
-    }
-
-    if (this.player.state === Player.STATE_DIE) {
-      return;
-    }
-
-    if (this.player.state === Player.STATE_RUN && this.controller.isActionDown) {
-      this.player.jump(this.controller.getActionDuration());
-    }
-    // if (this.controller.isActionDown) {
-    //   this.player.run();
-    //   this.player.jump(this.controller.getActionDuration());
-    // }
-    // if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
-    //   this.player.run();
-    // }
-  }
-
   handlePlayerCollideObstacle(player: Player, obstacle: any) {
     const { x: px, y: py } = player.getBottomRight();
     const { x: ox, y: oy } = obstacle.getTopLeft();
@@ -637,6 +610,32 @@ export default class GameScene extends Phaser.Scene {
     // if (this.player.state !== Player.STATE_DIE && this.player.state !== Player.STATE_IDLE) {
     //   console.log('! Respawn');
     //   this.spawnCoins();
+    // }
+  }
+
+  private handleWorldbounds(body: Phaser.Physics.Arcade.Body) {
+    if (body.gameObject === this.player) {
+      this.handlePlayerCollideGround();
+    }
+  }
+
+  handlePlayerCollideGround() {
+    if (this.player.isCurrentState(PlayerState.FALL)) {
+      this.player.landing();
+    }
+
+    // if (this.player.state === Player.STATE_DIE) {
+    //   return;
+    // }
+    // if (this.player.state === Player.STATE_RUN && this.controller.isActionDown) {
+    //   this.player.jump(this.controller.getActionDuration());
+    // }
+    // if (this.controller.isActionDown) {
+    //   this.player.run();
+    //   this.player.jump(this.controller.getActionDuration());
+    // }
+    // if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
+    //   this.player.run();
     // }
   }
 }

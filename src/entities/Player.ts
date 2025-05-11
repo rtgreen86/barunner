@@ -142,13 +142,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.play(RamAnimationKey.RAM_FLY);
   }
 
+  private handleFlyUpdate() {
+    if (this.velocityY >= 0) this.fall();
+  }
+
+  private handleFallEnter() {
+    this.play(RamAnimationKey.RAM_FALL);
+  }
 
 
 
-  private handleFallEnter() {}
 
 
-  private handleFlyUpdate() {}
+
 
   private handleRunEnter() {}
 

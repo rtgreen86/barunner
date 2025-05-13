@@ -408,11 +408,17 @@ export default class GameScene extends Phaser.Scene {
     this.player.update(time, delta);
 
     if (
-      this.controller.isActionDown && (
-        this.player.isCurrentState(PlayerState.JUMP) ||
+      this.controller.isActionDown &&
+      this.controller.actionDownDuration <= CONST.PLAYER_JUMP_THRESHOLD && (
         this.player.isCurrentState(PlayerState.RUN) ||
         this.player.isCurrentState(PlayerState.IDLE)
       )
+    ) {
+      this.player.jump();
+    }
+
+    if (
+      this.controller.isActionDown && this.player.isCurrentState(PlayerState.JUMP)
     ) {
       this.player.jump();
     }

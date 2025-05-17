@@ -171,13 +171,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     );
   }
 
+  private handleDieEnter() {
+    this.setVelocityX(0);
+    this.play(RamAnimationKey.RAM_FAINT);
+  }
 
 
   private handleHurtEnter() {}
 
   private handleHurtUpdate() {}
 
-  private handleDieEnter() {}
 
   // private handleIdleEnter() {
   //   this.isRunningStart = false;

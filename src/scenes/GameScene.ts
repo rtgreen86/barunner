@@ -63,6 +63,8 @@ export default class GameScene extends Phaser.Scene {
 
   private score = 0;
 
+  private isRun = false;
+
   constructor() {
     super(SceneKey.GameScene);
   }
@@ -183,6 +185,8 @@ export default class GameScene extends Phaser.Scene {
       callbackScope: this,
       loop: true
     });
+
+    this.isRun = false;
   }
 
   subscribe() {
@@ -400,6 +404,11 @@ export default class GameScene extends Phaser.Scene {
   updatePlayer(time: number, delta: number) {
     this.player.update(time, delta);
 
+    if (this.controller.isActionDown && this.player.isCurrentState(PlayerState.IDLE)) {
+      this.isRun = true;
+      this.player.run();
+    }
+
     if (
       this.controller.isActionDown &&
       this.controller.actionDownDuration <= CONST.PLAYER_JUMP_THRESHOLD && (
@@ -432,9 +441,14 @@ export default class GameScene extends Phaser.Scene {
       this.player.run(Direction.Right);
     }
 
+    if (this.isRun && this.player.isCurrentState(PlayerState.IDLE)) {
+      this.player.run(Direction.Right);
+    }
+
     if (
       !this.controller.isRightPressed &&
       !this.controller.isLeftPressed &&
+      !this.isRun &&
       this.player.isCurrentState(PlayerState.RUN))
     {
       this.player.idle();

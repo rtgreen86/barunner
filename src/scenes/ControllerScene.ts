@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 import { SceneKey } from '../enums';
 import { OpenMainMenu } from '../commands';
 
-
 export interface Controller {
+  readonly isRightPressed: boolean;
+  readonly isLeftPressed: boolean;
   readonly isActionDown: boolean;
   readonly actionDownDuration: number;
 }
@@ -18,6 +19,14 @@ export default class ControllerScene
 
   constructor() {
     super(SceneKey.ControllerScene);
+  }
+
+  get isRightPressed() {
+    return this.cursor?.right.isDown;
+  }
+
+  get isLeftPressed() {
+    return this.cursor?.left.isDown;
   }
 
   get isActionDown() {

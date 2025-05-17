@@ -12,7 +12,6 @@ import Obstacle from '../entities/Obstacle';
 
 const CAMERA_STABILIZE_ERROR = 40;
 const CAMERA_STABLE_LERP = 1;
-const CAMERA_MOVE_LERP = 0.4;
 
 const SPAWN_DISTANCE = 4000;
 
@@ -106,6 +105,7 @@ export default class GameScene extends Phaser.Scene {
     // this.createObstacles();
     // this.createCollaider();
     this.createCamera();
+    this.followPlayerRight()
     this.jumpSound = this.sound.add('jump');
 
     this.generatedRight = this.cameras.main.scrollX;
@@ -315,13 +315,6 @@ export default class GameScene extends Phaser.Scene {
   createCamera() {
     this.cameras.main.setBackgroundColor('rgba(217, 240, 245, 1)');
     this.cameras.main.zoom = CONST.CAMERA_ZOOM;
-    this.cameras.main.startFollow(
-      this.player,
-      true,
-      1, 0,
-      CONST.CAMERA_PLAYER_POSITION_X,
-      CONST.CAMERA_PLAYER_POSITION_Y
-    );
   }
 
   private createPlayer() {
@@ -427,19 +420,21 @@ export default class GameScene extends Phaser.Scene {
       this.player.fly();
     }
 
+    if (this.controller.isLeftPressed && this.player.direction !== Direction.Left) {
+      this.player.direction = Direction.Left;
+      this.followPlayerLeft();
+    }
+
+    if (this.controller.isRightPressed && this.player.direction !== Direction.Right) {
+      this.player.direction = Direction.Right;
+      this.followPlayerRight();
+    }
+
     // if (this.player.state === Player.STATE_JUMP && !this.controller.isActionDown) {
     //   this.player.fly();
     // }
     // if (this.isFalling(this.player)) {
     //   this.player.fall();
-    // }
-    // if (this.controller.cursor.right.isDown) {
-    //   this.player.direction = Direction.Right;
-    //   this.setCameraToRight();
-    // }
-    // if (this.controller.cursor.left.isDown) {
-    //   this.player.direction = Direction.Left;
-    //   this.setCameraToLeft();
     // }
     // if (this.numKeys.key1.isDown) {
     //   this.player.idle();
@@ -479,25 +474,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  setCameraToRight() {
-    this.setCameraOffset(
-      this.cameras.main.width * CONST.CAMERA_PLAYER_POSITION_X,
-      this.cameras.main.height * CONST.CAMERA_PLAYER_POSITION_Y
-    )
-  }
-
-  setCameraToLeft() {
-    this.setCameraOffset(
-      -this.cameras.main.width * CONST.CAMERA_PLAYER_POSITION_X,
-      this.cameras.main.height * CONST.CAMERA_PLAYER_POSITION_Y
-    )
-  }
-
-  setCameraOffset(offsetX: number, offsetY: number) {
-    this.cameras.main.setLerp(CAMERA_MOVE_LERP, 0);
-    this.cameras.main.setFollowOffset(offsetX, offsetY);
-  }
-
   stabilizeTheCamera() {
     const error = CAMERA_STABILIZE_ERROR;
     const focusX = this.cameras.main.scrollX + (this.cameras.main.width / 2 + this.cameras.main.followOffset.x);
@@ -517,6 +493,25 @@ export default class GameScene extends Phaser.Scene {
     }
 
     return true;
+  }
+
+  followPlayer(offsetX: number, offsetY: number) {
+    this.cameras.main.startFollow(
+      this.player,
+      false,
+      CONST.CAMERA_LERP, 0,
+      offsetX,
+      offsetY
+    );
+    this.cameras.main.scrollY = 0;
+  }
+
+  followPlayerRight() {
+    this.followPlayer(CONST.CAMERA_PLAYER_POSITION_X, CONST.CAMERA_PLAYER_POSITION_Y);
+  }
+
+  followPlayerLeft() {
+    this.followPlayer(-CONST.CAMERA_PLAYER_POSITION_X, CONST.CAMERA_PLAYER_POSITION_Y);
   }
 
   private wrapObstacle() {
@@ -639,9 +634,6 @@ export default class GameScene extends Phaser.Scene {
     // if (this.controller.isActionDown) {
     //   this.player.run();
     //   this.player.jump(this.controller.getActionDuration());
-    // }
-    // if (this.controller.cursor.right.isDown || this.controller.cursor.left.isDown) {
-    //   this.player.run();
     // }
   }
 }

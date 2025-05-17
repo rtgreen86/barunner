@@ -63,7 +63,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   set direction(value) {
+    console.log(value);
     this.flipX = value === Direction.Left;
+
   }
 
   get isMoving() {

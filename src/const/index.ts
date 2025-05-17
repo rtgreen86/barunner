@@ -4,6 +4,7 @@ export * from './Spritesheet';
 export const CAMERA_ZOOM = 1;
 export const CAMERA_PLAYER_POSITION_X = -320;
 export const CAMERA_PLAYER_POSITION_Y = 280;
+export const CAMERA_LERP = 0.4;
 
 export const VIEWPORT_WIDTH = 1280;
 export const VIEWPORT_HEIGHT = 720;

@@ -326,7 +326,7 @@ export default class GameScene extends Phaser.Scene {
     this.player.data.set(CharAttributes.Health, 1);
     this.player.data.set(CharAttributes.JumpSpeed, CONST.PLAYER_JUMP_VELOCITY);
     this.player.data.set(CharAttributes.JumpTime, CONST.PLAYER_JUMP_MAX_TIME);
-    this.player.data.set(CharAttributes.RunSpeed, 0);
+    this.player.data.set(CharAttributes.RunSpeed, CONST.PLAYER_RUN_VELOCITY);
     this.player.idle();
 
     this.playerStartPosition = this.player.x;
@@ -420,14 +420,24 @@ export default class GameScene extends Phaser.Scene {
       this.player.fly();
     }
 
-    if (this.controller.isLeftPressed && this.player.direction !== Direction.Left) {
+    if (this.controller.isLeftPressed && (this.player.direction !== Direction.Left || this.player.isCurrentState(PlayerState.IDLE))) {
       this.player.direction = Direction.Left;
       this.followPlayerLeft();
+      this.player.run(Direction.Left);
     }
 
-    if (this.controller.isRightPressed && this.player.direction !== Direction.Right) {
+    if (this.controller.isRightPressed && (this.player.direction !== Direction.Right || this.player.isCurrentState(PlayerState.IDLE))) {
       this.player.direction = Direction.Right;
       this.followPlayerRight();
+      this.player.run(Direction.Right);
+    }
+
+    if (
+      !this.controller.isRightPressed &&
+      !this.controller.isLeftPressed &&
+      this.player.isCurrentState(PlayerState.RUN))
+    {
+      this.player.idle();
     }
 
     // if (this.player.state === Player.STATE_JUMP && !this.controller.isActionDown) {

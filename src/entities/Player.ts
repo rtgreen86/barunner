@@ -37,7 +37,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.stateMachine = new StateMachine(this, 'Player')
       .addState(PlayerState.IDLE, { onEnter: this.handleIdleEnter })
-      .addState(PlayerState.RUN, { onEnter: this.handleRunEnter })
+      .addState(PlayerState.RUN, { onEnter: this.handleRunEnter, onUpdate: this.handleRunUpdate })
       .addState(PlayerState.JUMP, { onEnter: this.handleJumpUpEnter, onUpdate: this.handleJumpUpUpdate })
       .addState(PlayerState.FLY, { onEnter: this.handleFlyEnter, onUpdate: this.handleFlyUpdate })
       .addState(PlayerState.FALL, { onEnter: this.handleFallEnter })
@@ -63,9 +63,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   set direction(value) {
-    console.log(value);
     this.flipX = value === Direction.Left;
-
   }
 
   get isMoving() {
@@ -124,6 +122,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   private handleIdleEnter() {
     this.play(RamAnimationKey.RAM_IDLE);
+    this.setVelocityX(0);
   }
 
   private handleJumpUpEnter() {
@@ -160,9 +159,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.idle();
   }
 
+  private handleRunEnter() {
+    this.play(RamAnimationKey.RAM_RUN);
+  }
+
+  private handleRunUpdate() {
+    const speed = this.data.get(CharAttributes.RunSpeed);
+    this.setVelocityX(this.direction === Direction.Right
+      ? speed
+      : -speed
+    );
+  }
 
 
-  private handleRunEnter() {}
 
   private handleHurtEnter() {}
 

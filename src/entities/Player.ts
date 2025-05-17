@@ -42,7 +42,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .addState(PlayerState.FLY, { onEnter: this.handleFlyEnter, onUpdate: this.handleFlyUpdate })
       .addState(PlayerState.FALL, { onEnter: this.handleFallEnter })
       .addState(PlayerState.LANDING, { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
-      .addState(PlayerState.HURT, { onEnter: this.handleHurtEnter, onUpdate: this.handleHurtUpdate })
+      .addState(PlayerState.HURT)
       .addState(PlayerState.DIE, { onEnter: this.handleDieEnter });
   }
 
@@ -175,56 +175,4 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setVelocityX(0);
     this.play(RamAnimationKey.RAM_FAINT);
   }
-
-
-  private handleHurtEnter() {}
-
-  private handleHurtUpdate() {}
-
-
-  // private handleIdleEnter() {
-  //   this.isRunningStart = false;
-  //   this.setVelocityX(0);
-  //   this.play(CONST.ANIMATION_KEY.RAM_IDLE);
-  // }
-
-  // private handleRunEnter() {
-  //   // const DIRECTION_RIGHT = 'right';
-  //   const DIRECTION_LEFT = 'left';
-  //   this.isRunningStart = true;
-  //   this.play('Ram Run', true);
-  //   if (this.direction === Direction.Left) this.setVelocityX(-CONST.PLAYER_RUN_VELOCITY);
-  //   else this.setVelocityX(CONST.PLAYER_RUN_VELOCITY);
-  // }
-
-  // private handleJumpUpUpdate(time: number) {
-  //   if (!this.jumpStartTime) this.jumpStartTime = time;
-  //   if (time - this.jumpStartTime <= CONST.PLAYER_JUMP_MAX_TIME) this.setVelocityY(CONST.PLAYER_JUMP_VELOCITY);
-  //   else this.setState('JUMP_TOP');
-  // }
-
-  // private handleJumpTopEnter() {
-  //   this.play('Ram Fly');
-  // }
-
-  // private handleFallEnter() {
-  //   this.play('Ram Fall');
-  // }
-
-  // private handleLandingEnter() {
-  //   this.play('Ram Landing');
-  //   if (this.isRunningStart) this.playAfterRepeat('Ram Run');
-  //   else this.playAfterRepeat('Ram Idle');
-  // }
-
-  // private handleLandingUpdate() {
-  //   const animationName = this.anims.getName();
-  //   if (animationName === 'Ram Run') this.setState('RUN');
-  //   if (animationName === 'Ram Idle') this.setState('IDLE');
-  // }
-
-  // private handleDieEnter() {
-  //   this.play('Ram Dizzy');
-  //   this.emit('dead');
-  // }
 }

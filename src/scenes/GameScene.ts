@@ -167,7 +167,7 @@ export default class GameScene extends Phaser.Scene {
     // Objects
 
     this.coins = this.physics.add.staticGroup();
-    this.spawnCoins();
+    // this.spawnCoins();
 
     // Overlaps and colliders
 

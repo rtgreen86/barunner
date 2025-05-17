@@ -157,14 +157,14 @@ export default class GameScene extends Phaser.Scene {
 
     // UI elements
 
-    this.scoreLabel = this.add.text(10, 10, `Score: ${this.score}`, {
-      fontSize: '24px',
-      color: '#080808',
-      backgroundColor: '#F8E71C',
-      shadow: { fill: true, blur: 0, offsetY: 0 },
-      padding: { left: 15, right: 15, top: 10, bottom: 10 }
-    })
-      .setScrollFactor(0);
+    // this.scoreLabel = this.add.text(10, 10, `Score: ${this.score}`, {
+    //   fontSize: '24px',
+    //   color: '#080808',
+    //   backgroundColor: '#F8E71C',
+    //   shadow: { fill: true, blur: 0, offsetY: 0 },
+    //   padding: { left: 15, right: 15, top: 10, bottom: 10 }
+    // })
+    //   .setScrollFactor(0);
 
     // Objects
 

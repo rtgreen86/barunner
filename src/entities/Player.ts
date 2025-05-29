@@ -1,28 +1,14 @@
 import Phaser, { Scene } from 'phaser';
 import StateMachine from '../lib/state-machine';
 import * as CONST from '../const';
+import { Direction, CharAttributes, RamAnimationKey, PlayerState } from '../enums';
 
-import {
-  Direction,
-  CharAttributes,
-  RamAnimationKey
-} from '../enums';
-
-export enum PlayerState {
-  DIE = 'DIE',
-  FALL = 'FALL',
-  FLY = 'FLY',
-  HURT = 'HURT',
-  IDLE = 'IDLE',
-  JUMP = 'JUMP_UP',
-  LANDING = 'LANDING',
-  RUN = 'RUN',
-};
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   private jumpTime = 0;
 
   private readonly stateMachine;
+
 
   constructor(scene: Scene, x: number = 0, y: number = 0) {
     super(scene, x, y, CONST.SPRITESHEET.RAM, 0);
@@ -45,6 +31,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .addState(PlayerState.HURT)
       .addState(PlayerState.DIE, { onEnter: this.handleDieEnter });
   }
+
 
   get arcadeBody() {
     return this.body as Phaser.Physics.Arcade.Body | null;
@@ -70,6 +57,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     return this.body?.velocity.x !== 0;
   }
 
+
   isCurrentState(state: PlayerState) {
     return this.state === state;
   }
@@ -94,10 +82,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   fly() {
     return this.setState(PlayerState.FLY);
-  }
-
-  hurt() {
-    return this.setState(PlayerState.HURT);
   }
 
   die() {
@@ -131,12 +115,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   private handleJumpUpUpdate(time: number, delta: number) {
-    const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
-    this.setVelocityY(velocity);
-
     const maxTime = this.data.get(CharAttributes.JumpTime) || 0;
     this.jumpTime += delta;
-    if (this.jumpTime >= maxTime) this.fly();
+    if (this.jumpTime < maxTime) {
+      const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
+      this.setVelocityY(velocity);
+    }
   }
 
   private handleFlyEnter() {
@@ -148,7 +132,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   private handleFallEnter() {
-    this.play(RamAnimationKey.RAM_FALL);
+    this.play(RamAnimationKey.RAM_FLY);
+    this.playAfterDelay(RamAnimationKey.RAM_FALL, 500);
   }
 
   private handleLandingEnter() {

@@ -5,9 +5,9 @@ import { Controller } from './ControllerScene';
 import { OpenMainMenu } from '../commands';
 import * as CONST from '../const';
 import { TextureKey } from '../resources';
-import { Direction, CharAttributes, SceneKey } from '../enums';
+import { Direction, CharAttributes, SceneKey, PlayerState } from '../enums';
 
-import Player, { PlayerState } from '../entities/Player';
+import Player from '../entities/Player';
 import Obstacle from '../entities/Obstacle';
 
 const CAMERA_STABILIZE_ERROR = 40;
@@ -404,30 +404,37 @@ export default class GameScene extends Phaser.Scene {
   updatePlayer(time: number, delta: number) {
     this.player.update(time, delta);
 
-    if (this.controller.isActionDown && this.player.isCurrentState(PlayerState.IDLE)) {
-      this.isRun = true;
-      this.player.run();
+    switch (this.player.state) {
+      case PlayerState.IDLE:
+        if (this.isRun) {
+          this.player.run(Direction.Right);
+        }
+        if (this.controller.isActionDown) {
+          this.isRun = true;
+          this.player.run();
+        }
+        break;
+
+      case PlayerState.RUN:
+        if (this.controller.isActionDown && this.controller.actionDownDuration <= CONST.PLAYER_JUMP_THRESHOLD) {
+          this.player.jump();
+        }
+        break;
+
+      case PlayerState.JUMP:
+        if (this.controller.isActionDown) {
+          this.player.jump();
+        } else {
+          this.player.fly();
+        }
+        if (this.player.velocityY > 0) {
+          this.player.fall();
+        }
+        break;
     }
 
-    if (
-      this.controller.isActionDown &&
-      this.controller.actionDownDuration <= CONST.PLAYER_JUMP_THRESHOLD && (
-        this.player.isCurrentState(PlayerState.RUN) ||
-        this.player.isCurrentState(PlayerState.IDLE)
-      )
-    ) {
-      this.player.jump();
-    }
 
-    if (
-      this.controller.isActionDown && this.player.isCurrentState(PlayerState.JUMP)
-    ) {
-      this.player.jump();
-    }
-
-    if (!this.controller.isActionDown && this.player.isCurrentState(PlayerState.JUMP)) {
-      this.player.fly();
-    }
+    // Control by Arrows
 
     if (this.controller.isLeftPressed && (this.player.direction !== Direction.Left || this.player.isCurrentState(PlayerState.IDLE))) {
       this.player.direction = Direction.Left;
@@ -441,28 +448,13 @@ export default class GameScene extends Phaser.Scene {
       this.player.run(Direction.Right);
     }
 
-    if (this.isRun && this.player.isCurrentState(PlayerState.IDLE)) {
-      this.player.run(Direction.Right);
-    }
-
     if (
       !this.controller.isRightPressed &&
       !this.controller.isLeftPressed &&
       !this.isRun &&
-      this.player.isCurrentState(PlayerState.RUN))
-    {
+      this.player.isCurrentState(PlayerState.RUN)) {
       this.player.idle();
     }
-
-    // if (this.player.state === Player.STATE_JUMP && !this.controller.isActionDown) {
-    //   this.player.fly();
-    // }
-    // if (this.isFalling(this.player)) {
-    //   this.player.fall();
-    // }
-    // if (this.numKeys.key1.isDown) {
-    //   this.player.idle();
-    // }
   }
 
   isFalling(object: any) {

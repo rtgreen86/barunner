@@ -32,3 +32,14 @@ export enum SceneKey {
   GameoverScene = 'GameOver',
   ControllerScene = 'ControllerScene'
 };
+
+export enum PlayerState {
+  DIE = 'DIE',
+  FALL = 'FALL',
+  FLY = 'FLY',
+  HURT = 'HURT',
+  IDLE = 'IDLE',
+  JUMP = 'JUMP_UP',
+  LANDING = 'LANDING',
+  RUN = 'RUN',
+};

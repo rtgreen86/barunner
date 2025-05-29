@@ -1,5 +1,5 @@
 import Phaser, { Scene } from 'phaser';
-import StateMachine from '../state-machine';
+import StateMachine from '../lib/state-machine';
 import * as CONST from '../const';
 
 import {

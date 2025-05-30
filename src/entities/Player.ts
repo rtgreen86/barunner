@@ -28,7 +28,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .addState(PlayerState.FLY, { onEnter: this.handleFlyEnter, onUpdate: this.handleFlyUpdate })
       .addState(PlayerState.FALL, { onEnter: this.handleFallEnter })
       .addState(PlayerState.LANDING, { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
-      .addState(PlayerState.HURT)
+      .addState(PlayerState.HURT, { onEnter: this.handleHurtEnter })
       .addState(PlayerState.DIE, { onEnter: this.handleDieEnter });
   }
 
@@ -96,6 +96,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     return this.setState(PlayerState.LANDING);
   }
 
+  hurt() {
+    return this.setState(PlayerState.HURT);
+  }
+
   respawn() {
     this.idle();
   }
@@ -159,5 +163,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   private handleDieEnter() {
     this.setVelocityX(0);
     this.play(RamAnimationKey.RAM_FAINT);
+  }
+
+  private handleHurtEnter() {
+    const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
+    this.setVelocityY(velocity);
+    this.play(RamAnimationKey.RAM_HURT);
   }
 }

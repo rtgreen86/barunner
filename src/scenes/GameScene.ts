@@ -327,10 +327,12 @@ export default class GameScene extends Phaser.Scene {
     this.player = this.add.existing(new Player(this));
     this.player.setName('The Player');
     this.player.setPosition(0, ground);
+    this.player.setBounceX(CONST.PLAYER_BOUNCE_X);
     this.player.data.set(CharAttributes.Health, 1);
     this.player.data.set(CharAttributes.JumpSpeed, CONST.PLAYER_JUMP_VELOCITY);
     this.player.data.set(CharAttributes.JumpTime, CONST.PLAYER_JUMP_MAX_TIME);
     this.player.data.set(CharAttributes.RunSpeed, CONST.PLAYER_RUN_VELOCITY);
+
     this.player.idle();
 
     this.playerStartPosition = this.player.x;
@@ -608,7 +610,23 @@ export default class GameScene extends Phaser.Scene {
   //
 
   private handleObstacleOverlap() {
-    this.player.die();
+    // old version
+    // this.player.die();
+
+    // new version
+    this.isRun = false;
+    this.player.hurt();
+
+
+
+
+
+
+
+
+    return true;
+
+
   }
 
   private handleCollectCoin(
@@ -637,9 +655,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   handlePlayerCollideGround() {
-    if (this.player.isCurrentState(PlayerState.FALL)) {
-      this.player.landing();
+    switch(this.player.state) {
+      case PlayerState.FALL:
+        this.player.landing();
+        break;
+      case PlayerState.HURT:
+        this.player.idle();
+        break;
     }
+
 
     // if (this.player.state === Player.STATE_DIE) {
     //   return;

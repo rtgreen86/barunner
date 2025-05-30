@@ -28,3 +28,4 @@ export const PLAYER_MAX_VERTICAL_VELOCITY = 600;
 export const PLAYER_RUN_VELOCITY = 1200;
 export const PLAYER_WIDTH = 100;
 export const PLAYER_JUMP_THRESHOLD = 120;
+export const PLAYER_DIZZY_TIME = 1000;

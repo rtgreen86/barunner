@@ -1,8 +1,9 @@
 export enum CharAttributes {
+  DizzyTime = 'DizzyTime',
+  Health = 'Health',
   JumpSpeed = 'JumpSpeed',
   JumpTime = 'JumpTime',
   RunSpeed = 'RunSpeed',
-  Health = 'Health',
 };
 
 export enum Direction {
@@ -35,6 +36,7 @@ export enum SceneKey {
 
 export enum PlayerState {
   DIE = 'DIE',
+  DIZZY = 'DIZZY',
   FALL = 'FALL',
   FLY = 'FLY',
   HURT = 'HURT',

@@ -6,6 +6,7 @@ import { Direction, CharAttributes, RamAnimationKey, PlayerState } from '../enum
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   private jumpTime = 0;
+  private dizzyTime = 0;
 
   private readonly stateMachine;
 
@@ -29,7 +30,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .addState(PlayerState.FALL, { onEnter: this.handleFallEnter })
       .addState(PlayerState.LANDING, { onEnter: this.handleLandingEnter, onUpdate: this.handleLandingUpdate })
       .addState(PlayerState.HURT, { onEnter: this.handleHurtEnter })
-      .addState(PlayerState.DIE, { onEnter: this.handleDieEnter });
+      .addState(PlayerState.DIE, { onEnter: this.handleDieEnter })
+      .addState(PlayerState.DIZZY, { onEnter: this.handleDizzyEnter, onUpdate: this.handleDizzyUpdate });
   }
 
 
@@ -98,6 +100,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   hurt() {
     return this.setState(PlayerState.HURT);
+  }
+
+  dizzy() {
+    return this.setState(PlayerState.DIZZY);
   }
 
   respawn() {
@@ -169,5 +175,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const velocity = this.data.get(CharAttributes.JumpSpeed) || 0;
     this.setVelocityY(velocity);
     this.play(RamAnimationKey.RAM_HURT);
+  }
+
+  private handleDizzyEnter() {
+    this.dizzyTime = 0;
+    this.setVelocityX(0);
+    this.play(RamAnimationKey.RAM_DIZZY);
+  }
+
+  private handleDizzyUpdate(time: number, timeDelta: number) {
+    this.dizzyTime += timeDelta;
+    const dizzyMaxTime = this.data.get(CharAttributes.DizzyTime) || 0;
+    if (this.dizzyTime >= dizzyMaxTime) {
+      this.idle();
+    }
   }
 }

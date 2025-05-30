@@ -332,6 +332,7 @@ export default class GameScene extends Phaser.Scene {
     this.player.data.set(CharAttributes.JumpSpeed, CONST.PLAYER_JUMP_VELOCITY);
     this.player.data.set(CharAttributes.JumpTime, CONST.PLAYER_JUMP_MAX_TIME);
     this.player.data.set(CharAttributes.RunSpeed, CONST.PLAYER_RUN_VELOCITY);
+    this.player.data.set(CharAttributes.DizzyTime, CONST.PLAYER_DIZZY_TIME);
 
     this.player.idle();
 
@@ -660,20 +661,8 @@ export default class GameScene extends Phaser.Scene {
         this.player.landing();
         break;
       case PlayerState.HURT:
-        this.player.idle();
+        this.player.dizzy();
         break;
     }
-
-
-    // if (this.player.state === Player.STATE_DIE) {
-    //   return;
-    // }
-    // if (this.player.state === Player.STATE_RUN && this.controller.isActionDown) {
-    //   this.player.jump(this.controller.getActionDuration());
-    // }
-    // if (this.controller.isActionDown) {
-    //   this.player.run();
-    //   this.player.jump(this.controller.getActionDuration());
-    // }
   }
 }

@@ -22,6 +22,8 @@ import SWITCH_ANIMATED_JSON from '../../assets/images/ui/switch_animated.json';
 import OBSTACLES_EFFECT_PNG from '../../assets/images/obstacle-effect.png';
 import OBSTACLES_EFFECT_JSON from '../../assets/images/obstacle-effect.json';
 
+import Resources from '../resource-index';
+
 const baseURL = import.meta.env.VITE_ASSETS_BASE_URL;
 
 export default class BootScene extends Phaser.Scene {
@@ -53,17 +55,16 @@ export default class BootScene extends Phaser.Scene {
     // Sprites and objects
     this.load.aseprite('obstacles-effects', OBSTACLES_EFFECT_PNG, OBSTACLES_EFFECT_JSON);
 
+    // Load resources from generated file
 
-    // Hills background
-    this.load.image(TextureKey.HillLayer1, `${baseURL}/images/hill-layer-1.png`);
-    this.load.image(TextureKey.HillLayer2, `${baseURL}/images/hill-layer-2.png`);
-    this.load.image(TextureKey.HillLayer3, `${baseURL}/images/hill-layer-3.png`);
-    this.load.image(TextureKey.HillLayer4, `${baseURL}/images/hill-layer-4.png`);
-    this.load.image(TextureKey.HillLayer5, `${baseURL}/images/hill-layer-5.png`);
-
-    // Spritesheets
-    this.load.aseprite(SPRITESHEET.RAM, `${baseURL}/spritesheets/ram-spritesheet.png`, `${baseURL}/spritesheets/ram-spritesheet.json`);
-    this.load.aseprite(SPRITESHEET.OBJECTS, `${baseURL}/spritesheets/objects.png`, `${baseURL}/spritesheets/objects.json`);
+    for (const resource of Resources) {
+      if (resource.type === 'spritesheet') {
+        this.load.aseprite(resource.name, `${baseURL}${resource.file}`, `${baseURL}${resource.meta}`);
+      }
+      if (resource.type === 'image') {
+        this.load.image(resource.name, `${baseURL}${resource.file}`);
+      }
+    }
   }
 
   create() {
